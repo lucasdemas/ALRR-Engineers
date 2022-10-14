@@ -1,0 +1,4 @@
+LocationFinder\User.class
+LocationFinder\UserController.class
+LocationFinder\LocationFinderApplication.class
+LocationFinder\UserRepository.class
