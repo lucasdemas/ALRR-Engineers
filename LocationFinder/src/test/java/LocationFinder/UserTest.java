@@ -25,7 +25,7 @@ class UserTest {
     @MockBean
     private UserRepository userRepo;
 
-
+    //Test to see if a new user can be added successfully
     @Test
     public void addNewUser() {
         User bUser = new User(0,
@@ -38,8 +38,24 @@ class UserTest {
         assertEquals(userServ.postUser(bUser).get(0).getId(), 0);
     }
 
+    //Test to see if we can get a specific user from the repository
     @Test
-    void getAllUsers() {
+    void getUser() {
+        User bUser = new User(0,
+                "testUser",
+                "testUser@test.com");
+
+        Mockito.when(userRepo.findByTemplate(null,
+                null,
+                "testUser@test.com")).thenReturn(List.of(bUser));
+
+        User result = userServ.getUsersByTemplate(null,
+                null,
+                "testUser@test.com").get(0);
+
+        System.out.println(bUser.getId() + bUser.getName());
+        System.out.println(result.getId() + result.getName());
+        assertEquals(bUser.getId(), result.getId());
 
     }
 }
