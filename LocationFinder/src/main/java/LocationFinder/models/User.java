@@ -1,19 +1,33 @@
 package LocationFinder.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class User {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="user_id")
     private Integer id;
 
+    @Column(name="user_name")
     private String name;
 
+    @Column(name="user_email")
     private String email;
+
+    // Default Constructor
+    public User() {
+        this.id=null;
+        this.name=null;
+        this.email=null;
+    }
+    public User(Integer user_id,
+                String username,
+                String email) {
+        this.id=user_id;
+        this.name=username;
+        this.email=email;
+    }
 
     public Integer getId() {
         return id;
