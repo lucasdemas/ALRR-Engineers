@@ -1,4 +1,4 @@
-LocationFinder\User.class
-LocationFinder\UserController.class
+LocationFinder\repositories\UserRepository.class
+LocationFinder\controllers\UserController.class
 LocationFinder\LocationFinderApplication.class
-LocationFinder\UserRepository.class
+LocationFinder\models\User.class
