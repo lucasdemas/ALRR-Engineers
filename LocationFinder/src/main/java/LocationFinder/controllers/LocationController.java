@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(path="/location")
 public class LocationController {
     @Autowired
@@ -21,8 +21,7 @@ public class LocationController {
     private LocationService locService;
     
     @PostMapping(path="/add")
-    public @ResponseBody
-    String addNewLoc(@RequestParam String loc_name,
+    public String addNewLoc(@RequestParam String loc_name,
                     @RequestParam String loc_area,
                     @RequestParam Double loc_cost) {
         // @ResponseBody means the returned String is the response, not a view name
@@ -31,5 +30,15 @@ public class LocationController {
         Location loc = new Location(loc_name, loc_area, loc_cost);
         locRepository.save(loc);
         return "Saved";
+    }
+
+    @GetMapping(path="/getall")
+    Iterable<Location> getLocations() {
+        return locRepository.findAll();
+    }
+    
+    @GetMapping(path="/get/{area}")
+    List<Location> getLocByArea(@PathVariable String area) {
+        return locRepository.findByArea(area);
     }
 }
