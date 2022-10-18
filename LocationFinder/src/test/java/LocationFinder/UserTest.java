@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import LocationFinder.models.User;
 import LocationFinder.controllers.UserController;
 import LocationFinder.repositories.UserRepository;
+import LocationFinder.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -20,29 +21,47 @@ import java.util.List;
 class UserTest {
 
     @Autowired
-    private UserController userCon;
+    private UserService userServ;
 
     @MockBean
     private UserRepository userRepo;
 
+<<<<<<< HEAD
 
 
+=======
+    //Test to see if a new user can be added successfully
+    @Test
+>>>>>>> cfc71c8a245c38507543615fc2035b09addd136c
     public void addNewUser() {
-        String returnedString = userCon.addNewUser("test4", "test4@test.com");
-        User testUser = new User();
-        testUser.setName("test4");
-        testUser.setEmail("test4@test.com");
-        User afterUser = new User();
-        afterUser.setName("test4");
-        afterUser.setEmail("test4@test.com");
-        Mockito.when(userRepo.save(testUser)).thenReturn(afterUser);
-        assertEquals(afterUser.getName(), "test4");
+        User bUser = new User(0,
+                        "testUser",
+                        "testUser@test.com");
+        // save the user
+        Mockito.when(userRepo.save(bUser)).thenReturn(bUser);
+
+        //assert that the user_id gets correctly updated
+        assertEquals(userServ.postUser(bUser).get(0).getId(), 0);
     }
 
+    //Test to see if we can get a specific user from the repository
     @Test
-    void getAllUsers() {
-        userCon.addNewUser("test4", "test4@test.com");
-        System.out.println();
+    void getUser() {
+        User bUser = new User(0,
+                "testUser",
+                "testUser@test.com");
+
+        Mockito.when(userRepo.findByTemplate(null,
+                null,
+                "testUser@test.com")).thenReturn(List.of(bUser));
+
+        User result = userServ.getUsersByTemplate(null,
+                null,
+                "testUser@test.com").get(0);
+
+        System.out.println(bUser.getId() + bUser.getName());
+        System.out.println(result.getId() + result.getName());
+        assertEquals(bUser.getId(), result.getId());
 
 
     }
