@@ -28,7 +28,7 @@ public class LocationController {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
 
-        Location loc = new Location("Columbia University", "New York", 45.50);
+        Location loc = new Location(loc_name, loc_area, loc_cost);
         locRepository.save(loc);
         return "Saved";
     }
