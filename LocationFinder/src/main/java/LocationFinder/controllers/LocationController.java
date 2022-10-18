@@ -20,4 +20,16 @@ public class LocationController {
     @Autowired
     private LocationService locService;
     
+    @PostMapping(path="/add")
+    public @ResponseBody
+    String addNewLoc(@RequestParam String loc_name,
+                    @RequestParam String loc_area,
+                    @RequestParam Double loc_cost) {
+        // @ResponseBody means the returned String is the response, not a view name
+        // @RequestParam means it is a parameter from the GET or POST request
+
+        Location loc = new Location("Columbia University", "New York", 45.50);
+        locRepository.save(loc);
+        return "Saved";
+    }
 }

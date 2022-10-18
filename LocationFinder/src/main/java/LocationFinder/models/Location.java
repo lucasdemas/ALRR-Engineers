@@ -3,9 +3,10 @@ package LocationFinder.models;
 import javax.persistence.*;
 
 @Entity
+@Table(name="location_data")
 public class Location {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="location_id")
     private Integer loc_id;
 
@@ -16,7 +17,7 @@ public class Location {
     private String loc_area;
 
     @Column(name = "location_cost")
-    private Float loc_cost;
+    private Double loc_cost;
 
     // Default Constructor
     public Location() {
@@ -26,8 +27,7 @@ public class Location {
         this.loc_cost=null;
     }
 
-    public Location(Integer id, String loc, String area, Float cost) {
-        this.loc_id=id;
+    public Location( String loc, String area, Double cost) {
         this.loc_name=loc;
         this.loc_area=area;
         this.loc_cost=cost;
@@ -57,11 +57,11 @@ public class Location {
         this.loc_area=area;
     }
 
-    public Float getCost() {
+    public Double getCost() {
         return loc_cost;
     }
 
-    public void setCost(Float cost) {
+    public void setCost(Double cost) {
         this.loc_cost=cost;
     }
 }
