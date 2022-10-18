@@ -41,4 +41,16 @@ public class LocationController {
     List<Location> getLocByArea(@PathVariable String area) {
         return locRepository.findByArea(area);
     }
+
+    @GetMapping(path="/getClaim/{isClaim}")
+    List<Location> getLocByClaim(@PathVariable String isClaim) {
+        if(isClaim.toLowerCase().equals("claimed")) {
+            return locRepository.findByClaim(true);
+        }
+        else if(isClaim.toLowerCase().equals("unclaimed")) {
+            return locRepository.findByClaim(false);
+        }
+        
+        return locRepository.findByClaim(null);
+    }
 }

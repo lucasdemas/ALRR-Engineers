@@ -29,4 +29,7 @@ public interface LocationRepository extends CrudRepository<Location, Integer> {
 
     @Query(value = "select * from location_data where location_area = :location_area", nativeQuery = true)
     List<Location> findByArea(@Param("location_area") String location_area);
+
+    @Query(value = "select * from location_data where claimed = :claimed", nativeQuery = true)
+    List<Location> findByClaim(@Param("claimed") Boolean claimed);
 }
