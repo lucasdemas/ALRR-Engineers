@@ -67,7 +67,26 @@ public class LocationController {
 
             locRepository.save(updatedLoc);
 //            locRepository.updateCost(loc_id, loc_cost);
-            return "Updated";
+            return "Updated location cost";
+        }
+
+        return "Could not find location";
+
+    }
+
+    @PostMapping(path="/updateClaim")
+    public String updateLocClaim(@RequestParam Integer loc_id,
+                                @RequestParam Boolean loc_claim) {
+        //Get the location based on the id provided
+        List<Location> targetLoc = locService.getLocById(loc_id);
+
+        if(targetLoc != null) {
+            Location updatedLoc = new Location(targetLoc.get(0).getName(), targetLoc.get(0).getArea(), targetLoc.get(0).getCost());
+            updatedLoc.setId(targetLoc.get(0).getId());
+            updatedLoc.setClaim(loc_claim);
+
+            locRepository.save(updatedLoc);
+            return "Updated claim status";
         }
 
         return "Could not find location";
