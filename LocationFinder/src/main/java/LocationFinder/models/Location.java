@@ -31,7 +31,7 @@ public class Location {
         this.claim=false;
     }
 
-    public Location( String loc, String area, Double cost) {
+    public Location(String loc, String area, Double cost) {
         this.loc_name=loc;
         this.loc_area=area;
         this.loc_cost=cost;

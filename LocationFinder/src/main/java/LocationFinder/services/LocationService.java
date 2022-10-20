@@ -28,11 +28,11 @@ public class LocationService {
     }
 
 
-    public List<Location> getLocById(Integer loc_id) throws NotFoundException {
+    public Location getLocById(Integer loc_id) throws NotFoundException {
         Optional<Location> target = locRepository.findById(loc_id);
         if (target.isPresent()) {
             Location locResult = target.get();
-            return List.of(locResult);
+            return locResult;
         } else {
             throw new NotFoundException("Location id does not exist");
         }

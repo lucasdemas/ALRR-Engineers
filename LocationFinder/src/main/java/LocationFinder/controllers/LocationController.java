@@ -69,10 +69,10 @@ public class LocationController {
         //Get the location based on the id provided
         try {
             //Check to see if the location is in the DB and get it's data
-            List<Location> targetLoc = locService.getLocById(loc_id);
+            Location targetLoc = locService.getLocById(loc_id);
 
             //Update the location's data in the database given the provided information by the user
-            Location updatedLoc = locService.updateLocCost(targetLoc.get(0), loc_cost);
+            Location updatedLoc = locService.updateLocCost(targetLoc, loc_cost);
 //            locRepository.updateCost(loc_id, loc_cost);
             return "Updated location cost";
         }
@@ -86,10 +86,10 @@ public class LocationController {
                                 @RequestParam Boolean loc_claim) {
         try {
             //Check to see if the location is in the DB and get it's data
-            List<Location> targetLoc = locService.getLocById(loc_id);
+            Location targetLoc = locService.getLocById(loc_id);
 
             //Update the location's data in the database given the provided information by the user
-            Location updatedLoc = locService.updateLocClaim(targetLoc.get(0), loc_claim);
+            Location updatedLoc = locService.updateLocClaim(targetLoc, loc_claim);
             return "Updated claim status";
         }
         catch (NotFoundException e) {
@@ -100,7 +100,8 @@ public class LocationController {
     @PostMapping(path="/delete")
     public String deleteLoc(@RequestParam Integer loc_id) {
         try {
-            List<Location> targetLoc = locService.getLocById(loc_id);
+            //Check to see if this is a valid location for this client
+            Location targetLoc = locService.getLocById(loc_id);
             locRepository.deleteById(loc_id);
             return "Deleted location";
         }

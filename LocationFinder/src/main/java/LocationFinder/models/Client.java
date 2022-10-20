@@ -2,9 +2,10 @@ package LocationFinder.models;
 
 import javax.persistence.*;
 
+@Entity
 public class Client {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="client_id")
     private Integer id;
 
