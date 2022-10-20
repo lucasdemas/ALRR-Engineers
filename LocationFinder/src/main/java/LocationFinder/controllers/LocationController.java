@@ -1,6 +1,8 @@
 package LocationFinder.controllers;
 
 import LocationFinder.repositories.LocationRepository;
+import LocationFinder.exceptions.NotFoundException;
+import LocationFinder.exceptions.InvalidTypeException;
 import LocationFinder.models.Location;
 import LocationFinder.services.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +28,19 @@ public class LocationController {
                     @RequestParam Double loc_cost) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
+        try {
+            Location loc = new Location(loc_name, loc_area, loc_cost);
+            locService.checkInvalid(loc);
 
-        Location loc = new Location(loc_name, loc_area, loc_cost);
-        loc.setClaim(false);
-        locService.addLocation(loc);
-        return "Saved";
+            locService.addLocation(loc);
+            return "Saved";
+        }
+        catch (InvalidTypeException e)  {
+            return e.getMessage();
+        }
     }
 
-    @GetMapping(path="/getall")
+    @GetMapping(path="/getAll")
     Iterable<Location> getLocations() {
         return locRepository.findAll();
     }
@@ -59,51 +66,46 @@ public class LocationController {
     public String updateLocCost(@RequestParam Integer loc_id,
                                 @RequestParam Double loc_cost) {
         //Get the location based on the id provided
-        List<Location> targetLoc = locService.getLocById(loc_id);
+        try {
+            //Check to see if the location is in the DB and get it's data
+            Location targetLoc = locService.getLocById(loc_id);
 
-        if(targetLoc != null) {
-            Location updatedLoc = new Location(targetLoc.get(0).getName(), targetLoc.get(0).getArea(), loc_cost);
-            updatedLoc.setId(targetLoc.get(0).getId());
-            updatedLoc.setClaim(targetLoc.get(0).getClaim());
-
-            locRepository.save(updatedLoc);
+            //Update the location's data in the database given the provided information by the user
+            Location updatedLoc = locService.updateLocCost(targetLoc, loc_cost);
 //            locRepository.updateCost(loc_id, loc_cost);
             return "Updated location cost";
         }
-
-        return "Could not find location";
-
+        catch (NotFoundException e) {
+            return e.getMessage();
+        }
     }
 
     @PostMapping(path="/updateClaim")
     public String updateLocClaim(@RequestParam Integer loc_id,
                                 @RequestParam Boolean loc_claim) {
-        //Get the location based on the id provided
-        List<Location> targetLoc = locService.getLocById(loc_id);
+        try {
+            //Check to see if the location is in the DB and get it's data
+            Location targetLoc = locService.getLocById(loc_id);
 
-        if(targetLoc != null) {
-            Location updatedLoc = new Location(targetLoc.get(0).getName(), targetLoc.get(0).getArea(), targetLoc.get(0).getCost());
-            updatedLoc.setId(targetLoc.get(0).getId());
-            updatedLoc.setClaim(loc_claim);
-
-            locRepository.save(updatedLoc);
+            //Update the location's data in the database given the provided information by the user
+            Location updatedLoc = locService.updateLocClaim(targetLoc, loc_claim);
             return "Updated claim status";
         }
-
-        return "Could not find location";
-
+        catch (NotFoundException e) {
+            return e.getMessage();
+        }
     }
 
     @PostMapping(path="/delete")
     public String deleteLoc(@RequestParam Integer loc_id) {
-
-        List<Location> targetLoc = locService.getLocById(loc_id);
-
-        if (targetLoc != null) {
+        try {
+            //Check to see if this is a valid location for this client
+            Location targetLoc = locService.getLocById(loc_id);
             locRepository.deleteById(loc_id);
             return "Deleted location";
         }
-
-        return "Could not find a location with that id";
+        catch (NotFoundException e) {
+            return e.getMessage();
+        }
     }
 }
