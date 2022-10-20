@@ -28,7 +28,7 @@ public class LocationController {
         // @RequestParam means it is a parameter from the GET or POST request
 
         Location loc = new Location(loc_name, loc_area, loc_cost);
-        locRepository.save(loc);
+        locService.addLocation(loc);
         return "Saved";
     }
 
@@ -52,5 +52,25 @@ public class LocationController {
         }
         
         return locRepository.findByClaim(null);
+    }
+
+    @PostMapping(path="/updateCost")
+    public String updateLocCost(@RequestParam Integer loc_id,
+                                @RequestParam Double loc_cost) {
+        //Get the location based on the id provided
+        List<Location> targetLoc = locService.getLocById(loc_id);
+
+        if(targetLoc != null) {
+            Location updatedLoc = new Location(targetLoc.get(0).getName(), targetLoc.get(0).getArea(), loc_cost);
+            updatedLoc.setId(targetLoc.get(0).getId());
+            updatedLoc.setClaim(targetLoc.get(0).getClaim());
+
+            locRepository.save(updatedLoc);
+//            locRepository.updateCost(loc_id, loc_cost);
+            return "Updated";
+        }
+
+        return "Could not find location";
+
     }
 }

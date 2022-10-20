@@ -1,5 +1,6 @@
 package LocationFinder.repositories;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -7,6 +8,7 @@ import LocationFinder.models.Location;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
@@ -32,4 +34,10 @@ public interface LocationRepository extends CrudRepository<Location, Integer> {
 
     @Query(value = "select * from location_data where claimed = :claimed", nativeQuery = true)
     List<Location> findByClaim(@Param("claimed") Boolean claimed);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update location_data set location_cost = :location_cost" +
+            " where location_id = :location_id", nativeQuery = true)
+    void updateCost(@Param("location_id") Integer location_id, @Param("location_cost") Double location_cost);
 }
