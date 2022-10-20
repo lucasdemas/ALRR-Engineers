@@ -1,6 +1,8 @@
 package LocationFinder.controllers;
 
 import LocationFinder.repositories.LocationRepository;
+import LocationFinder.exceptions.NotFoundException;
+import LocationFinder.exceptions.InvalidTypeException;
 import LocationFinder.models.Location;
 import LocationFinder.services.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,17 @@ public class LocationController {
                     @RequestParam Double loc_cost) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
-
+    try {
         Location loc = new Location(loc_name, loc_area, loc_cost);
+
         loc.setClaim(false);
+        locService.checkInvalid(loc);
         locService.addLocation(loc);
         return "Saved";
+    }
+    catch (InvalidTypeException e)  {
+        return e.getMessage();
+    }
     }
 
     @GetMapping(path="/getall")
@@ -59,9 +67,11 @@ public class LocationController {
     public String updateLocCost(@RequestParam Integer loc_id,
                                 @RequestParam Double loc_cost) {
         //Get the location based on the id provided
-        List<Location> targetLoc = locService.getLocById(loc_id);
+        try {
 
-        if(targetLoc != null) {
+
+            List<Location> targetLoc = locService.getLocById(loc_id);
+
             Location updatedLoc = new Location(targetLoc.get(0).getName(), targetLoc.get(0).getArea(), loc_cost);
             updatedLoc.setId(targetLoc.get(0).getId());
             updatedLoc.setClaim(targetLoc.get(0).getClaim());
@@ -71,7 +81,9 @@ public class LocationController {
             return "Updated location cost";
         }
 
-        return "Could not find location";
+        catch (NotFoundException e) {
+        return e.getMessage();
+        }
 
     }
 
@@ -79,31 +91,38 @@ public class LocationController {
     public String updateLocClaim(@RequestParam Integer loc_id,
                                 @RequestParam Boolean loc_claim) {
         //Get the location based on the id provided
+
+        try {
         List<Location> targetLoc = locService.getLocById(loc_id);
 
-        if(targetLoc != null) {
             Location updatedLoc = new Location(targetLoc.get(0).getName(), targetLoc.get(0).getArea(), targetLoc.get(0).getCost());
             updatedLoc.setId(targetLoc.get(0).getId());
             updatedLoc.setClaim(loc_claim);
 
             locRepository.save(updatedLoc);
             return "Updated claim status";
+
         }
 
-        return "Could not find location";
+        catch (NotFoundException e) {
+            return e.getMessage();
+        }
+
 
     }
 
     @PostMapping(path="/delete")
-    public String deleteLoc(@RequestParam Integer loc_id) {
+    public String deleteLoc(@RequestParam Integer loc_id) throws NotFoundException{
 
-        List<Location> targetLoc = locService.getLocById(loc_id);
 
-        if (targetLoc != null) {
+
+        try {
+            List<Location> targetLoc = locService.getLocById(loc_id);
             locRepository.deleteById(loc_id);
             return "Deleted location";
         }
-
-        return "Could not find a location with that id";
+        catch (NotFoundException e) {
+            return e.getMessage();
+        }
     }
 }

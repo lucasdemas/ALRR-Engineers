@@ -1,5 +1,7 @@
+LocationFinder\exceptions\InvalidTypeException.class
 LocationFinder\repositories\LocationRepository.class
 LocationFinder\repositories\UserRepository.class
+LocationFinder\exceptions\NotFoundException.class
 LocationFinder\controllers\UserController.class
 LocationFinder\models\User.class
 LocationFinder\services\UserService.class

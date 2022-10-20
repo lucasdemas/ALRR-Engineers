@@ -1,10 +1,15 @@
 package LocationFinder.services;
 
+
+
 import LocationFinder.models.Location;
+import LocationFinder.exceptions.NotFoundException;
+import LocationFinder.exceptions.InvalidTypeException;
 import LocationFinder.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
+
 
 import java.util.Collections;
 import java.util.List;
@@ -24,12 +29,26 @@ public class LocationService {
         return List.of(loc);
     }
 
-    public List<Location> getLocById(Integer loc_id) {
+
+    public List<Location> getLocById(Integer loc_id) throws NotFoundException {
         Optional<Location> target = locRepository.findById(loc_id);
         if (target.isPresent()) {
             Location locResult = target.get();
             return List.of(locResult);
+        } else {
+            throw new NotFoundException("Location id does not exist");
         }
-        return null;
     }
+
+    public void checkInvalid(Location loc) throws InvalidTypeException {
+
+        if (loc.getCost() < 0){
+            throw new InvalidTypeException("Location Cost can't be a nagative number");
+        }
+
+
+    }
+
+
 }
+
