@@ -28,6 +28,7 @@ public class LocationController {
         // @RequestParam means it is a parameter from the GET or POST request
 
         Location loc = new Location(loc_name, loc_area, loc_cost);
+        loc.setClaim(false);
         locService.addLocation(loc);
         return "Saved";
     }
@@ -91,5 +92,18 @@ public class LocationController {
 
         return "Could not find location";
 
+    }
+
+    @PostMapping(path="/delete")
+    public String deleteLoc(@RequestParam Integer loc_id) {
+
+        List<Location> targetLoc = locService.getLocById(loc_id);
+
+        if (targetLoc != null) {
+            locRepository.deleteById(loc_id);
+            return "Deleted location";
+        }
+
+        return "Could not find a location with that id";
     }
 }

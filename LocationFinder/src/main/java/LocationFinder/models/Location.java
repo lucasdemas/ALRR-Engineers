@@ -28,7 +28,7 @@ public class Location {
         this.loc_name=null;
         this.loc_area=null;
         this.loc_cost=null;
-        this.claim=null;
+        this.claim=false;
     }
 
     public Location( String loc, String area, Double cost) {
