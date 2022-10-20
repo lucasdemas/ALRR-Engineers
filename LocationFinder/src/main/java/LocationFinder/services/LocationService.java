@@ -1,7 +1,5 @@
 package LocationFinder.services;
 
-
-
 import LocationFinder.models.Location;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.exceptions.InvalidTypeException;
@@ -41,14 +39,25 @@ public class LocationService {
     }
 
     public void checkInvalid(Location loc) throws InvalidTypeException {
-
         if (loc.getCost() < 0){
-            throw new InvalidTypeException("Location Cost can't be a nagative number");
+            throw new InvalidTypeException("Location Cost can't be a negative number");
         }
-
-
     }
 
+    public Location updateLocClaim(Location loc, Boolean loc_claim) {
+        Location updatedLoc = new Location(loc.getName(), loc.getArea(), loc.getCost());
+        updatedLoc.setId(loc.getId());
+        updatedLoc.setClaim(loc_claim);
+        locRepository.save(updatedLoc);
+        return updatedLoc;
+    }
 
+    public Location updateLocCost(Location loc, Double loc_cost) {
+        Location updatedLoc = new Location(loc.getName(), loc.getArea(), loc_cost);
+        updatedLoc.setId(loc.getId());
+        updatedLoc.setClaim(loc.getClaim());
+        locRepository.save(updatedLoc);
+        return updatedLoc;
+    }
 }
 

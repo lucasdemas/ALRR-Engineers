@@ -28,20 +28,20 @@ public class LocationController {
                     @RequestParam Double loc_cost) {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
-    try {
-        Location loc = new Location(loc_name, loc_area, loc_cost);
+        try {
+            Location loc = new Location(loc_name, loc_area, loc_cost);
+            locService.checkInvalid(loc);
 
-        loc.setClaim(false);
-        locService.checkInvalid(loc);
-        locService.addLocation(loc);
-        return "Saved";
-    }
-    catch (InvalidTypeException e)  {
-        return e.getMessage();
-    }
+            loc.setClaim(false);
+            locService.addLocation(loc);
+            return "Saved";
+        }
+        catch (InvalidTypeException e)  {
+            return e.getMessage();
+        }
     }
 
-    @GetMapping(path="/getall")
+    @GetMapping(path="/getAll")
     Iterable<Location> getLocations() {
         return locRepository.findAll();
     }
@@ -68,54 +68,37 @@ public class LocationController {
                                 @RequestParam Double loc_cost) {
         //Get the location based on the id provided
         try {
-
-
+            //Check to see if the location is in the DB and get it's data
             List<Location> targetLoc = locService.getLocById(loc_id);
 
-            Location updatedLoc = new Location(targetLoc.get(0).getName(), targetLoc.get(0).getArea(), loc_cost);
-            updatedLoc.setId(targetLoc.get(0).getId());
-            updatedLoc.setClaim(targetLoc.get(0).getClaim());
-
-            locRepository.save(updatedLoc);
+            //Update the location's data in the database given the provided information by the user
+            Location updatedLoc = locService.updateLocCost(targetLoc.get(0), loc_cost);
 //            locRepository.updateCost(loc_id, loc_cost);
             return "Updated location cost";
         }
-
         catch (NotFoundException e) {
-        return e.getMessage();
+            return e.getMessage();
         }
-
     }
 
     @PostMapping(path="/updateClaim")
     public String updateLocClaim(@RequestParam Integer loc_id,
                                 @RequestParam Boolean loc_claim) {
-        //Get the location based on the id provided
-
         try {
-        List<Location> targetLoc = locService.getLocById(loc_id);
+            //Check to see if the location is in the DB and get it's data
+            List<Location> targetLoc = locService.getLocById(loc_id);
 
-            Location updatedLoc = new Location(targetLoc.get(0).getName(), targetLoc.get(0).getArea(), targetLoc.get(0).getCost());
-            updatedLoc.setId(targetLoc.get(0).getId());
-            updatedLoc.setClaim(loc_claim);
-
-            locRepository.save(updatedLoc);
+            //Update the location's data in the database given the provided information by the user
+            Location updatedLoc = locService.updateLocClaim(targetLoc.get(0), loc_claim);
             return "Updated claim status";
-
         }
-
         catch (NotFoundException e) {
             return e.getMessage();
         }
-
-
     }
 
     @PostMapping(path="/delete")
-    public String deleteLoc(@RequestParam Integer loc_id) throws NotFoundException{
-
-
-
+    public String deleteLoc(@RequestParam Integer loc_id) {
         try {
             List<Location> targetLoc = locService.getLocById(loc_id);
             locRepository.deleteById(loc_id);
