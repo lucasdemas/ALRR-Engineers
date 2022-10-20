@@ -8,9 +8,7 @@ import LocationFinder.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
-@RestController // This means that this class is a Controller
+@RestController
 @RequestMapping(path="/client")
 public class ClientController {
     @Autowired // This means to get the bean called userRepository
@@ -43,13 +41,13 @@ public class ClientController {
 
     //Call to get all of the clients from our database table
     @GetMapping(path="/getAll")
-    Iterable<Client> getClients() {
+    public Iterable<Client> getClients() {
         return clientRepo.findAll();
     }
 
     //Call to get a specific client by their id
     @GetMapping(path="/get/{id}")
-    String getClientById(@PathVariable Integer id) {
+    public String getClientById(@PathVariable Integer id) {
         //Search for the client in the client table based on the provided id (if there is a client with that id)
         try {
             Client targetClient = clientServ.getClientById(id);
@@ -64,7 +62,7 @@ public class ClientController {
 
     //Call to update the email of a client
     @PostMapping(path="/updateEmail")
-    String updateClientEmail(@RequestParam Integer client_id,
+    public String updateClientEmail(@RequestParam Integer client_id,
                              @RequestParam String client_email) {
         try {
             //Check to see if there is a client with the specified id
@@ -79,5 +77,23 @@ public class ClientController {
             return e.getMessage();
         }
         //Catch exception of client not providing valid a valid email address
+    }
+
+    //Call to delete a specific client given the provided client id
+    //Might change in future depending if client id is stored so that a client can only delete themselves
+    @PostMapping(path="/delete")
+    public String deleteClient(@RequestParam Integer client_id) {
+        //find the client with the given id
+        try {
+            //Check to see if there is a client with the specified id
+            Client targetClient = clientServ.getClientById(client_id);
+
+            //Delete the client from the repository with the given id
+            clientRepo.deleteById(client_id);
+            return "Client deleted successfully";
+        }
+        catch (NotFoundException e) {
+            return e.getMessage();
+        }
     }
 }
