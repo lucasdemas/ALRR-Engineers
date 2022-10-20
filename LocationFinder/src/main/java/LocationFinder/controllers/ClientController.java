@@ -1,16 +1,14 @@
 package LocationFinder.controllers;
 
 import LocationFinder.exceptions.InvalidTypeException;
+import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.repositories.ClientRepository;
 import LocationFinder.models.Client;
 import LocationFinder.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController // This means that this class is a Controller
 @RequestMapping(path="/client")
@@ -22,6 +20,7 @@ public class ClientController {
     @Autowired
     private ClientService clientServ;
 
+    //Call to add a new client to the database
     @PostMapping(path="/add")
     public String addNewClient(@RequestParam String client_name,
                             @RequestParam String client_email) {
@@ -42,8 +41,24 @@ public class ClientController {
         }
     }
 
+    //Call to get all of the clients from our database table
     @GetMapping(path="/getAll")
     Iterable<Client> getClients() {
         return clientRepo.findAll();
+    }
+
+    //Call to get a specific client by their id
+    @GetMapping(path="/get/{id}")
+    String getClientById(@PathVariable Integer id) {
+        //Search for the client in the client table based on the provided id (if there is a client with that id)
+        try {
+            Client targetClient = clientServ.getClientById(id);
+            return "Client id: " + targetClient.getId().toString() +
+                    "\nClient Name:  " + targetClient.getName() +
+                    "\nClient Email:  " + targetClient.getEmail();
+        }
+        catch(NotFoundException e) {
+            return e.getMessage();
+        }
     }
 }
