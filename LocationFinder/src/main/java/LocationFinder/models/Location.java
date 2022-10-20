@@ -19,12 +19,16 @@ public class Location {
     @Column(name = "location_cost")
     private Double loc_cost;
 
+    @Column (name ="claimed")
+    private Boolean claim;
+
     // Default Constructor
     public Location() {
         this.loc_id=null;
         this.loc_name=null;
         this.loc_area=null;
         this.loc_cost=null;
+        this.claim=false;
     }
 
     public Location( String loc, String area, Double cost) {
@@ -63,5 +67,13 @@ public class Location {
 
     public void setCost(Double cost) {
         this.loc_cost=cost;
+    }
+
+    public Boolean getClaim() {
+        return claim;
+    }
+
+    public void setClaim(Boolean cl) {
+        this.claim=cl;
     }
 }

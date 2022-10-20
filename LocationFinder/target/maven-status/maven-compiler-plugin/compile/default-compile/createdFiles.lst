@@ -1,4 +1,9 @@
+LocationFinder\repositories\LocationRepository.class
 LocationFinder\repositories\UserRepository.class
 LocationFinder\controllers\UserController.class
 LocationFinder\models\User.class
+LocationFinder\services\UserService.class
 LocationFinder\LocationFinderApplication.class
+LocationFinder\models\Location.class
+LocationFinder\services\LocationService.class
+LocationFinder\controllers\LocationController.class
