@@ -32,7 +32,6 @@ public class LocationController {
             Location loc = new Location(loc_name, loc_area, loc_cost);
             locService.checkInvalid(loc);
 
-            loc.setClaim(false);
             locService.addLocation(loc);
             return "Saved";
         }

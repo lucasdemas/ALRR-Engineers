@@ -22,9 +22,10 @@ public class LocationService {
 //        return locRepository.findByTemplate(loc_id, loc_name, loc_area, loc_cost);
 //    }
 
-    public List<Location> addLocation(Location loc) {
+    public Location addLocation(Location loc) {
+        loc.setClaim(false);
         locRepository.save(loc);
-        return List.of(loc);
+        return loc;
     }
 
 
