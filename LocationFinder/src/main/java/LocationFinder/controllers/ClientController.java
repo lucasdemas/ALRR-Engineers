@@ -61,4 +61,23 @@ public class ClientController {
             return e.getMessage();
         }
     }
+
+    //Call to update the email of a client
+    @PostMapping(path="/updateEmail")
+    String updateClientEmail(@RequestParam Integer client_id,
+                             @RequestParam String client_email) {
+        try {
+            //Check to see if there is a client with the specified id
+            Client targetClient = clientServ.getClientById(client_id);
+
+            //Update client with email provided
+            Client updatedClient = clientServ.updateClientEmail(targetClient, client_email);
+            return "Client email updated successfully";
+        }
+        //Catch exception of not finding a client with that id
+        catch (NotFoundException e) {
+            return e.getMessage();
+        }
+        //Catch exception of client not providing valid a valid email address
+    }
 }

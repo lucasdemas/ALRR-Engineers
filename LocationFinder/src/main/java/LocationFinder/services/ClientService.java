@@ -33,6 +33,17 @@ public class ClientService {
         }
     }
 
+    //Function to update a specific client's email address
+    public Client updateClientEmail(Client client, String new_email) {
+        Client updatedClient = new Client();
+        updatedClient.setId(client.getId());
+        updatedClient.setName(client.getName());
+        //have a checker to see if the new email is valid, if not throw and exception
+        updatedClient.setEmail(new_email);
+        clientRepo.save(updatedClient);
+        return updatedClient;
+    }
+
     //Function to handle invalid entries for certain attributes given a clients values
     public void checkInvalid(Client client) throws InvalidTypeException {
         if (client.getName().trim().isEmpty()){
