@@ -10,6 +10,7 @@ LocationFinder\services\ClientService.class
 LocationFinder\exceptions\NotFoundException.class
 LocationFinder\models\User.class
 LocationFinder\services\UserService.class
+LocationFinder\exceptions\InvaildInputException.class
 LocationFinder\repositories\ClientRepository.class
 LocationFinder\services\LocationService.class
 LocationFinder\controllers\LocationController.class

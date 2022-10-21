@@ -1,5 +1,6 @@
 package LocationFinder.controllers;
 
+import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.repositories.LocationRepository;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.exceptions.InvalidTypeException;
@@ -58,15 +59,14 @@ public class LocationController {
 
     //Call to get all of the locations that are either claimed or unclaimed given the user's input
     @GetMapping(path="/getClaim/{isClaim}")
-    List<Location> getLocByClaim(@PathVariable String isClaim) {
-        if(isClaim.toLowerCase().equals("claimed")) {
-            return locRepository.findByClaim(true);
+    public ResponseEntity<?> getLocByClaim(@PathVariable String isClaim) {
+        try {
+            List<Location> searchResults = locService.getLocationByClaim(isClaim);
+            return new ResponseEntity<>(searchResults, HttpStatus.OK);
         }
-        else if(isClaim.toLowerCase().equals("unclaimed")) {
-            return locRepository.findByClaim(false);
+        catch (InvaildInputException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        
-        return locRepository.findByClaim(null);
     }
 
     //Call to update the cost of a location

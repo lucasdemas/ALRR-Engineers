@@ -99,7 +99,7 @@ public class ClientController {
             Client targetClient = clientServ.getClientById(client_id);
 
             //Delete the client from the repository with the given id
-            clientRepo.deleteById(client_id);
+            clientServ.deleteClientById(client_id);
             return "Client deleted successfully";
         }
         catch (NotFoundException e) {

@@ -1,5 +1,6 @@
 package LocationFinder.services;
 
+import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.models.Location;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.exceptions.InvalidTypeException;
@@ -42,6 +43,18 @@ public class LocationService {
     public void checkInvalid(Location loc) throws InvalidTypeException {
         if (loc.getCost() < 0){
             throw new InvalidTypeException("Location Cost can't be a negative number");
+        }
+    }
+
+    public List<Location> getLocationByClaim(String claim_status) throws InvaildInputException {
+        if(claim_status.toLowerCase().equals("claimed")) {
+            return locRepository.findByClaim(true);
+        }
+        else if(claim_status.toLowerCase().equals("unclaimed")) {
+            return locRepository.findByClaim(false);
+        }
+        else {
+            throw new InvaildInputException("Please specify whether you are searching for claimed or unclaimed spots");
         }
     }
 
