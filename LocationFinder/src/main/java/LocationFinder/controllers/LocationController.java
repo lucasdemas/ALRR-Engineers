@@ -21,17 +21,21 @@ public class LocationController {
 
     @Autowired
     private LocationService locService;
-    
+
+    //Call to add a new location to the database
     @PostMapping(path="/add")
     public String addNewLoc(@RequestParam String loc_name,
                     @RequestParam String loc_area,
                     @RequestParam Double loc_cost) {
-        // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
         try {
+            //Convert the user input into a location entity
             Location loc = new Location(loc_name, loc_area, loc_cost);
+
+            //Check that all of the data the user input is in a valid format
+            //Possibly add checker for if the user inputs a string of spaces (which is invalid)
             locService.checkInvalid(loc);
 
+            //Add the new location to the database
             locService.addLocation(loc);
             return "Saved";
         }
@@ -40,16 +44,19 @@ public class LocationController {
         }
     }
 
+    //Call to get back all of the location in the database
     @GetMapping(path="/getAll")
     Iterable<Location> getLocations() {
         return locRepository.findAll();
     }
-    
+
+    //Call to get all of the locations from a specific area
     @GetMapping(path="/get/{area}")
     List<Location> getLocByArea(@PathVariable String area) {
         return locRepository.findByArea(area);
     }
 
+    //Call to get all of the locations that are either claimed or unclaimed given the user's input
     @GetMapping(path="/getClaim/{isClaim}")
     List<Location> getLocByClaim(@PathVariable String isClaim) {
         if(isClaim.toLowerCase().equals("claimed")) {
@@ -62,6 +69,7 @@ public class LocationController {
         return locRepository.findByClaim(null);
     }
 
+    //Call to update the cost of a location
     @PostMapping(path="/updateCost")
     public String updateLocCost(@RequestParam Integer loc_id,
                                 @RequestParam Double loc_cost) {
@@ -72,7 +80,6 @@ public class LocationController {
 
             //Update the location's data in the database given the provided information by the user
             Location updatedLoc = locService.updateLocCost(targetLoc, loc_cost);
-//            locRepository.updateCost(loc_id, loc_cost);
             return "Updated location cost";
         }
         catch (NotFoundException e) {
@@ -80,6 +87,7 @@ public class LocationController {
         }
     }
 
+    //Call to update the claim status of a given location
     @PostMapping(path="/updateClaim")
     public String updateLocClaim(@RequestParam Integer loc_id,
                                 @RequestParam Boolean loc_claim) {
@@ -96,12 +104,15 @@ public class LocationController {
         }
     }
 
+    //Call to delete a location from the database
     @PostMapping(path="/delete")
     public String deleteLoc(@RequestParam Integer loc_id) {
         try {
             //Check to see if this is a valid location for this client
             Location targetLoc = locService.getLocById(loc_id);
-            locRepository.deleteById(loc_id);
+
+            //Delete the location from the database
+            locService.deleteLocationById(loc_id);
             return "Deleted location";
         }
         catch (NotFoundException e) {

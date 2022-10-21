@@ -60,5 +60,9 @@ public class LocationService {
         locRepository.save(updatedLoc);
         return updatedLoc;
     }
+
+    public void deleteLocationById(Integer id) {
+        locRepository.deleteById(id);
+    }
 }
 
