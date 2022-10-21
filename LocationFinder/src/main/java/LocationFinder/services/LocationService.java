@@ -41,7 +41,13 @@ public class LocationService {
     }
 
     public void checkInvalid(Location loc) throws InvalidTypeException {
-        if (loc.getCost() < 0){
+        if (loc.getName().trim().isEmpty()) {
+            throw new InvalidTypeException("Location name cannot be blank");
+        }
+        else if (loc.getArea().trim().isEmpty()) {
+            throw new InvalidTypeException("Location area cannot be blank");
+        }
+        else if (loc.getCost() < 0){
             throw new InvalidTypeException("Location Cost can't be a negative number");
         }
     }
