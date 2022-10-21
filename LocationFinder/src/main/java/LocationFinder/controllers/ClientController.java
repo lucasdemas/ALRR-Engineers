@@ -27,8 +27,12 @@ public class ClientController {
             Client newClient = new Client();
             newClient.setName(client_name);
             newClient.setEmail(client_email);
+
             //Check that the inputted data is valid
             clientServ.checkInvalid(newClient);
+
+            //Check that the email provided is a valid email format
+            clientServ.checkEmail(client_email);
 
             //If data is valid add new client to table
             clientServ.addClient(newClient);
@@ -68,6 +72,9 @@ public class ClientController {
             //Check to see if there is a client with the specified id
             Client targetClient = clientServ.getClientById(client_id);
 
+            //Check to see if the email they provided is valid or not
+            clientServ.checkEmail(client_email);
+
             //Update client with email provided
             Client updatedClient = clientServ.updateClientEmail(targetClient, client_email);
             return "Client email updated successfully";
@@ -77,6 +84,9 @@ public class ClientController {
             return e.getMessage();
         }
         //Catch exception of client not providing valid a valid email address
+        catch (InvalidTypeException e) {
+            return e.getMessage();
+        }
     }
 
     //Call to delete a specific client given the provided client id
