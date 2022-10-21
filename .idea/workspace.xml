@@ -2,10 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f443563e-a07a-4aae-9051-59939e357ede" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/controllers/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/controllers/ClientController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/controllers/LocationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/controllers/LocationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/exceptions/InvalidTypeException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/services/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/services/ClientService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/services/LocationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/services/LocationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocationFinder/target/classes/LocationFinder/LocationFinderApplication.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -13,8 +18,14 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="KotlinCodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -38,7 +49,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.customizations"
+    "settings.editor.selected.configurable": "fileTemplates"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -53,6 +64,7 @@
       <workItem from="1666107752815" duration="2136000" />
       <workItem from="1666109968169" duration="2572000" />
       <workItem from="1666280290826" duration="8184000" />
+      <workItem from="1666371930737" duration="7909000" />
     </task>
     <servers />
   </component>

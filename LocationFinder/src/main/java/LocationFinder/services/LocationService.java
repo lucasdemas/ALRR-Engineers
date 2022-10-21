@@ -1,13 +1,15 @@
 package LocationFinder.services;
 
-import LocationFinder.exceptions.InvaildInputException;
+
 import LocationFinder.models.Location;
 import LocationFinder.exceptions.NotFoundException;
-import LocationFinder.exceptions.InvalidTypeException;
+import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import com.sun.jdi.InvalidTypeException;
+
 
 
 import java.util.Collections;

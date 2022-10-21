@@ -1,6 +1,7 @@
 package LocationFinder.services;
 
-import LocationFinder.exceptions.InvalidTypeException;
+
+import com.sun.jdi.InvalidTypeException;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.models.Client;
 import LocationFinder.repositories.ClientRepository;
