@@ -1,5 +1,6 @@
 package LocationFinder.controllers;
 
+import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.repositories.LocationRepository;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.exceptions.InvalidTypeException;
@@ -21,49 +22,56 @@ public class LocationController {
 
     @Autowired
     private LocationService locService;
-    
+
+    //Call to add a new location to the database
     @PostMapping(path="/add")
-    public String addNewLoc(@RequestParam String loc_name,
+    public ResponseEntity<?> addNewLoc(@RequestParam String loc_name,
                     @RequestParam String loc_area,
                     @RequestParam Double loc_cost) {
-        // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
         try {
+            //Convert the user input into a location entity
             Location loc = new Location(loc_name, loc_area, loc_cost);
+
+            //Check that all of the data the user input is in a valid format
+            //Possibly add checker for if the user inputs a string of spaces (which is invalid)
             locService.checkInvalid(loc);
 
-            locService.addLocation(loc);
-            return "Saved";
+            //Add the new location to the database
+            Location savedLocation = locService.addLocation(loc);
+            return new ResponseEntity<>(savedLocation, HttpStatus.CREATED);
         }
         catch (InvalidTypeException e)  {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
+    //Call to get back all of the location in the database
     @GetMapping(path="/getAll")
-    Iterable<Location> getLocations() {
-        return locRepository.findAll();
+    public ResponseEntity<?> getLocations() {
+        return new ResponseEntity<>(locRepository.findAll(), HttpStatus.OK);
     }
-    
+
+    //Call to get all of the locations from a specific area
     @GetMapping(path="/get/{area}")
-    List<Location> getLocByArea(@PathVariable String area) {
-        return locRepository.findByArea(area);
+    public ResponseEntity<?> getLocByArea(@PathVariable String area) {
+        return new ResponseEntity<>(locRepository.findByArea(area), HttpStatus.OK);
     }
 
+    //Call to get all of the locations that are either claimed or unclaimed given the user's input
     @GetMapping(path="/getClaim/{isClaim}")
-    List<Location> getLocByClaim(@PathVariable String isClaim) {
-        if(isClaim.toLowerCase().equals("claimed")) {
-            return locRepository.findByClaim(true);
+    public ResponseEntity<?> getLocByClaim(@PathVariable String isClaim) {
+        try {
+            List<Location> searchResults = locService.getLocationByClaim(isClaim);
+            return new ResponseEntity<>(searchResults, HttpStatus.OK);
         }
-        else if(isClaim.toLowerCase().equals("unclaimed")) {
-            return locRepository.findByClaim(false);
+        catch (InvaildInputException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        
-        return locRepository.findByClaim(null);
     }
 
+    //Call to update the cost of a location
     @PostMapping(path="/updateCost")
-    public String updateLocCost(@RequestParam Integer loc_id,
+    public ResponseEntity<?> updateLocCost(@RequestParam Integer loc_id,
                                 @RequestParam Double loc_cost) {
         //Get the location based on the id provided
         try {
@@ -72,16 +80,16 @@ public class LocationController {
 
             //Update the location's data in the database given the provided information by the user
             Location updatedLoc = locService.updateLocCost(targetLoc, loc_cost);
-//            locRepository.updateCost(loc_id, loc_cost);
-            return "Updated location cost";
+            return new ResponseEntity<>(updatedLoc, HttpStatus.OK);
         }
         catch (NotFoundException e) {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
+    //Call to update the claim status of a given location
     @PostMapping(path="/updateClaim")
-    public String updateLocClaim(@RequestParam Integer loc_id,
+    public ResponseEntity<?> updateLocClaim(@RequestParam Integer loc_id,
                                 @RequestParam Boolean loc_claim) {
         try {
             //Check to see if the location is in the DB and get it's data
@@ -89,23 +97,26 @@ public class LocationController {
 
             //Update the location's data in the database given the provided information by the user
             Location updatedLoc = locService.updateLocClaim(targetLoc, loc_claim);
-            return "Updated claim status";
+            return new ResponseEntity<>(updatedLoc, HttpStatus.OK);
         }
         catch (NotFoundException e) {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
+    //Call to delete a location from the database
     @PostMapping(path="/delete")
-    public String deleteLoc(@RequestParam Integer loc_id) {
+    public ResponseEntity<?> deleteLoc(@RequestParam Integer loc_id) {
         try {
             //Check to see if this is a valid location for this client
             Location targetLoc = locService.getLocById(loc_id);
-            locRepository.deleteById(loc_id);
-            return "Deleted location";
+
+            //Delete the location from the database
+            locService.deleteLocationById(loc_id);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }

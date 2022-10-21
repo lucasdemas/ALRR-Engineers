@@ -6,6 +6,8 @@ import LocationFinder.repositories.ClientRepository;
 import LocationFinder.models.Client;
 import LocationFinder.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,8 +22,8 @@ public class ClientController {
 
     //Call to add a new client to the database
     @PostMapping(path="/add")
-    public String addNewClient(@RequestParam String client_name,
-                            @RequestParam String client_email) {
+    public ResponseEntity<?> addNewClient(@RequestParam String client_name,
+                                       @RequestParam String client_email) {
         try {
             //Create a new client and add the data provided by the user
             Client newClient = new Client();
@@ -35,38 +37,36 @@ public class ClientController {
             clientServ.checkEmail(client_email);
 
             //If data is valid add new client to table
-            clientServ.addClient(newClient);
-            return "Saved";
+            Client addedClient = clientServ.addClient(newClient);
+            return new ResponseEntity<>(addedClient, HttpStatus.CREATED);
         }
         catch (InvalidTypeException e)  {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
     //Call to get all of the clients from our database table
     @GetMapping(path="/getAll")
-    public Iterable<Client> getClients() {
-        return clientRepo.findAll();
+    public ResponseEntity<?> getClients() {
+        return new ResponseEntity<>(clientRepo.findAll(), HttpStatus.OK);
     }
 
     //Call to get a specific client by their id
     @GetMapping(path="/get/{id}")
-    public String getClientById(@PathVariable Integer id) {
+    public ResponseEntity<?> getClientById(@PathVariable Integer id) {
         //Search for the client in the client table based on the provided id (if there is a client with that id)
         try {
             Client targetClient = clientServ.getClientById(id);
-            return "Client id: " + targetClient.getId().toString() +
-                    "\nClient Name:  " + targetClient.getName() +
-                    "\nClient Email:  " + targetClient.getEmail();
+            return new ResponseEntity<>(targetClient, HttpStatus.OK);
         }
         catch(NotFoundException e) {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     //Call to update the email of a client
     @PostMapping(path="/updateEmail")
-    public String updateClientEmail(@RequestParam Integer client_id,
+    public ResponseEntity<?> updateClientEmail(@RequestParam Integer client_id,
                              @RequestParam String client_email) {
         try {
             //Check to see if there is a client with the specified id
@@ -77,33 +77,33 @@ public class ClientController {
 
             //Update client with email provided
             Client updatedClient = clientServ.updateClientEmail(targetClient, client_email);
-            return "Client email updated successfully";
+            return new ResponseEntity<>(updatedClient, HttpStatus.OK);
         }
         //Catch exception of not finding a client with that id
         catch (NotFoundException e) {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         //Catch exception of client not providing valid a valid email address
         catch (InvalidTypeException e) {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
     //Call to delete a specific client given the provided client id
     //Might change in future depending if client id is stored so that a client can only delete themselves
     @PostMapping(path="/delete")
-    public String deleteClient(@RequestParam Integer client_id) {
+    public ResponseEntity<?> deleteClient(@RequestParam Integer client_id) {
         //find the client with the given id
         try {
             //Check to see if there is a client with the specified id
             Client targetClient = clientServ.getClientById(client_id);
 
             //Delete the client from the repository with the given id
-            clientRepo.deleteById(client_id);
-            return "Client deleted successfully";
+            clientServ.deleteClientById(client_id);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
