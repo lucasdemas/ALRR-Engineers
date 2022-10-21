@@ -25,7 +25,7 @@ public class LocationController {
 
     //Call to add a new location to the database
     @PostMapping(path="/add")
-    public String addNewLoc(@RequestParam String loc_name,
+    public ResponseEntity<?> addNewLoc(@RequestParam String loc_name,
                     @RequestParam String loc_area,
                     @RequestParam Double loc_cost) {
         try {
@@ -37,24 +37,24 @@ public class LocationController {
             locService.checkInvalid(loc);
 
             //Add the new location to the database
-            locService.addLocation(loc);
-            return "Saved";
+            Location savedLocation = locService.addLocation(loc);
+            return new ResponseEntity<>(savedLocation, HttpStatus.CREATED);
         }
         catch (InvalidTypeException e)  {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
     //Call to get back all of the location in the database
     @GetMapping(path="/getAll")
-    Iterable<Location> getLocations() {
-        return locRepository.findAll();
+    public ResponseEntity<?> getLocations() {
+        return new ResponseEntity<>(locRepository.findAll(), HttpStatus.OK);
     }
 
     //Call to get all of the locations from a specific area
     @GetMapping(path="/get/{area}")
-    List<Location> getLocByArea(@PathVariable String area) {
-        return locRepository.findByArea(area);
+    public ResponseEntity<?> getLocByArea(@PathVariable String area) {
+        return new ResponseEntity<>(locRepository.findByArea(area), HttpStatus.OK);
     }
 
     //Call to get all of the locations that are either claimed or unclaimed given the user's input
@@ -71,7 +71,7 @@ public class LocationController {
 
     //Call to update the cost of a location
     @PostMapping(path="/updateCost")
-    public String updateLocCost(@RequestParam Integer loc_id,
+    public ResponseEntity<?> updateLocCost(@RequestParam Integer loc_id,
                                 @RequestParam Double loc_cost) {
         //Get the location based on the id provided
         try {
@@ -80,16 +80,16 @@ public class LocationController {
 
             //Update the location's data in the database given the provided information by the user
             Location updatedLoc = locService.updateLocCost(targetLoc, loc_cost);
-            return "Updated location cost";
+            return new ResponseEntity<>(updatedLoc, HttpStatus.OK);
         }
         catch (NotFoundException e) {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     //Call to update the claim status of a given location
     @PostMapping(path="/updateClaim")
-    public String updateLocClaim(@RequestParam Integer loc_id,
+    public ResponseEntity<?> updateLocClaim(@RequestParam Integer loc_id,
                                 @RequestParam Boolean loc_claim) {
         try {
             //Check to see if the location is in the DB and get it's data
@@ -97,26 +97,26 @@ public class LocationController {
 
             //Update the location's data in the database given the provided information by the user
             Location updatedLoc = locService.updateLocClaim(targetLoc, loc_claim);
-            return "Updated claim status";
+            return new ResponseEntity<>(updatedLoc, HttpStatus.OK);
         }
         catch (NotFoundException e) {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     //Call to delete a location from the database
     @PostMapping(path="/delete")
-    public String deleteLoc(@RequestParam Integer loc_id) {
+    public ResponseEntity<?> deleteLoc(@RequestParam Integer loc_id) {
         try {
             //Check to see if this is a valid location for this client
             Location targetLoc = locService.getLocById(loc_id);
 
             //Delete the location from the database
             locService.deleteLocationById(loc_id);
-            return "Deleted location";
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
