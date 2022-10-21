@@ -27,15 +27,19 @@ public class LocationController {
     private LocationService locService;
 
     //Exception handling for InvalidTypeInput
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<?> handleInvalidNumber(NumberFormatException e){
+
+        return new ResponseEntity<>("Cost Must be a positive numeric value", HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 
 
 
     //Call to add a new location to the database
-
     @PostMapping(path="/add")
     public ResponseEntity<?> addNewLoc(@RequestParam String loc_name,
                     @RequestParam String loc_area,
-                    @RequestParam Double loc_cost){
+                    @RequestParam Double loc_cost) {
         try {
 
             System.out.println("Before new location");
