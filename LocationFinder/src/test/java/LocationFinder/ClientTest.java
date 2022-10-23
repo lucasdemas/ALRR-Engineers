@@ -68,29 +68,30 @@ class ClientTest {
         assertEquals(clientResult.getEmail(), "ClientTest@client.com");
     }
 
-    /*
+
     @Test
-    public void TestUpdateClientEmail() {
+    public void TestUpdateClientEmail() throws NotFoundException {
 
 
         Client client1 = new Client(100, "Client Test", "ClientTest@client.com");
 
-        Client client2 = new Client(100, "Client Test", "ClientTest2@client.com");
         //Optional<Client> optClient = Optional.of(client1);
         //Mockito.when(clientRepo.findById(100)).thenReturn(optClient);
 
+        Optional<Client> optClient = Optional.of(client1);
+        Mockito.when(clientRepo.findById(100)).thenReturn(optClient);
+
         Mockito.when(clientRepo.existsById(100)).thenReturn(true);
 
-        Mockito.when(userRepo.save(updatedUser)).thenReturn(updatedUser);
+        //Mockito.when(clientServ.getClientById(100)).thenReturn(client1);
+        Mockito.when(clientRepo.save(client1)).thenReturn(client1);
 
-        Client clientResult = clientServ.getClientById(100);
+        Client clientResult = clientServ.updateClientEmail(100,"UpdatedClientTest@client.com");
 
-        assertEquals(clientResult.getId(), 100);
-        assertEquals(clientResult.getName(), "Client Test");
-        assertEquals(clientResult.getEmail(), "ClientTest@client.com");
+        assertEquals(clientResult.getEmail(), "UpdatedClientTest@client.com");
     }
 
-*/
+
 
 
     // Testing to see if we can add a new location
