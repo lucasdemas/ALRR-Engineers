@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import LocationFinder.exceptions.NotFoundException;
 import org.junit.jupiter.params.ParameterizedTest;
+import java.util.Optional;
 
 
 
@@ -27,17 +28,19 @@ class ClientTest {
 
     @MockBean
     private ClientRepository clientRepo;
-/*
-    @Test(expected = NotFoundException.class)
-    public void testDeleteClient(ClientTest client) throws NotFoundException{
+//Figure out catch exception junit 5
+
+    /*
+    @Test
+    public void testDeleteClient() throws NotFoundException{
 
         Mockito.when(clientRepo.existsById(100)).thenReturn(false);
+
 
         clientServ.deleteClientById(100);
 
     }
-
- */
+*/
 
     @Test
     public void testAddClient() {
@@ -48,6 +51,21 @@ class ClientTest {
 
         Mockito.when(clientRepo.save(client1)).thenReturn(client2);
         assertEquals(clientServ.addClient(client1).getId(), 100);
+    }
+
+    @Test
+    public void TestGetClientById() throws NotFoundException {
+
+
+        Client client1 = new Client(100, "Client Test", "ClientTest@client.com");
+        Optional<Client> optClient = Optional.of(client1);
+        Mockito.when(clientRepo.findById(100)).thenReturn(optClient);
+
+        Client clientResult = clientServ.getClientById(100);
+
+        assertEquals(clientResult.getId(), 100);
+        assertEquals(clientResult.getName(), "Client Test");
+        assertEquals(clientResult.getEmail(), "ClientTest@client.com");
     }
 
     // Testing to see if we can add a new location

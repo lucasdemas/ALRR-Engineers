@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f443563e-a07a-4aae-9051-59939e357ede" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/controllers/LocationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/controllers/LocationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocationFinder/src/test/java/LocationFinder/ClientTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/test/java/LocationFinder/ClientTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +41,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "fileTemplates"
+    "settings.editor.selected.configurable": "editor.preferences.import"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -57,7 +56,7 @@
       <workItem from="1666107752815" duration="2136000" />
       <workItem from="1666109968169" duration="2572000" />
       <workItem from="1666280290826" duration="8184000" />
-      <workItem from="1666371930737" duration="8821000" />
+      <workItem from="1666371930737" duration="15195000" />
     </task>
     <servers />
   </component>
