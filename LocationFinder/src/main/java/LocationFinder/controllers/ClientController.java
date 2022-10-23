@@ -2,6 +2,7 @@ package LocationFinder.controllers;
 
 
 
+import LocationFinder.exceptions.InvaildInputException;
 import com.sun.jdi.InvalidTypeException;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.repositories.ClientRepository;
@@ -42,7 +43,7 @@ public class ClientController {
             Client addedClient = clientServ.addClient(newClient);
             return new ResponseEntity<>(addedClient, HttpStatus.CREATED);
         }
-        catch (InvalidTypeException e)  {
+        catch (InvaildInputException e)  {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
@@ -85,7 +86,7 @@ public class ClientController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         //Catch exception of client not providing valid a valid email address
-        catch (InvalidTypeException e) {
+        catch (InvaildInputException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }

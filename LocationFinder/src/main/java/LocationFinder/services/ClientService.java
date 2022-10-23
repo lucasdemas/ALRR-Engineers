@@ -3,6 +3,7 @@ package LocationFinder.services;
 
 import com.sun.jdi.InvalidTypeException;
 import LocationFinder.exceptions.NotFoundException;
+import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.models.Client;
 import LocationFinder.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,19 +57,19 @@ public class ClientService {
     }
 
     //Function to handle invalid entries for certain attributes given a clients values
-    public void checkInvalid(Client client) throws InvalidTypeException {
+    public void checkInvalid(Client client) throws InvaildInputException {
         if (client.getName().trim().isEmpty()){
-            throw new InvalidTypeException("Client name cannot be blank");
+            throw new InvaildInputException("Client name cannot be blank");
         }
     }
 
     //Function that will check if the email format provided when adding a new client or updating an existing client's email is the correct format
-    public void checkEmail(String email) throws InvalidTypeException{
+    public void checkEmail(String email) throws InvaildInputException{
         String emailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
         Pattern emailPat = Pattern.compile(emailRegex, Pattern.CASE_INSENSITIVE);
         Matcher emailMatcher = emailPat.matcher(email);
         if(!emailMatcher.find()) {
-            throw new InvalidTypeException("Please enter a valid email format");
+            throw new InvaildInputException("Please enter a valid email format");
         }
     }
 

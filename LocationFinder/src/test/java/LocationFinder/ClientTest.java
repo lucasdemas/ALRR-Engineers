@@ -1,13 +1,13 @@
 package LocationFinder;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.models.Client;
-import LocationFinder.controllers.ClientController;
 import LocationFinder.repositories.ClientRepository;
 import LocationFinder.services.ClientService;
 import org.junit.Rule;
 import org.junit.jupiter.api.Test;
-//import org.junit.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import LocationFinder.exceptions.NotFoundException;
-import org.junit.jupiter.params.ParameterizedTest;
 import java.util.Optional;
 
 
@@ -32,8 +31,6 @@ class ClientTest {
     @MockBean
     private ClientRepository clientRepo;
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 //Figure out catch exception junit 5
 
     //Test for attempting to delete a client who does not exist (no client with the specified client id)
@@ -94,7 +91,7 @@ class ClientTest {
         });
     }
 
-
+    //Test to successfully update a client's email
     @Test
     public void testUpdateClientEmail() throws NotFoundException {
 
@@ -115,6 +112,17 @@ class ClientTest {
         Client clientResult = clientServ.updateClientEmail(100,"UpdatedClientTest@client.com");
 
         assertEquals(clientResult.getEmail(), "UpdatedClientTest@client.com");
+    }
+
+    //Test to throw exception when an email is in a invailid format
+    @Test
+    public void invalidEmailException() {
+        assertThrows(InvaildInputException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                clientServ.checkEmail("@invlaidformat.com");
+            }
+        });
     }
 
 
