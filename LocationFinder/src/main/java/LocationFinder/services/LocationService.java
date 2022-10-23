@@ -15,6 +15,7 @@ import com.sun.jdi.InvalidTypeException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.*;
 
 @Service
 public class LocationService {
@@ -56,10 +57,14 @@ public class LocationService {
 
     public List<Location> getLocationByClaim(String claim_status) throws InvaildInputException {
         if(claim_status.toLowerCase().equals("claimed")) {
-            return locRepository.findByClaim(true);
+            List<Location> location_list = new LinkedList();
+            location_list = locRepository.findByClaim(true);
+            return location_list;
         }
         else if(claim_status.toLowerCase().equals("unclaimed")) {
-            return locRepository.findByClaim(false);
+            List<Location> location_list = new LinkedList();
+            location_list = locRepository.findByClaim(false);
+            return location_list;
         }
         else {
             throw new InvaildInputException("Please specify whether you are searching for claimed or unclaimed spots");

@@ -19,8 +19,8 @@ import LocationFinder.exceptions.NotFoundException;
 import java.util.Optional;
 
 import java.util.List;
+import java.util.*;
 
-import java.util.List;
 
 @RunWith (SpringRunner.class)
 @SpringBootTest
@@ -76,6 +76,7 @@ class LocationTest {
 
         //Create a mock location that will represent the data that would be passed in for when a new location is added
         Location loc1 = new Location();
+        loc1.setClaim(false);
         loc1.setId(100);
         loc1.setName("Times Square");
         loc1.setArea("New York");
@@ -92,13 +93,68 @@ class LocationTest {
         Location locationResult = locServ.getLocById(100);
 
         //Check to see that the results of the service returned the correct data
+        assertEquals(locationResult.getClaim(), false);
         assertEquals(locationResult.getId(), 100);
         assertEquals(locationResult.getName(), "Times Square");
         assertEquals(locationResult.getArea(), "New York");
         assertEquals(locationResult.getCost(), 20.0);
     }
 
+    @Test
+    public void testGetLocationByIdException() {
+        assertThrows(NotFoundException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                //Tell the mock repo that there is no client with id 100
+                Mockito.when(locRepo.existsById(100)).thenReturn(false);
 
+                //Try and get a client with the id 100 (which results in a NotFound exception)
+                locServ.getLocById(100);
+            }
+        });
+    }
+    @Test
+    public void testGetLocationByClaim() throws InvaildInputException {
+
+        //Create a mock location that will represent the data that would be passed in for when a new location is added
+        Location loc1 = new Location();
+        loc1.setClaim(false);
+        loc1.setId(100);
+        loc1.setName("Times Square");
+        loc1.setArea("New York");
+        loc1.setCost(20.0);
+
+        Location loc2 = new Location();
+        loc2.setClaim(false);
+        loc2.setId(100);
+        loc2.setName("Midtown");
+        loc2.setArea("New York");
+        loc2.setCost(30.0);
+
+        List<Location> location_list = new LinkedList();
+        location_list.add(loc1);
+        location_list.add(loc2);
+
+
+        Mockito.when(locRepo.findByClaim(false)).thenReturn(location_list);
+        //Have the client be returned in the format that findById is looking for in the cleintRepo
+        List<Location> searchResults = locServ.getLocationByClaim("unclaimed");
+
+        //Have the mock return the formatted client when it look for a client with the id 100
+
+        //Check to see that the results of the service returned the correct data
+        assertEquals(searchResults.get(0).getClaim(), false);
+        assertEquals(searchResults.get(0).getId(), 100);
+        assertEquals(searchResults.get(0).getName(), "Times Square");
+        assertEquals(searchResults.get(0).getArea(), "New York");
+        assertEquals(searchResults.get(0).getCost(), 20.0);
+
+        assertEquals(searchResults.get(1).getClaim(), false);
+        assertEquals(searchResults.get(1).getId(), 100);
+        assertEquals(searchResults.get(1).getName(), "Midtown");
+        assertEquals(searchResults.get(1).getArea(), "New York");
+        assertEquals(searchResults.get(1).getCost(), 30.0);
+    }
 
     // Testing to see if we can add a new location
 //    @Test

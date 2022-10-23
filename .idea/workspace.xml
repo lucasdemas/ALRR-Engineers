@@ -5,8 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/services/LocationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/services/LocationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocationFinder/src/test/java/LocationFinder/LocationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/test/java/LocationFinder/LocationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocationFinder/target/classes/LocationFinder/LocationFinderApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
