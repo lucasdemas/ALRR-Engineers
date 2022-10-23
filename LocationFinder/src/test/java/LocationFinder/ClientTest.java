@@ -36,19 +36,22 @@ class ClientTest {
     public ExpectedException exception = ExpectedException.none();
 //Figure out catch exception junit 5
 
+    //Test for attempting to delete a client who does not exist (no client with the specified client id)
     @Test
     public void testDeleteClient() {
-
         assertThrows(NotFoundException.class, new Executable() {
             @Override
             public void execute() throws Throwable {
+                //Have the mock repo say that there is no client with the id 100
                 Mockito.when(clientRepo.existsById(100)).thenReturn(false);
+
+                //Try to delete the client with id 100 and get the thrown error
                 clientServ.deleteClientById(100);
             }
         });
     }
 
-
+    //Test to successfully add a client to the database
     @Test
     public void testAddClient() {
 
@@ -60,8 +63,9 @@ class ClientTest {
         assertEquals(clientServ.addClient(client1).getId(), 100);
     }
 
+    //Test to successfully get a specific client based on the client id
     @Test
-    public void TestGetClientById() throws NotFoundException {
+    public void testGetClientById() throws NotFoundException {
 
 
         Client client1 = new Client(100, "Client Test", "ClientTest@client.com");
@@ -75,9 +79,24 @@ class ClientTest {
         assertEquals(clientResult.getEmail(), "ClientTest@client.com");
     }
 
+    //Test to get a client id that does not exist in the database
+    @Test
+    public void testGetClientByIdException() {
+        assertThrows(NotFoundException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                //Tell the mock repo that there is no client with id 100
+                Mockito.when(clientRepo.existsById(100)).thenReturn(false);
+
+                //Try and get a client with the id 100 (which results in a NotFound exception)
+                clientServ.getClientById(100);
+            }
+        });
+    }
+
 
     @Test
-    public void TestUpdateClientEmail() throws NotFoundException {
+    public void testUpdateClientEmail() throws NotFoundException {
 
 
         Client client1 = new Client(100, "Client Test", "ClientTest@client.com");
