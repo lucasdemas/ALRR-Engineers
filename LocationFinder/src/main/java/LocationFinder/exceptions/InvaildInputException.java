@@ -1,7 +1,7 @@
 package LocationFinder.exceptions;
 
 public class InvaildInputException extends Exception {
-    public InvaildInputException(String str){
+    public InvaildInputException(final String str) {
         super(str);
     }
 }
