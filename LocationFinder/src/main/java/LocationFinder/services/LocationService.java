@@ -27,8 +27,8 @@ public class LocationService {
 
     public Location addLocation(Location loc) {
         loc.setClaim(false);
-        locRepository.save(loc);
-        return loc;
+        Location fullLocation = locRepository.save(loc);
+        return fullLocation;
     }
 
 

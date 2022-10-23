@@ -50,22 +50,52 @@ class LocationTest {
     public void testAddLocation() {
         //Create a mock location that will represent the data that would be passed in for when a new location is added
         Location loc1 = new Location();
-        loc1.setName("Location Name Test");
-        loc1.setArea("Location area Test");
+        loc1.setId(null);
+        loc1.setClaim(false);
+        loc1.setName("Times Square");
+        loc1.setArea("New York");
         loc1.setCost(20.0);
 
         //Create a second mock location to represent that the mock client will be given the location id 100 when added to the repo
         Location loc2 = new Location();
-        loc1.setId(100);
-        loc1.setName("Location Name Test");
-        loc1.setArea("Location area Test");
-        loc1.setCost(20.0);
+        loc2.setClaim(false);
+        loc2.setId(100);
+        loc2.setName("Times Square");
+        loc2.setArea("New York");
+        loc2.setCost(20.0);
 
-        //Have the mock return the second mock client when it will save the first one to the client repo
+        //Have the mock return the second mock location when it will save the first one to the location repo
         Mockito.when(locRepo.save(loc1)).thenReturn(loc2);
 
-        //Check to see that the fist mock client's id was updated to 100 after being added to the client repo
+        //Check to see that the fist mock location's id was updated to 100 after being added to the location repo
         assertEquals(locServ.addLocation(loc1).getId(), 100);
+    }
+
+    @Test
+    public void testGetLocationById() throws NotFoundException {
+
+        //Create a mock location that will represent the data that would be passed in for when a new location is added
+        Location loc1 = new Location();
+        loc1.setId(100);
+        loc1.setName("Times Square");
+        loc1.setArea("New York");
+        loc1.setCost(20.0);
+
+
+        //Have the client be returned in the format that findById is looking for in the cleintRepo
+        Optional<Location> optLocation = Optional.of(loc1);
+
+        //Have the mock return the formatted client when it look for a client with the id 100
+        Mockito.when(locRepo.findById(100)).thenReturn(optLocation);
+
+        //Get the result of searching for a client with the id 100
+        Location locationResult = locServ.getLocById(100);
+
+        //Check to see that the results of the service returned the correct data
+        assertEquals(locationResult.getId(), 100);
+        assertEquals(locationResult.getName(), "Times Square");
+        assertEquals(locationResult.getArea(), "New York");
+        assertEquals(locationResult.getCost(), 20.0);
     }
 
 
