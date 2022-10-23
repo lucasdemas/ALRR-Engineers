@@ -82,8 +82,16 @@ public class LocationService {
         return updatedLoc;
     }
 
-    public void deleteLocationById(Integer id) {
+    public void deleteLocationById(Integer id) throws NotFoundException{
+        if(locRepository.existsById(id)) {
+
         locRepository.deleteById(id);
+        }
+        else {
+            throw new NotFoundException("There is no location with that id");
+
+        }
+
     }
 }
 

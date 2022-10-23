@@ -57,6 +57,7 @@ class ClientTest {
         assertEquals(clientServ.addClient(client1).getId(), 100);
     }
 
+
     //Test to successfully get a specific client based on the client id
     @Test
     public void testGetClientById() throws NotFoundException {

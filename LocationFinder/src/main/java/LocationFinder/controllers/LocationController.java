@@ -42,16 +42,13 @@ public class LocationController {
                     @RequestParam Double loc_cost) {
         try {
 
-            System.out.println("Before new location");
             //Convert the user input into a location entity
             Location loc = new Location(loc_name, loc_area, loc_cost);
 
             //Check that all of the data the user input is in a valid format
             //Possibly add checker for if the user inputs a string of spaces (which is invalid)
-            System.out.println("Before Check Invalid");
             locService.checkInvalid(loc);
 
-            System.out.println("Before Add");
             //Add the new location to the database
             Location savedLocation = locService.addLocation(loc);
             return new ResponseEntity<>(savedLocation, HttpStatus.CREATED);
@@ -129,8 +126,6 @@ public class LocationController {
     @PostMapping(path="/delete")
     public ResponseEntity<?> deleteLoc(@RequestParam Integer loc_id) {
         try {
-            //Check to see if this is a valid location for this client
-            Location targetLoc = locService.getLocById(loc_id);
 
             //Delete the location from the database
             locService.deleteLocationById(loc_id);
