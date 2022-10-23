@@ -21,8 +21,8 @@ public class ClientService {
 
     //Function to save client to client repository
     public Client addClient(Client client) {
-        clientRepo.save(client);
-        return client;
+        Client fullClient = clientRepo.save(client);
+        return fullClient;
     }
 
     //Function to get a client by a provided id
@@ -64,8 +64,14 @@ public class ClientService {
         }
     }
 
-    public void deleteClientById(Integer id) {
-        clientRepo.deleteById(id);
+    public void deleteClientById(Integer id) throws NotFoundException{
+        if (clientRepo.existsById(id)){
+
+        clientRepo.deleteById(id);}
+
+        else {
+            throw new NotFoundException("There is no client with that id");
+        }
     }
 
 }
