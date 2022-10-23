@@ -166,14 +166,28 @@ class LocationTest {
                 Location loc1 = new Location();
                 loc1.setClaim(false);
                 loc1.setId(100);
-                loc1.setName(" ");
-                loc1.setArea("New York");
+                loc1.setName("Times square");
+                loc1.setArea(" ");
                 loc1.setCost(20.0);
                 locServ.checkInvalid(loc1);
             }
         });
     }
-
+    @Test
+    public void testCheckInvalidCost() throws InvalidTypeException {
+        assertThrows(InvalidTypeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                Location loc1 = new Location();
+                loc1.setClaim(false);
+                loc1.setId(100);
+                loc1.setName("Times square");
+                loc1.setArea("New York");
+                loc1.setCost(-20.0);
+                locServ.checkInvalid(loc1);
+            }
+        });
+    }
 
     @Test
     public void testupdateLocClaim()  {
