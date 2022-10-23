@@ -34,17 +34,25 @@ public class ClientService {
         } else {
             throw new NotFoundException("There is no client with that id");
         }
+
     }
 
     //Function to update a specific client's email address
-    public Client updateClientEmail(Client client, String new_email) {
-        Client updatedClient = new Client();
-        updatedClient.setId(client.getId());
-        updatedClient.setName(client.getName());
+    public Client updateClientEmail(Integer client_id, String new_email) throws NotFoundException{
+
+        if (clientRepo.existsById(client_id)){
+
         //have a checker to see if the new email is valid, if not throw and exception
-        updatedClient.setEmail(new_email);
-        clientRepo.save(updatedClient);
-        return updatedClient;
+
+            Client updatedClient = getClientById(client_id);
+            updatedClient.setEmail(new_email);
+            clientRepo.save(updatedClient);
+
+            return updatedClient;
+    }
+    else {
+            throw new NotFoundException("There is no client with that id");
+        }
     }
 
     //Function to handle invalid entries for certain attributes given a clients values

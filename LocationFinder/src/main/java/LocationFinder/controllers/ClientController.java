@@ -72,13 +72,12 @@ public class ClientController {
                              @RequestParam String client_email) {
         try {
             //Check to see if there is a client with the specified id
-            Client targetClient = clientServ.getClientById(client_id);
 
             //Check to see if the email they provided is valid or not
             clientServ.checkEmail(client_email);
 
             //Update client with email provided
-            Client updatedClient = clientServ.updateClientEmail(targetClient, client_email);
+            Client updatedClient = clientServ.updateClientEmail(client_id, client_email);
             return new ResponseEntity<>(updatedClient, HttpStatus.OK);
         }
         //Catch exception of not finding a client with that id
