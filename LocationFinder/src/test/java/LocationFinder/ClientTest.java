@@ -5,8 +5,11 @@ import LocationFinder.models.Client;
 import LocationFinder.controllers.ClientController;
 import LocationFinder.repositories.ClientRepository;
 import LocationFinder.services.ClientService;
+import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 //import org.junit.Test;
+import org.junit.jupiter.api.function.Executable;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +31,23 @@ class ClientTest {
 
     @MockBean
     private ClientRepository clientRepo;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 //Figure out catch exception junit 5
 
-    /*
     @Test
-    public void testDeleteClient() throws NotFoundException{
+    public void testDeleteClient() {
 
-        Mockito.when(clientRepo.existsById(100)).thenReturn(false);
-
-
-        clientServ.deleteClientById(100);
-
+        assertThrows(NotFoundException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                Mockito.when(clientRepo.existsById(100)).thenReturn(false);
+                clientServ.deleteClientById(100);
+            }
+        });
     }
-*/
+
 
     @Test
     public void testAddClient() {
