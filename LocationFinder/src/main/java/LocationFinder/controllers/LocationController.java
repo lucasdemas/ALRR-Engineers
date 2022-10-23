@@ -33,6 +33,12 @@ public class LocationController {
         return new ResponseEntity<>("Cost Must be a positive numeric value", HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleInvalidNumber(IllegalArgumentException e){
+
+        return new ResponseEntity<>("Location Claim Must be a either true for claimed or false for unclaimed", HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
 
 
     //Call to add a new location to the database
@@ -95,6 +101,7 @@ public class LocationController {
         try {
             //Check to see if the location is in the DB and get it's data
             Location targetLoc = locService.getLocById(loc_id);
+            locService.checkInvalid(targetLoc);
 
             //Update the location's data in the database given the provided information by the user
             Location updatedLoc = locService.updateLocCost(targetLoc, loc_cost);
@@ -103,6 +110,13 @@ public class LocationController {
         catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+        catch (InvalidTypeException e)  {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        catch (Exception e)  {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
     }
 
     //Call to update the claim status of a given location
@@ -112,6 +126,7 @@ public class LocationController {
         try {
             //Check to see if the location is in the DB and get it's data
             Location targetLoc = locService.getLocById(loc_id);
+            locService.checkInvalid(targetLoc);
 
             //Update the location's data in the database given the provided information by the user
             Location updatedLoc = locService.updateLocClaim(targetLoc, loc_claim);
@@ -119,6 +134,12 @@ public class LocationController {
         }
         catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (InvalidTypeException e)  {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        catch (Exception e)  {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 

@@ -28,7 +28,19 @@ class ClientTest {
 
     //Test for attempting to delete a client who does not exist (no client with the specified client id)
     @Test
-    public void testDeleteClient() {
+    public void testDeleteClient() throws NotFoundException{
+
+                //Have the mock repo say that there is a client with the id 100
+                Mockito.when(clientRepo.existsById(100)).thenReturn(true);
+                //Try to delete the client with id 100
+                clientServ.deleteClientById(100);
+
+                //Question: How can we test the success of delete Client?
+
+    }
+
+    @Test
+    public void testDeleteClientException() {
         assertThrows(NotFoundException.class, new Executable() {
             @Override
             public void execute() throws Throwable {

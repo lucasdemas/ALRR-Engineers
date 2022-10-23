@@ -71,7 +71,7 @@ public class LocationService {
         }
     }
 
-    public Location updateLocClaim(Location loc, Boolean loc_claim) {
+    public Location updateLocClaim(Location loc, Boolean loc_claim) throws IllegalArgumentException{
         Location updatedLoc = new Location(loc.getName(), loc.getArea(), loc.getCost());
         updatedLoc.setId(loc.getId());
         updatedLoc.setClaim(loc_claim);

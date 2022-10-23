@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f443563e-a07a-4aae-9051-59939e357ede" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/controllers/LocationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/controllers/LocationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/services/LocationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/main/java/LocationFinder/services/LocationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocationFinder/src/test/java/LocationFinder/ClientTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/test/java/LocationFinder/ClientTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LocationFinder/src/test/java/LocationFinder/LocationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/src/test/java/LocationFinder/LocationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/LocationFinder/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocationFinder/target/test-classes/LocationFinder/LocationFinderApplicationTests.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
