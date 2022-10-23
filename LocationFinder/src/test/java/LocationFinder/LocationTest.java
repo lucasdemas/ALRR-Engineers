@@ -156,6 +156,36 @@ class LocationTest {
         assertEquals(searchResults.get(1).getCost(), 30.0);
     }
 
+
+    @Test
+    public void testupdateLocClaim()  {
+        //Create a mock client who's email we will update
+        Location loc1 = new Location();
+        loc1.setClaim(false);
+        loc1.setId(100);
+        loc1.setName("Times Square");
+        loc1.setArea("New York");
+        loc1.setCost(20.0);
+
+
+        //Have the client be returned in the format that findById is looking for in the cleintRepo
+        Optional<Location> optLoc = Optional.of(loc1);
+
+        //Have the mock return the formatted client when it look for a client with the id 100
+        Mockito.when(locRepo.findById(100)).thenReturn(optLoc);
+
+        //Have the mock return true when it checks to see if there is a client with the id 100 in the repo
+        Mockito.when(locRepo.existsById(100)).thenReturn(true);
+
+        //Save the client to the repository
+        Mockito.when(locRepo.save(loc1)).thenReturn(loc1);
+
+        //Update the mock client's email
+        Location locResult = locServ.updateLocClaim(loc1,true);
+
+        //Check to see that the client's email was updated successfully
+        assertEquals(locResult.getClaim(), true);
+    }
     // Testing to see if we can add a new location
 //    @Test
 //    public void addNewLocTest() {
