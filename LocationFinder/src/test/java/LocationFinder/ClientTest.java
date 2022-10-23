@@ -125,6 +125,22 @@ class ClientTest {
         });
     }
 
+    //Test to see if the client provided a blank string for their name
+    @Test
+    public void invalidClientNameException() {
+        assertThrows(InvaildInputException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                //Create a dummy client with a blank string for the client name
+                Client dummyClient = new Client(100, "      ", "ClientTest@client.com");
+
+                //Test to see if their input has an invalid name
+                clientServ.checkInvalid(dummyClient);
+
+            }
+        });
+    }
+
 
 
 
