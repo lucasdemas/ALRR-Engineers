@@ -3,6 +3,7 @@ package LocationFinder.services;
 
 import com.sun.jdi.InvalidTypeException;
 import LocationFinder.exceptions.NotFoundException;
+import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.models.Client;
 import LocationFinder.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class ClientService {
 
     //Function to save client to client repository
     public Client addClient(Client client) {
-        clientRepo.save(client);
-        return client;
+        Client fullClient = clientRepo.save(client);
+        return fullClient;
     }
 
     //Function to get a client by a provided id
@@ -34,38 +35,52 @@ public class ClientService {
         } else {
             throw new NotFoundException("There is no client with that id");
         }
+
     }
 
     //Function to update a specific client's email address
-    public Client updateClientEmail(Client client, String new_email) {
-        Client updatedClient = new Client();
-        updatedClient.setId(client.getId());
-        updatedClient.setName(client.getName());
+    public Client updateClientEmail(Integer client_id, String new_email) throws NotFoundException{
+
+        if (clientRepo.existsById(client_id)){
+
         //have a checker to see if the new email is valid, if not throw and exception
-        updatedClient.setEmail(new_email);
-        clientRepo.save(updatedClient);
-        return updatedClient;
+
+            Client updatedClient = getClientById(client_id);
+            updatedClient.setEmail(new_email);
+            clientRepo.save(updatedClient);
+
+            return updatedClient;
+    }
+    else {
+            throw new NotFoundException("There is no client with that id");
+        }
     }
 
     //Function to handle invalid entries for certain attributes given a clients values
-    public void checkInvalid(Client client) throws InvalidTypeException {
+    public void checkInvalid(Client client) throws InvaildInputException {
         if (client.getName().trim().isEmpty()){
-            throw new InvalidTypeException("Client name cannot be blank");
+            throw new InvaildInputException("Client name cannot be blank");
         }
     }
 
     //Function that will check if the email format provided when adding a new client or updating an existing client's email is the correct format
-    public void checkEmail(String email) throws InvalidTypeException{
+    public void checkEmail(String email) throws InvaildInputException{
         String emailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
         Pattern emailPat = Pattern.compile(emailRegex, Pattern.CASE_INSENSITIVE);
         Matcher emailMatcher = emailPat.matcher(email);
         if(!emailMatcher.find()) {
-            throw new InvalidTypeException("Please enter a valid email format");
+            throw new InvaildInputException("Please enter a valid email format");
         }
     }
 
-    public void deleteClientById(Integer id) {
-        clientRepo.deleteById(id);
+    public void deleteClientById(Integer id) throws NotFoundException{
+        if (clientRepo.existsById(id)){
+
+        clientRepo.deleteById(id);}
+
+        else {
+            throw new NotFoundException("There is no client with that id");
+        }
     }
 
 }

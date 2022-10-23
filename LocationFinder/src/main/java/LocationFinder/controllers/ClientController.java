@@ -2,6 +2,7 @@ package LocationFinder.controllers;
 
 
 
+import LocationFinder.exceptions.InvaildInputException;
 import com.sun.jdi.InvalidTypeException;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.repositories.ClientRepository;
@@ -42,7 +43,7 @@ public class ClientController {
             Client addedClient = clientServ.addClient(newClient);
             return new ResponseEntity<>(addedClient, HttpStatus.CREATED);
         }
-        catch (InvalidTypeException e)  {
+        catch (InvaildInputException e)  {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
@@ -72,13 +73,12 @@ public class ClientController {
                              @RequestParam String client_email) {
         try {
             //Check to see if there is a client with the specified id
-            Client targetClient = clientServ.getClientById(client_id);
 
             //Check to see if the email they provided is valid or not
             clientServ.checkEmail(client_email);
 
             //Update client with email provided
-            Client updatedClient = clientServ.updateClientEmail(targetClient, client_email);
+            Client updatedClient = clientServ.updateClientEmail(client_id, client_email);
             return new ResponseEntity<>(updatedClient, HttpStatus.OK);
         }
         //Catch exception of not finding a client with that id
@@ -86,7 +86,7 @@ public class ClientController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         //Catch exception of client not providing valid a valid email address
-        catch (InvalidTypeException e) {
+        catch (InvaildInputException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
@@ -97,8 +97,7 @@ public class ClientController {
     public ResponseEntity<?> deleteClient(@RequestParam Integer client_id) {
         //find the client with the given id
         try {
-            //Check to see if there is a client with the specified id
-            Client targetClient = clientServ.getClientById(client_id);
+
 
             //Delete the client from the repository with the given id
             clientServ.deleteClientById(client_id);
