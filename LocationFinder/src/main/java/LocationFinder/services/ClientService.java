@@ -13,19 +13,34 @@ import java.util.regex.Pattern;
 
 @Service
 public class ClientService {
+    /**
+     * An instance of the client repository.
+     */
     @Autowired
     private ClientRepository clientRepo;
 
-    //Function to save client to client repository
+    /**
+     * A method to add a client to the database.
+     * @param client
+     * @return
+     *      The client that was saved
+     */
     public Client addClient(final Client client) {
         Client fullClient = clientRepo.save(client);
         return fullClient;
     }
 
-    //Function to get a client by a provided id
-    public Client getClientById(final Integer client_id)
+    /**
+     * A method to get a client from the database by a given id.
+     * @param clientId
+     * @return
+     *      The client
+     * @throws NotFoundException
+     *      The given id does not exist in the database
+     */
+    public Client getClientById(final Integer clientId)
      throws NotFoundException {
-        Optional<Client> target = clientRepo.findById(client_id);
+        Optional<Client> target = clientRepo.findById(clientId);
         if (target.isPresent()) {
             Client clientResult = target.get();
             return clientResult;
@@ -35,16 +50,24 @@ public class ClientService {
 
     }
 
-    //Function to update a specific client's email address
-    public Client updateClientEmail(final Integer client_id,
-     final String new_email) throws NotFoundException {
+    /**
+     * A method to update the client's email given their id.
+     * @param clientId
+     * @param newEmail
+     * @return
+     *      The updated client
+     * @throws NotFoundException
+     *      The client does not exist in the database
+     */
+    public Client updateClientEmail(final Integer clientId,
+     final String newEmail) throws NotFoundException {
 
-        if (clientRepo.existsById(client_id)) {
+        if (clientRepo.existsById(clientId)) {
         //have a checker to see if the new email is valid,
         //if not throw and exception
 
-            Client updatedClient = getClientById(client_id);
-            updatedClient.setEmail(new_email);
+            Client updatedClient = getClientById(clientId);
+            updatedClient.setEmail(newEmail);
             clientRepo.save(updatedClient);
 
             return updatedClient;
@@ -53,17 +76,24 @@ public class ClientService {
         }
     }
 
-    //Function to handle invalid entries for
-    //certain attributes given a clients values
+    /**
+     * A method to check for valid client name.
+     * @param client
+     * @throws InvaildInputException
+     *      The client name is blank
+     */
     public void checkInvalid(final Client client) throws InvaildInputException {
         if (client.getName().trim().isEmpty()) {
             throw new InvaildInputException("Client name cannot be blank");
         }
     }
 
-    //Function that will check if the email format
-    //provided when adding a new client or updating an
-    //existing client's email is the correct format
+    /**
+     * A method to check if a given email is valid.
+     * @param email
+     * @throws InvaildInputException
+     *      The email is not a valid format
+     */
     public void checkEmail(final String email)
     throws InvaildInputException {
         String emailRegex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
@@ -76,6 +106,12 @@ public class ClientService {
         }
     }
 
+    /**
+     * A method to delete a client by their id.
+     * @param id
+     * @throws NotFoundException
+     *      A client does not exist in the database for the given id
+     */
     public void deleteClientById(final Integer id) throws NotFoundException {
         if (clientRepo.existsById(id)) {
 

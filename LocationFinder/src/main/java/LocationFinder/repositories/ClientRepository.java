@@ -11,8 +11,16 @@ import java.util.List;
 
 @Repository
 public interface ClientRepository extends CrudRepository<Client, Integer> {
+    /**
+     * Query to find a client in the database.
+     * @param clientId
+     * @param clientName
+     * @param clientEmail
+     * @return
+     *      List of clients
+     */
     @Query(value = "select * from client", nativeQuery = true)
-    List<Client> findByTemplate(@Param("client_id") Integer client_id,
-                              @Param("client_name") String client_name,
-                              @Param("client_email") String client_email);
+    List<Client> findByTemplate(@Param("client_id") Integer clientId,
+                              @Param("client_name") String clientName,
+                              @Param("client_email") String clientEmail);
 }

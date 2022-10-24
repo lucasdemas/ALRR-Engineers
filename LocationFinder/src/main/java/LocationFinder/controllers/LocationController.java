@@ -8,10 +8,15 @@ import LocationFinder.services.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import com.sun.jdi.InvalidTypeException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/location")
@@ -42,34 +47,44 @@ public class LocationController {
          HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Exception handling for InvalidNumberException.
+     * @param e
+     *      The Exception that is handled.
+     * @return
+     *      The response for the exception being handled.
+     */
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<?> handleInvalidNumber(IllegalArgumentException e){
+    public ResponseEntity<?> handleInvalidNumber(
+        final IllegalArgumentException e) {
 
-        return new ResponseEntity<>("Location Claim Must be a either true for claimed or false for unclaimed", HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>("Location Claim Must be a either true "
+        + "for claimed or false for unclaimed",
+         HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
 
 
     /**
      * A method that adds a new location to the database.
-     * @param loc_name
+     * @param locName
      *      The location name
-     * @param loc_area
+     * @param locArea
      *      The location area
-     * @param loc_cost
+     * @param locCost
      *      The location cost
      * @return
      *      The response for a successfully created location
      *      or the response for a caught exception
      */
     @PostMapping(path = "/add")
-    public ResponseEntity<?> addNewLoc(@RequestParam final String loc_name,
-                    @RequestParam final String loc_area,
-                    @RequestParam final Double loc_cost) {
+    public ResponseEntity<?> addNewLoc(@RequestParam final String locName,
+                    @RequestParam final String locArea,
+                    @RequestParam final Double locCost) {
         try {
 
             //Convert the user input into a location entity
-            Location loc = new Location(loc_name, loc_area, loc_cost);
+            Location loc = new Location(locName, locArea, locCost);
 
             //Check that all of the data the user input is in a valid format
             //Possibly add checker for if the user
@@ -136,88 +151,88 @@ public class LocationController {
     }
 
     /**
-     * A methodto update the cost of an already existing location.
-     * @param loc_id
+     * A method to update the cost of an already existing location.
+     * @param locId
      *      The id of the location in need of changing
-     * @param loc_cost
+     * @param locCost
      *      The new cost of the location
      * @return
      *      The response from updating the cost or the response
      *      from the location not existing
      */
     @PostMapping(path = "/updateCost")
-    public ResponseEntity<?> updateLocCost(@RequestParam final Integer loc_id,
-                                @RequestParam final Double loc_cost) {
+    public ResponseEntity<?> updateLocCost(@RequestParam final Integer locId,
+                                @RequestParam final Double locCost) {
         //Get the location based on the id provided
         try {
             //Check to see if the location is in the DB and get it's data
-            Location targetLoc = locService.getLocById(loc_id);
+            Location targetLoc = locService.getLocById(locId);
             locService.checkInvalid(targetLoc);
 
             //Update the location's data in the
             //database given the provided information by the user
-            Location updatedLoc = locService.updateLocCost(targetLoc, loc_cost);
+            Location updatedLoc = locService.updateLocCost(targetLoc, locCost);
             return new ResponseEntity<>(updatedLoc, HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-        catch (InvalidTypeException e)  {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        catch (Exception e)  {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (InvalidTypeException e)  {
+            return new ResponseEntity<>(e.getMessage(),
+            HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (Exception e)  {
+            return new ResponseEntity<>(e.getMessage(),
+            HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
     }
 
     /**
      * A method to update the claimed status of an existing location.
-     * @param loc_id
+     * @param locId
      *      The id of the location in need of updating
-     * @param loc_claim
+     * @param locClaim
      *      The new claimed status of the location
      * @return
      *      The response from updating the claimed status or the
      *      response from the location not existing
      */
     @PostMapping(path = "/updateClaim")
-    public ResponseEntity<?> updateLocClaim(@RequestParam final Integer loc_id,
-                                @RequestParam final Boolean loc_claim) {
+    public ResponseEntity<?> updateLocClaim(@RequestParam final Integer locId,
+                                @RequestParam final Boolean locClaim) {
         try {
             //Check to see if the location is in the DB and get it's data
-            Location targetLoc = locService.getLocById(loc_id);
+            Location targetLoc = locService.getLocById(locId);
             locService.checkInvalid(targetLoc);
 
             //Update the location's data in the
             //database given the provided information by the user
             Location updatedLoc =
-             locService.updateLocClaim(targetLoc, loc_claim);
+             locService.updateLocClaim(targetLoc, locClaim);
             return new ResponseEntity<>(updatedLoc, HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-        catch (InvalidTypeException e)  {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        catch (Exception e)  {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (InvalidTypeException e)  {
+            return new ResponseEntity<>(e.getMessage(),
+            HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (Exception e)  {
+            return new ResponseEntity<>(e.getMessage(),
+            HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
     /**
      * A method to delete an existing location.
-     * @param loc_id
+     * @param locId
      *      The id of the location to be deleted
      * @return
      *      The response from successfully deleting the location or
      *      the response from the location not existing
      */
     @PostMapping(path = "/delete")
-    public ResponseEntity<?> deleteLoc(@RequestParam final Integer loc_id) {
+    public ResponseEntity<?> deleteLoc(@RequestParam final Integer locId) {
         try {
 
             //Delete the location from the database
-            locService.deleteLocationById(loc_id);
+            locService.deleteLocationById(locId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

@@ -8,7 +8,13 @@ import LocationFinder.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequestMapping(path = "/client")
@@ -27,9 +33,9 @@ public class ClientController {
 
     /**
      * A method to add a new Client to the database.
-     * @param client_name
+     * @param clientName
      *      The client name to be added
-     * @param client_email
+     * @param clientEmail
      *      The client email to be added
      * @return
      *      The response for a successfully added client or the
@@ -37,19 +43,19 @@ public class ClientController {
      */
     @PostMapping(path = "/add")
     public ResponseEntity<?> addNewClient(
-                                    @RequestParam final String client_name,
-                                    @RequestParam final String client_email) {
+                                    @RequestParam final String clientName,
+                                    @RequestParam final String clientEmail) {
         try {
             //Create a new client and add the data provided by the user
             Client newClient = new Client();
-            newClient.setName(client_name);
-            newClient.setEmail(client_email);
+            newClient.setName(clientName);
+            newClient.setEmail(clientEmail);
 
             //Check that the inputted data is valid
             clientServ.checkInvalid(newClient);
 
             //Check that the email provided is a valid email format
-            clientServ.checkEmail(client_email);
+            clientServ.checkEmail(clientEmail);
 
             //If data is valid add new client to table
             Client addedClient = clientServ.addClient(newClient);
@@ -92,9 +98,9 @@ public class ClientController {
 
     /**
      * A method to update the email of a client.
-     * @param client_id
+     * @param clientId
      *      The id of the client being updated
-     * @param client_email
+     * @param clientEmail
      *      The email to be updated
      * @return
      *      The response from successfully updating the email or
@@ -103,17 +109,17 @@ public class ClientController {
      */
     @PostMapping(path = "/updateEmail")
     public ResponseEntity<?> updateClientEmail(
-                            @RequestParam final Integer client_id,
-                            @RequestParam final String client_email) {
+                            @RequestParam final Integer clientId,
+                            @RequestParam final String clientEmail) {
         try {
             //Check to see if there is a client with the specified id
 
             //Check to see if the email they provided is valid or not
-            clientServ.checkEmail(client_email);
+            clientServ.checkEmail(clientEmail);
 
             //Update client with email provided
             Client updatedClient =
-            clientServ.updateClientEmail(client_id, client_email);
+            clientServ.updateClientEmail(clientId, clientEmail);
             return new ResponseEntity<>(updatedClient, HttpStatus.OK);
         } catch (NotFoundException e) {
             //Catch exception of not finding a client with that id
@@ -129,7 +135,7 @@ public class ClientController {
 
     /**
      * A method to delete an existing client.
-     * @param client_id
+     * @param clientId
      *      The id of the client being deleted
      * @return
      *      The response for a successful deletion or the response
@@ -137,11 +143,11 @@ public class ClientController {
      */
     @PostMapping(path = "/delete")
     public ResponseEntity<?> deleteClient(
-                            @RequestParam final Integer client_id) {
+                            @RequestParam final Integer clientId) {
         //find the client with the given id
         try {
             //Delete the client from the repository with the given id
-            clientServ.deleteClientById(client_id);
+            clientServ.deleteClientById(clientId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

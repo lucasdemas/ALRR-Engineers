@@ -8,24 +8,41 @@ import LocationFinder.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.sun.jdi.InvalidTypeException;
+
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.*;
 
 @Service
 public class LocationService {
+    /**
+     * An instance of location repository.
+     */
     @Autowired
     private LocationRepository locRepository;
 
+    /**
+     * A method to add a location.
+     * @param loc
+     * @return
+     *      The location that is saved to the database
+     */
     public Location addLocation(final Location loc) {
         loc.setClaim(false);
         Location fullLocation = locRepository.save(loc);
         return fullLocation;
     }
 
-
-    public Location getLocById(final Integer loc_id) throws NotFoundException {
-        Optional<Location> target = locRepository.findById(loc_id);
+    /**
+     * A method to get a location by its id.
+     * @param locId
+     * @return
+     *      The location corresponding to the given id
+     * @throws NotFoundException
+     *      The location does not exist in the database
+     */
+    public Location getLocById(final Integer locId) throws NotFoundException {
+        Optional<Location> target = locRepository.findById(locId);
         if (target.isPresent()) {
             Location locResult = target.get();
             return locResult;
@@ -34,6 +51,12 @@ public class LocationService {
         }
     }
 
+    /**
+     * A method to check if an input is of invalid type.
+     * @param loc
+     * @throws InvalidTypeException
+     *      The input is of invalid type
+     */
     public void checkInvalid(final Location loc) throws InvalidTypeException {
         if (loc.getName().trim().isEmpty()) {
             throw new InvalidTypeException("Location name cannot be blank");
@@ -45,45 +68,77 @@ public class LocationService {
         }
     }
 
-
-    public List<Location> getLocationByClaim(String claim_status) throws InvaildInputException {
-        if(claim_status.toLowerCase().equals("claimed")) {
-            List<Location> location_list = new LinkedList();
-            location_list = locRepository.findByClaim(true);
-            return location_list;
-        }
-        else if(claim_status.toLowerCase().equals("unclaimed")) {
-            List<Location> location_list = new LinkedList();
-            location_list = locRepository.findByClaim(false);
-            return location_list;
-        }
-        else {
-            throw new InvaildInputException("Please specify whether you are searching for claimed or unclaimed spots");
+    /**
+     * A method to get locations by claimed status.
+     * @param claimStatus
+     * @return
+     *      A list of locations
+     * @throws InvaildInputException
+     *      The claimed status input is invalid
+     */
+    public List<Location> getLocationByClaim(
+        final String claimStatus) throws InvaildInputException {
+        if (claimStatus.toLowerCase().equals("claimed")) {
+            List<Location> locationList = new LinkedList();
+            locationList = locRepository.findByClaim(true);
+            return locationList;
+        } else if (claimStatus.toLowerCase().equals("unclaimed")) {
+            List<Location> locationList = new LinkedList();
+            locationList = locRepository.findByClaim(false);
+            return locationList;
+        } else {
+            throw new InvaildInputException(
+                "Please specify whether you are searching for claimed or unclaimed spots");
         }
     }
 
-    public Location updateLocClaim(Location loc, Boolean loc_claim) throws IllegalArgumentException{
-        Location updatedLoc = new Location(loc.getName(), loc.getArea(), loc.getCost());
+    /**
+     * A method to update the claimed status of an existing location.
+     * @param loc
+     * @param locClaim
+     * @return
+     *      The updated location
+     * @throws IllegalArgumentException
+     *      One of the inputs is illegal
+     */
+    public Location updateLocClaim(
+        final Location loc,
+        final Boolean locClaim) throws IllegalArgumentException {
+
+        Location updatedLoc = new Location(
+            loc.getName(), loc.getArea(), loc.getCost());
         updatedLoc.setId(loc.getId());
-        updatedLoc.setClaim(loc_claim);
+        updatedLoc.setClaim(locClaim);
         locRepository.save(updatedLoc);
         return updatedLoc;
     }
 
-    public Location updateLocCost(final Location loc, final Double loc_cost) {
+    /**
+     * A method to update the cost of a location.
+     * @param loc
+     * @param locCost
+     * @return
+     *      The updated location
+     */
+    public Location updateLocCost(final Location loc, final Double locCost) {
         Location updatedLoc =
-        new Location(loc.getName(), loc.getArea(), loc_cost);
+        new Location(loc.getName(), loc.getArea(), locCost);
         updatedLoc.setId(loc.getId());
         updatedLoc.setClaim(loc.getClaim());
         locRepository.save(updatedLoc);
         return updatedLoc;
     }
 
-    public void deleteLocationById(Integer id) throws NotFoundException{
-        if(locRepository.existsById(id)) {
+    /**
+     * A method to delete a location by its id.
+     * @param id
+     * @throws NotFoundException
+     *      The location does not exist in the database.
+     */
+    public void deleteLocationById(final Integer id) throws NotFoundException {
+        if (locRepository.existsById(id)) {
         locRepository.deleteById(id);
-        }
-        else {
+        } else {
             throw new NotFoundException("There is no location with that id");
 
         }
