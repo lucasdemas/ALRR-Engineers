@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
 @RestController
@@ -30,6 +31,20 @@ public class ClientController {
      */
     @Autowired
     private ClientService clientServ;
+
+    /**
+     * Exception Handler for Number Format Exception.
+     * @param e
+     * @return
+     *      The response for a number format exception
+     */
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<?> handleInvalidNumber(
+            final NumberFormatException e) {
+
+        return new ResponseEntity<>("Client id must be integer",
+                HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 
     /**
      * A method to add a new Client to the database.
@@ -85,7 +100,8 @@ public class ClientController {
      *      response for the client not existing
      */
     @GetMapping(path = "/get/{id}")
-    public ResponseEntity<?> getClientById(@PathVariable final Integer id) {
+    public ResponseEntity<?> getClientById(
+        @PathVariable final Integer id) throws NumberFormatException {
         //Search for the client in the client table
         //based on the provided id (if there is a client with that id)
         try {
