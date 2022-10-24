@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.sun.jdi.InvalidTypeException;
 import java.util.List;
 import java.util.Optional;
+import java.util.*;
 
 @Service
 public class LocationService {
@@ -18,8 +19,8 @@ public class LocationService {
 
     public Location addLocation(final Location loc) {
         loc.setClaim(false);
-        locRepository.save(loc);
-        return loc;
+        Location fullLocation = locRepository.save(loc);
+        return fullLocation;
     }
 
 
@@ -44,23 +45,25 @@ public class LocationService {
         }
     }
 
-    public List<Location> getLocationByClaim(final String claim_status)
-    throws InvaildInputException {
-        if (claim_status.toLowerCase().equals("claimed")) {
-            return locRepository.findByClaim(true);
-        } else if (claim_status.toLowerCase().equals("unclaimed")) {
-            return locRepository.findByClaim(false);
-        } else {
-            throw new
-            InvaildInputException("Please specify whether you are "
-            + "searching for claimed or unclaimed spots");
+
+    public List<Location> getLocationByClaim(String claim_status) throws InvaildInputException {
+        if(claim_status.toLowerCase().equals("claimed")) {
+            List<Location> location_list = new LinkedList();
+            location_list = locRepository.findByClaim(true);
+            return location_list;
+        }
+        else if(claim_status.toLowerCase().equals("unclaimed")) {
+            List<Location> location_list = new LinkedList();
+            location_list = locRepository.findByClaim(false);
+            return location_list;
+        }
+        else {
+            throw new InvaildInputException("Please specify whether you are searching for claimed or unclaimed spots");
         }
     }
 
-    public Location updateLocClaim(final Location loc,
-     final Boolean loc_claim) {
-        Location updatedLoc =
-        new Location(loc.getName(), loc.getArea(), loc.getCost());
+    public Location updateLocClaim(Location loc, Boolean loc_claim) throws IllegalArgumentException{
+        Location updatedLoc = new Location(loc.getName(), loc.getArea(), loc.getCost());
         updatedLoc.setId(loc.getId());
         updatedLoc.setClaim(loc_claim);
         locRepository.save(updatedLoc);
@@ -76,8 +79,15 @@ public class LocationService {
         return updatedLoc;
     }
 
-    public void deleteLocationById(final Integer id) {
+    public void deleteLocationById(Integer id) throws NotFoundException{
+        if(locRepository.existsById(id)) {
         locRepository.deleteById(id);
+        }
+        else {
+            throw new NotFoundException("There is no location with that id");
+
+        }
+
     }
 }
 
