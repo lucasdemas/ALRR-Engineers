@@ -103,12 +103,13 @@ public class LocationService {
      */
     public Location updateLocClaim(
         final Location loc,
-        final Boolean locClaim) throws IllegalArgumentException {
+        final Boolean locClaim) throws IllegalArgumentException, InvalidTypeException {
 
         Location updatedLoc = new Location(
             loc.getName(), loc.getArea(), loc.getCost());
         updatedLoc.setId(loc.getId());
         updatedLoc.setClaim(locClaim);
+        checkInvalid(updatedLoc);
         locRepository.save(updatedLoc);
         return updatedLoc;
     }
@@ -120,11 +121,12 @@ public class LocationService {
      * @return
      *      The updated location
      */
-    public Location updateLocCost(final Location loc, final Double locCost) {
+    public Location updateLocCost(final Location loc, final Double locCost) throws InvalidTypeException{
         Location updatedLoc =
         new Location(loc.getName(), loc.getArea(), locCost);
         updatedLoc.setId(loc.getId());
         updatedLoc.setClaim(loc.getClaim());
+        checkInvalid(updatedLoc);
         locRepository.save(updatedLoc);
         return updatedLoc;
     }
