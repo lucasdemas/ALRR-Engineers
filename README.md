@@ -122,4 +122,5 @@ We have incorporated a checkstyle-supress.xml file to supress certain checks tha
 	* Learning how to link a spring application to a mysql database: https://spring.io/guides/gs/accessing-data-mysql/
 	* How to create a mysql database on AWS: https://aws.amazon.com/getting-started/hands-on/create-mysql-db/
 	* How to test for when exceptions are to be thrown in test cases: https://www.codejava.net/testing/junit-test-exception-examples-how-to-assert-an-exception-is-thrown
+	* How to supress certain method checks from checkstyle in maven: https://maven.apache.org/plugins/maven-checkstyle-plugin/examples/suppressions-filter.html
 	
