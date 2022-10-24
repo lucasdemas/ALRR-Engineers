@@ -33,6 +33,12 @@ public class LocationController {
         return new ResponseEntity<>("Cost Must be a positive numeric value", HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleInvalidNumber(IllegalArgumentException e){
+
+        return new ResponseEntity<>("Location Claim Must be a either true for claimed or false for unclaimed", HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
 
 
     //Call to add a new location to the database
@@ -42,16 +48,13 @@ public class LocationController {
                     @RequestParam Double loc_cost) {
         try {
 
-            System.out.println("Before new location");
             //Convert the user input into a location entity
             Location loc = new Location(loc_name, loc_area, loc_cost);
 
             //Check that all of the data the user input is in a valid format
             //Possibly add checker for if the user inputs a string of spaces (which is invalid)
-            System.out.println("Before Check Invalid");
             locService.checkInvalid(loc);
 
-            System.out.println("Before Add");
             //Add the new location to the database
             Location savedLocation = locService.addLocation(loc);
             return new ResponseEntity<>(savedLocation, HttpStatus.CREATED);
@@ -98,6 +101,7 @@ public class LocationController {
         try {
             //Check to see if the location is in the DB and get it's data
             Location targetLoc = locService.getLocById(loc_id);
+            locService.checkInvalid(targetLoc);
 
             //Update the location's data in the database given the provided information by the user
             Location updatedLoc = locService.updateLocCost(targetLoc, loc_cost);
@@ -106,6 +110,13 @@ public class LocationController {
         catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+        catch (InvalidTypeException e)  {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        catch (Exception e)  {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
     }
 
     //Call to update the claim status of a given location
@@ -115,6 +126,7 @@ public class LocationController {
         try {
             //Check to see if the location is in the DB and get it's data
             Location targetLoc = locService.getLocById(loc_id);
+            locService.checkInvalid(targetLoc);
 
             //Update the location's data in the database given the provided information by the user
             Location updatedLoc = locService.updateLocClaim(targetLoc, loc_claim);
@@ -123,14 +135,18 @@ public class LocationController {
         catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+        catch (InvalidTypeException e)  {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        catch (Exception e)  {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
 
     //Call to delete a location from the database
     @PostMapping(path="/delete")
     public ResponseEntity<?> deleteLoc(@RequestParam Integer loc_id) {
         try {
-            //Check to see if this is a valid location for this client
-            Location targetLoc = locService.getLocById(loc_id);
 
             //Delete the location from the database
             locService.deleteLocationById(loc_id);

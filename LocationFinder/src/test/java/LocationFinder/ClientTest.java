@@ -27,8 +27,9 @@ class ClientTest {
     private ClientRepository clientRepo;
 
     //Test for attempting to delete a client who does not exist (no client with the specified client id)
+
     @Test
-    public void testDeleteClient() {
+    public void testDeleteClientException() {
         assertThrows(NotFoundException.class, new Executable() {
             @Override
             public void execute() throws Throwable {
@@ -56,6 +57,7 @@ class ClientTest {
         //Check to see that the fist mock client's id was updated to 100 after being added to the client repo
         assertEquals(clientServ.addClient(client1).getId(), 100);
     }
+
 
     //Test to successfully get a specific client based on the client id
     @Test
