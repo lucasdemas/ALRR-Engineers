@@ -257,7 +257,7 @@ class LocationTest {
      * A test for updating the location claimed status.
      */
     @Test
-    public void testupdateLocClaim()  throws InvalidTypeException{
+    public void testupdateLocClaim()  throws InvalidTypeException {
         //Create a mock client who's email we will update
         Location loc1 = new Location();
         loc1.setClaim(false);
@@ -293,7 +293,7 @@ class LocationTest {
      * A test for updating location cost.
      */
     @Test
-    public void testUpdateLocCost() throws InvalidTypeException{
+    public void testUpdateLocCost() throws InvalidTypeException {
         //Create a mock client who's email we will update
         Location loc1 = new Location();
         loc1.setClaim(false);

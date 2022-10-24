@@ -33,6 +33,20 @@ public class ClientController {
     private ClientService clientServ;
 
     /**
+     * Exception Handler for Number Format Exception.
+     * @param e
+     * @return
+     *      The response for a number format exception
+     */
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<?> handleInvalidNumber(
+            final NumberFormatException e) {
+
+        return new ResponseEntity<>("Client id must be integer",
+                HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    /**
      * A method to add a new Client to the database.
      * @param clientName
      *      The client name to be added
@@ -42,14 +56,6 @@ public class ClientController {
      *      The response for a successfully added client or the
      *      response for an invalid input
      */
-
-    @ExceptionHandler(NumberFormatException.class)
-    public ResponseEntity<?> handleInvalidNumber(
-            final NumberFormatException e) {
-
-        return new ResponseEntity<>("Client id must be integer",
-                HttpStatus.UNPROCESSABLE_ENTITY);
-    }
     @PostMapping(path = "/add")
     public ResponseEntity<?> addNewClient(
                                     @RequestParam final String clientName,
@@ -94,7 +100,8 @@ public class ClientController {
      *      response for the client not existing
      */
     @GetMapping(path = "/get/{id}")
-    public ResponseEntity<?> getClientById(@PathVariable final Integer id) throws NumberFormatException {
+    public ResponseEntity<?> getClientById(
+        @PathVariable final Integer id) throws NumberFormatException {
         //Search for the client in the client table
         //based on the provided id (if there is a client with that id)
         try {

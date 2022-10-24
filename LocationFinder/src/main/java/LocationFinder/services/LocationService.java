@@ -88,7 +88,8 @@ public class LocationService {
             return locationList;
         } else {
             throw new InvaildInputException(
-                "Please specify whether you are searching for claimed or unclaimed spots");
+                "Please specify whether you are searching"
+                + "for claimed or unclaimed spots");
         }
     }
 
@@ -103,7 +104,8 @@ public class LocationService {
      */
     public Location updateLocClaim(
         final Location loc,
-        final Boolean locClaim) throws IllegalArgumentException, InvalidTypeException {
+        final Boolean locClaim)
+        throws IllegalArgumentException, InvalidTypeException {
 
         Location updatedLoc = new Location(
             loc.getName(), loc.getArea(), loc.getCost());
@@ -121,7 +123,9 @@ public class LocationService {
      * @return
      *      The updated location
      */
-    public Location updateLocCost(final Location loc, final Double locCost) throws InvalidTypeException{
+    public Location updateLocCost(
+        final Location loc, final Double locCost)
+        throws InvalidTypeException {
         Location updatedLoc =
         new Location(loc.getName(), loc.getArea(), locCost);
         updatedLoc.setId(loc.getId());
