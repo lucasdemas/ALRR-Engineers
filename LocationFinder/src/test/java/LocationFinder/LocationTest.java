@@ -33,7 +33,7 @@ class LocationTest {
     private LocationRepository locRepo;
 
     @Test
-    public void testDeleteLocation() {
+    public void testDeleteLocationException() {
         assertThrows(NotFoundException.class, new Executable() {
             @Override
             public void execute() throws Throwable {
@@ -157,6 +157,16 @@ class LocationTest {
         assertEquals(searchResults.get(1).getCost(), 30.0);
     }
 
+    @Test
+    public void testGetLocationByClaimException() throws InvaildInputException {
+        assertThrows(InvaildInputException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                locServ.getLocationByClaim("invalid");
+            }
+        });
+    }
+
 
     @Test
     public void testCheckInvalidClaim() throws InvalidTypeException {
@@ -249,15 +259,4 @@ class LocationTest {
         //Check to see that the client's email was updated successfully
         assertEquals(locResult.getCost(), 10000.0);
     }
-
-
-    // Testing to see if we can add a new location
-//    @Test
-//    public void addNewLocTest() {
-//        Location loc = new Location("Mudd Building", "NYC", 30.50);
-//        // Mockito.when(locRepo.save(loc)).thenReturn(loc);
-//        // System.out.println(loc.getName());
-//        String result = locController.addNewLoc("Mudd Building", "NYC", 30.50);
-//        assertEquals("Saved", result);
-//    }
 }
