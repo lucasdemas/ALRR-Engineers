@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+ 
+<!DOCTYPE suppressions PUBLIC
+     "-//Checkstyle//DTD SuppressionFilter Configuration 1.0//EN"
+     "https://checkstyle.org/dtds/suppressions_1_0.dtd">
+ 
+<suppressions>
+  <suppress checks="PackageName"
+             files="ClientTest.java|LocationTest.java|LocationFinderApplication.java|LocationFinderApplicationTests.java|ClientController.java|LocationController.java|InvaildInputException.java|NotFoundException.java|Client.java|Location.java|ClientRepository.java|LocationRepository.java|ClientService.java|LocationService.java"
+             lines="1-100"/>
+  <suppress checks="JavadocPackage"
+             files="ClientTest.java|LocationFinderApplication.java|ClientController.java|Client.java|ClientRepository.java|ClientService.java|InvaildInputException.java"
+             lines="1-100"/>
+  <suppress checks="FileTabCharacter"
+             files="LocationFinderApplication.java|LocationFinderApplicationTests.java"
+             lines="1-20"/>
+  <suppress checks="HideUtilityClassConstructor"
+             files="LocationFinderApplication.java"
+             lines="1-20"/>
+  <suppress checks="FinalParameters"
+             files="LocationFinderApplication.java"
+             lines="1-20"/>
+</suppressions>
