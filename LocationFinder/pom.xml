@@ -85,6 +85,9 @@
 						</reports>
 					</reportSet>
 				</reportSets>
+				<configuration>
+        			<includeTestSourceDirectory>true</includeTestSourceDirectory>
+    			</configuration>
        		</plugin>
     	</plugins>
 	</reporting>

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ClientRepository extends CrudRepository<Client, Integer>{
+public interface ClientRepository extends CrudRepository<Client, Integer> {
     @Query(value = "select * from client", nativeQuery = true)
     List<Client> findByTemplate(@Param("client_id") Integer client_id,
                               @Param("client_name") String client_name,
