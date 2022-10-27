@@ -1,0 +1,46 @@
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/add -d locName="Columbia" -d locArea="New York" -d locCost=56.78
+{"claim":false,"name":"Columbia","id":4,"area":"New York","cost":56.78}
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/add -d locName="     " -d locArea="New York" -d locCost=56.78
+Location name cannot be blank
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/add -d locName="Columbia" -d locArea="   " -d locCost=56.78
+Location area cannot be blank
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/add -d locName="Columbia" -d locArea="New York" -d locCost="ab"
+Cost Must be a positive numeric value
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/getClaim/unclaimed
+[{"claim":false,"name":"Harlem","id":2,"area":"New York","cost":1000.0},{"claim":false,"name":"Columbia","id":4,"area":"New York","cost":56.78}]
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/getClaim/claimed
+[]
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/getClaim/claim
+Please specify whether you are searchingfor claimed or unclaimed spots
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/updateCost -d locId=4 -d locCost=12.34
+{"claim":false,"name":"Columbia","id":4,"area":"New York","cost":12.34}
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/getAll
+[{"claim":false,"name":"Harlem","id":2,"area":"New York","cost":1000.0},{"claim":false,"name":"Columbia","id":4,"area":"New York","cost":12.34}]
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/updateCost -d locId=4 -d locCost=-12
+Location Cost can't be a negative number
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/updateCost -d locId=4 -d locCost="ab"
+Cost Must be a positive numeric value
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/updateClaim -d locId=4 -d locClaim=true
+{"claim":true,"name":"Columbia","id":4,"area":"New York","cost":12.34}
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/updateClaim -d locId=4 -d locClaim=tr
+Location Claim Must be a either true for claimed or false for unclaimed
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/getAll
+[{"claim":false,"name":"Harlem","id":2,"area":"New York","cost":1000.0},{"claim":true,"name":"Columbia","id":4,"area":"New York","cost":12.34}]
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/delete -d locId=4
+
+C:\Users\Lucas Demas\Desktop\COMS 4156 Advanced Software Engineering\ALRR-Engineers\LocationFinder>curl localhost:8080/location/delete -d locId=4
+There is no location with that id
