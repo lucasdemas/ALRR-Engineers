@@ -108,7 +108,7 @@ public class LocationService {
         throws IllegalArgumentException, InvalidTypeException {
 
         Location updatedLoc = new Location(
-            loc.getName(), loc.getArea(), loc.getCost());
+            loc.getName(), loc.getArea(), loc.getCost(), loc.getClientId());
         updatedLoc.setId(loc.getId());
         updatedLoc.setClaim(locClaim);
         checkInvalid(updatedLoc);
@@ -127,7 +127,7 @@ public class LocationService {
         final Location loc, final Double locCost)
         throws InvalidTypeException {
         Location updatedLoc =
-        new Location(loc.getName(), loc.getArea(), locCost);
+        new Location(loc.getName(), loc.getArea(), locCost, loc.getClientId());
         updatedLoc.setId(loc.getId());
         updatedLoc.setClaim(loc.getClaim());
         checkInvalid(updatedLoc);

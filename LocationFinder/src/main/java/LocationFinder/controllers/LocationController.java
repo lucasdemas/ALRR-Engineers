@@ -73,6 +73,8 @@ public class LocationController {
      *      The location area
      * @param locCost
      *      The location cost
+     * @param clientId
+     *      The location client id
      * @return
      *      The response for a successfully created location
      *      or the response for a caught exception
@@ -80,16 +82,16 @@ public class LocationController {
     @PostMapping(path = "/add")
     public ResponseEntity<?> addNewLoc(@RequestParam final String locName,
                     @RequestParam final String locArea,
-                    @RequestParam final Double locCost) {
+                    @RequestParam final Double locCost,
+                    @RequestParam final Integer clientId) {
         try {
 
             //Convert the user input into a location entity
-            Location loc = new Location(locName, locArea, locCost);
+            Location loc = new Location(locName, locArea, locCost, clientId);
 
             //Check that all of the data the user input is in a valid format
             //Possibly add checker for if the user
             //inputs a string of spaces (which is invalid)
-            System.out.println("Before Check Invalid");
             locService.checkInvalid(loc);
 
             //Add the new location to the database
@@ -156,17 +158,23 @@ public class LocationController {
      *      The id of the location in need of changing
      * @param locCost
      *      The new cost of the location
+     * @param clientId
+     *      The id of the client assosiated with the location.
+     *      For authentication usage.
      * @return
      *      The response from updating the cost or the response
      *      from the location not existing
      */
     @PostMapping(path = "/updateCost")
     public ResponseEntity<?> updateLocCost(@RequestParam final Integer locId,
-                                @RequestParam final Double locCost) {
+                                @RequestParam final Double locCost,
+                                @RequestParam final Integer clientId) {
         //Get the location based on the id provided
         try {
             //Check to see if the location is in the DB and get it's data
             Location targetLoc = locService.getLocById(locId);
+            //To Do: Add a client authentication method in service
+
             locService.checkInvalid(targetLoc);
 
             //Update the location's data in the
@@ -191,16 +199,21 @@ public class LocationController {
      *      The id of the location in need of updating
      * @param locClaim
      *      The new claimed status of the location
+     * @param clientId
+     *      The id of the client assosiated with the location.
+     *      For authentication usage.
      * @return
      *      The response from updating the claimed status or the
      *      response from the location not existing
      */
     @PostMapping(path = "/updateClaim")
     public ResponseEntity<?> updateLocClaim(@RequestParam final Integer locId,
-                                @RequestParam final Boolean locClaim) {
+                                @RequestParam final Boolean locClaim,
+                                @RequestParam final Integer clientId) {
         try {
             //Check to see if the location is in the DB and get it's data
             Location targetLoc = locService.getLocById(locId);
+            //To Do: Add a client authentication method in service
             locService.checkInvalid(targetLoc);
 
             //Update the location's data in the
@@ -223,14 +236,18 @@ public class LocationController {
      * A method to delete an existing location.
      * @param locId
      *      The id of the location to be deleted
+     * @param clientId
+     *      The id of the client assosiated with the location.
+     *      For authentication usage.
      * @return
      *      The response from successfully deleting the location or
      *      the response from the location not existing
      */
     @PostMapping(path = "/delete")
-    public ResponseEntity<?> deleteLoc(@RequestParam final Integer locId) {
+    public ResponseEntity<?> deleteLoc(@RequestParam final Integer locId,
+                                       @RequestParam final Integer clientId) {
         try {
-
+            //To Do: Add a client authentication method in service
             //Delete the location from the database
             locService.deleteLocationById(locId);
             return new ResponseEntity<>(HttpStatus.OK);
