@@ -4,6 +4,8 @@ import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.repositories.LocationRepository;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.models.Location;
+import LocationFinder.models.Client;
+import LocationFinder.services.ClientService;
 import LocationFinder.services.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,12 @@ public class LocationController {
      */
     @Autowired
     private LocationService locService;
+
+    /**
+     * An instance of the client service.
+     */
+    @Autowired
+    private ClientService clientServ;
 
     /**
      * Exception handling for InvalidTypeInput.
@@ -86,6 +94,7 @@ public class LocationController {
                     @RequestParam final Integer clientId) {
         try {
 
+            Client targetClient = clientServ.getClientById(clientId);
             //Convert the user input into a location entity
             Location loc = new Location(locName, locArea, locCost, clientId);
 
@@ -100,6 +109,8 @@ public class LocationController {
         } catch (InvalidTypeException e)  {
             return new ResponseEntity<>(e.getMessage(),
              HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e)  {
             return new ResponseEntity<>(e.getMessage(),
              HttpStatus.UNPROCESSABLE_ENTITY);
