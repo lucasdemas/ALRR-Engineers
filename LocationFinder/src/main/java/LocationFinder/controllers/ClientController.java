@@ -4,6 +4,7 @@ import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.repositories.ClientRepository;
 import LocationFinder.models.Client;
+import LocationFinder.repositories.LocationRepository;
 import LocationFinder.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,12 @@ public class ClientController {
      */
     @Autowired
     private ClientRepository clientRepo;
+
+    /**
+     * An instance of the client repository.
+     */
+    @Autowired
+    private LocationRepository locRepo;
 
     /**
      * An instance of the client service.
@@ -150,7 +157,8 @@ public class ClientController {
     }
 
     /**
-     * A method to delete an existing client.
+     * A method to delete an existing client
+     * (and any locations belonging to them in the database).
      * @param clientId
      *      The id of the client being deleted
      * @return
@@ -164,6 +172,9 @@ public class ClientController {
         try {
             //Delete the client from the repository with the given id
             clientServ.deleteClientById(clientId);
+
+            //Delete all the locations belonging to the client (if they had any)
+            locRepo.deleteClientLocs(clientId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

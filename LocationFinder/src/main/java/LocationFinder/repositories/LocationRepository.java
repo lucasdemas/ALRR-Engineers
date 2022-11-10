@@ -1,11 +1,13 @@
 package LocationFinder.repositories;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import LocationFinder.models.Location;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,6 +50,18 @@ public interface LocationRepository extends CrudRepository<Location, Integer> {
      *      List of locations by claimed status
      */
     @Query(value = "select * from location_data where claimed = :claimed",
-     nativeQuery = true)
+            nativeQuery = true)
     List<Location> findByClaim(@Param("claimed") Boolean claimed);
+
+    /**
+     * Query to delete all the locations of a client that has been deleted
+     * @param client_id
+     * @return
+     *      Nothing
+     */
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE from location_data where client_id = :client_id",
+            nativeQuery = true)
+    void deleteClientLocs(@Param("client_id") Integer client_id);
 }

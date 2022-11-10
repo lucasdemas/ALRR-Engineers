@@ -1,11 +1,11 @@
-LocationFinder\controllers\ClientController.class
-LocationFinder\models\Client.class
-LocationFinder\LocationFinderApplication.class
-LocationFinder\models\Location.class
 LocationFinder\repositories\LocationRepository.class
 LocationFinder\services\ClientService.class
 LocationFinder\exceptions\NotFoundException.class
+LocationFinder\controllers\ClientController.class
+LocationFinder\models\Client.class
 LocationFinder\exceptions\InvaildInputException.class
+LocationFinder\LocationFinderApplication.class
+LocationFinder\models\Location.class
 LocationFinder\repositories\ClientRepository.class
 LocationFinder\services\LocationService.class
 LocationFinder\controllers\LocationController.class
