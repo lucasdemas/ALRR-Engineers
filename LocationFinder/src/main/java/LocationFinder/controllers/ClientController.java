@@ -9,13 +9,7 @@ import LocationFinder.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -87,6 +81,16 @@ public class ClientController {
              HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
+
+    /**
+     * A method to login a client
+     * @param clientEmail
+     *      The email of the client trying to login
+     */
+//    @GetMapping(path = "/login")
+//    public ResponseEntity clientLogin(@RequestParam final String clientEmail) {
+//
+//    }
 
     /**
      * A method to get all clients.
@@ -165,6 +169,7 @@ public class ClientController {
      *      The response for a successful deletion or the response
      *      for the client not existing
      */
+    @CrossOrigin("http://127.0.0.1:5000")
     @PostMapping(path = "/delete")
     public ResponseEntity<?> deleteClient(
                             @RequestParam final Integer clientId) {

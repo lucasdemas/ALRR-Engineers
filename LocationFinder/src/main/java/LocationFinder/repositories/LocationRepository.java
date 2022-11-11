@@ -56,8 +56,6 @@ public interface LocationRepository extends CrudRepository<Location, Integer> {
     /**
      * Query to delete all the locations of a client that has been deleted
      * @param client_id
-     * @return
-     *      Nothing
      */
     @Modifying
     @Transactional

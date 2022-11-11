@@ -11,14 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.sun.jdi.InvalidTypeException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/location")
@@ -124,6 +119,7 @@ public class LocationController {
      * @return
      *      The response from finding all the locations in the database.
      */
+    @CrossOrigin("http://127.0.0.1:5000")
     @GetMapping(path = "/getAll")
     public ResponseEntity<?> getLocations() {
         return new ResponseEntity<>(locRepository.findAll(), HttpStatus.OK);
@@ -151,6 +147,7 @@ public class LocationController {
      *      The response from finding all locations by claimed
      *      status or the response from catching an exception
      */
+    @CrossOrigin("http://127.0.0.1:5000")
     @GetMapping(path = "/getClaim/{isClaim}")
     public ResponseEntity<?> getLocByClaim(@PathVariable final String isClaim) {
         try {
