@@ -34,7 +34,4 @@ jobs:
           fail-on-error: true
       - name: Generate Spotbugs and Checkstyle reports
         run: mvn site --file LocationFinder/pom.xml
-      - name: Get Checkstyle XML
-        uses: mavrosxristoforos/get-xml-info@1.0
-        with:
-          xml-file: 'LocationFinder/target/checkstyle-checker.xml'
+  
