@@ -29,12 +29,19 @@ public class Client {
     private String email;
 
     /**
+     * Client Password (encrypted)
+     */
+    @Column(name = "client_password")
+    private String password;
+
+    /**
      * The default constructor.
      */
     public Client() {
         this.id = null;
         this.name = null;
         this.email = null;
+        this.password = null;
     }
     /**
      * A client object constructor.
@@ -99,5 +106,22 @@ public class Client {
      */
     public void setEmail(final String clientEmail) {
         this.email = clientEmail;
+    }
+
+    /**
+     * Password getter.
+     * @return
+     *      client password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Password setter.
+     * @param clientPassword
+     */
+    public void setPassword(final String clientPassword) {
+        this.email = clientPassword;
     }
 }

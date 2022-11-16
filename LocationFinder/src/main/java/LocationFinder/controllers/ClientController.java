@@ -60,12 +60,14 @@ public class ClientController {
     @PostMapping(path = "/add")
     public ResponseEntity<?> addNewClient(
                                     @RequestParam final String clientName,
-                                    @RequestParam final String clientEmail) {
+                                    @RequestParam final String clientEmail,
+                                    @RequestParam final String clientPassword) {
         try {
             //Create a new client and add the data provided by the user
             Client newClient = new Client();
             newClient.setName(clientName);
             newClient.setEmail(clientEmail);
+            newClient.setPassword(clientPassword);
 
             //Check that the inputted data is valid
             clientServ.checkInvalid(newClient);
