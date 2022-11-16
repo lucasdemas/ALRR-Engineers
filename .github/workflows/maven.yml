@@ -22,9 +22,3 @@ jobs:
         run: cd LocationFinder && mvn -Dtest=ClientTest test
       - name: Run LocationTest
         run: cd LocationFinder && mvn -Dtest=LocationTest test
-      - name: Export test results
-        run: cp LocationFinder/target/surefire-reports/*.txt UnitTests
-      - uses: EndBug/add-and-commit@v7
-        with:
-          add: UnitTesting/.
-          default_actor: github_actions
