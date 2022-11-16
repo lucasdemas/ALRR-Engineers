@@ -53,11 +53,12 @@ public class ClientController {
      *      The client name to be added
      * @param clientEmail
      *      The client email to be added
+     * @param clientPassword
+     *      The client password that will be added
      * @return
      *      The response for a successfully added client or the
      *      response for an invalid input
      */
-    @CrossOrigin()
     @PostMapping(path = "/add")
     public ResponseEntity<?> addNewClient(
                                     @RequestParam final String clientName,

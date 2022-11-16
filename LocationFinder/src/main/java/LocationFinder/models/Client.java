@@ -43,6 +43,7 @@ public class Client {
         this.email = null;
         this.password = null;
     }
+
     /**
      * A client object constructor.
      * @param clientId
@@ -61,6 +62,7 @@ public class Client {
                   final String clientName,
                   final String clientEmail,
                   final String clientPassword) {
+        System.out.print("you are here 4");
         this.id = clientId;
         this.name = clientName;
         this.email = clientEmail;
@@ -132,6 +134,6 @@ public class Client {
      * @param clientPassword
      */
     public void setPassword(final String clientPassword) {
-        this.email = clientPassword;
+        this.password = clientPassword;
     }
 }
