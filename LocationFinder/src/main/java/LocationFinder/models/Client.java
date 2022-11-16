@@ -57,6 +57,16 @@ public class Client {
         this.email = clientEmail;
     }
 
+    public Client(final Integer clientId,
+                  final String clientName,
+                  final String clientEmail,
+                  final String clientPassword) {
+        this.id = clientId;
+        this.name = clientName;
+        this.email = clientEmail;
+        this.password = clientPassword;
+    }
+
     /**
      * Id getter.
      * @return
