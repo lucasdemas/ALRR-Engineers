@@ -33,7 +33,7 @@ jobs:
           reporter: java-junit
           fail-on-error: true
       - name: Spotbugs
-        run: mvn -B verify spotbugs:spotbugs
+        run: mvn -B verify --file LocationFinder/pom.xml -DskipTests spotbugs:spotbugs
       - uses: jwgmeligmeyling/spotbugs-github-action@master
         with:
           path: LocationFinder/target/spotbugsXml.xml
