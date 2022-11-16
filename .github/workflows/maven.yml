@@ -24,7 +24,7 @@ jobs:
         run: cd LocationFinder && mvn -Dtest=ClientTest test
       - name: Run LocationTest
         run: cd LocationFinder && mvn -Dtest=LocationTest test
-      - name: Report
+      - name: Test Report
         uses: dorny/test-reporter@v1
         if: always()
         with:
@@ -34,3 +34,7 @@ jobs:
           fail-on-error: true
       - name: Generate Spotbugs and Checkstyle reports
         run: mvn site --file LocationFinder/pom.xml
+      - name: Get Checkstyle XML
+        uses: mavrosxristoforos/get-xml-info@1.0
+        with:
+          xml-file: 'LocationFinder/target/checkstyle-checker.xml'
