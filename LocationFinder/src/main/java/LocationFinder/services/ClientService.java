@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 @Service
 public class ClientService {
@@ -121,4 +125,26 @@ public class ClientService {
         }
     }
 
+    public String encryptPass(String clientPassword) throws NoSuchAlgorithmException {
+        //get the message digest to for SHA-256 to begin hashing password
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+
+        //hash the password with the message digest to get the byte array of the hash
+        byte[] shaPass = md.digest(clientPassword.getBytes(StandardCharsets.UTF_8));
+
+        //convert the byte array into a single number representation
+        BigInteger shaPassNum = new BigInteger(1, shaPass);
+
+        //convert the single number version of the message digest into a hex value
+        StringBuilder shaPassHex = new StringBuilder(shaPassNum.toString(16));
+
+        //pad the hex value of the password with leading 0's if not 64 characters long
+        while (shaPassHex.length() < 64)
+        {
+            shaPassHex.insert(0, '0');
+        }
+
+        //convert the hex version of the sha-256 encrypted password to a string and return it
+        return shaPassHex.toString();
+    }
 }

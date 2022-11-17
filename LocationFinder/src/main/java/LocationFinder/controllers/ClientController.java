@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.NoSuchAlgorithmException;
+
 
 @RestController
 @RequestMapping(path = "/client")
@@ -69,7 +71,12 @@ public class ClientController {
             Client newClient = new Client();
             newClient.setName(clientName);
             newClient.setEmail(clientEmail);
-            newClient.setPassword(clientPassword);
+
+            //verify password is not blank
+
+            String hashPass = clientServ.encryptPass(clientPassword);
+
+            newClient.setPassword(hashPass);
 
             //Check that the inputted data is valid
             clientServ.checkInvalid(newClient);
@@ -80,9 +87,12 @@ public class ClientController {
             //If data is valid add new client to table
             Client addedClient = clientServ.addClient(newClient);
             return new ResponseEntity<>(addedClient, HttpStatus.CREATED);
-        } catch (InvaildInputException e)  {
+        } catch (InvaildInputException e) {
             return new ResponseEntity<>(e.getMessage(),
-             HttpStatus.UNPROCESSABLE_ENTITY);
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (NoSuchAlgorithmException e) {
+            return new ResponseEntity<>(e.getMessage(),
+                    HttpStatus.FAILED_DEPENDENCY);
         }
     }
 
