@@ -71,15 +71,18 @@ public class ClientController {
             //verify that there is no client in the database with that email already
             clientServ.checkEmailNew(clientEmail);
 
+            //verify the password is not blank
+            clientServ.checkPass(clientPassword);
+
             //Create a new client and add the data provided by the user
             Client newClient = new Client();
             newClient.setName(clientName);
             newClient.setEmail(clientEmail);
 
-            //verify password is not blank
-
+            //encrypt the new client's password
             String hashPass = clientServ.encryptPass(clientPassword);
 
+            //Set the new client's password to the encrypted version of the password provided
             newClient.setPassword(hashPass);
 
             //Check that the inputted data is valid
@@ -118,6 +121,7 @@ public class ClientController {
             clientServ.checkEmail(clientEmail);
 
             //verify the password is not blank
+            clientServ.checkPass(clientPass);
 
             //check if there is a client in the database with that email and return them
             Client fetchedClient = clientServ.getClientByEmail(clientEmail);

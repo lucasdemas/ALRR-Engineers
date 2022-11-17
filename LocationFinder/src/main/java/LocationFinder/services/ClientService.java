@@ -9,7 +9,6 @@ import LocationFinder.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -182,6 +181,12 @@ public class ClientService {
         Optional<Client> target = clientRepo.findByEmail(clientEmail);
         if (target.isPresent()) {
             throw new EntityExistsException("There is already a client with that email!");
+        }
+    }
+
+    public void checkPass(String clientPass) throws InvaildInputException {
+        if (clientPass.trim().isEmpty()) {
+            throw new InvaildInputException("The password cannot be blank!");
         }
     }
 }
