@@ -6,7 +6,6 @@ import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.models.Client;
 import LocationFinder.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -20,8 +19,6 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepo;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
     /**
      * A method to add a client to the database.
      * @param client
@@ -29,7 +26,6 @@ public class ClientService {
      *      The client that was saved
      */
     public Client addClient(final Client client) {
-        //client.setPassword(bCryptPasswordEncoder.encode(client.getPassword()));
         Client fullClient = clientRepo.save(client);
         return fullClient;
     }

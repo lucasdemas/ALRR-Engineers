@@ -62,7 +62,6 @@ public class Client {
                   final String clientName,
                   final String clientEmail,
                   final String clientPassword) {
-        System.out.print("you are here 4");
         this.id = clientId;
         this.name = clientName;
         this.email = clientEmail;
