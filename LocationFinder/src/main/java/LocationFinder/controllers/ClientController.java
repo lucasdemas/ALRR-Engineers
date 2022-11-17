@@ -1,5 +1,6 @@
 package LocationFinder.controllers;
 
+import LocationFinder.exceptions.EntityExistsException;
 import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.repositories.ClientRepository;
@@ -68,6 +69,7 @@ public class ClientController {
                                     @RequestParam final String clientPassword) {
         try {
             //verify that there is no client in the database with that email already
+            clientServ.checkEmailNew(clientEmail);
 
             //Create a new client and add the data provided by the user
             Client newClient = new Client();
@@ -95,6 +97,9 @@ public class ClientController {
         } catch (NoSuchAlgorithmException e) {
             return new ResponseEntity<>(e.getMessage(),
                     HttpStatus.FAILED_DEPENDENCY);
+        } catch (EntityExistsException e) {
+            return new ResponseEntity<>(e.getMessage(),
+                    HttpStatus.FORBIDDEN);
         }
     }
 

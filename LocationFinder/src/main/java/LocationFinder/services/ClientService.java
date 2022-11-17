@@ -1,12 +1,15 @@
 package LocationFinder.services;
 
 
+import LocationFinder.exceptions.EntityExistsException;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.models.Client;
 import LocationFinder.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -118,13 +121,18 @@ public class ClientService {
      */
     public void deleteClientById(final Integer id) throws NotFoundException {
         if (clientRepo.existsById(id)) {
-
-        clientRepo.deleteById(id);
+            clientRepo.deleteById(id);
         } else {
             throw new NotFoundException("There is no client with that id");
         }
     }
 
+    /**
+     * A method to encrypt the password of a new client using SHA-256
+     * @param clientPassword
+     * @throws NoSuchAlgorithmException
+     *      The service does not have the encryption algorithm specified
+     */
     public String encryptPass(String clientPassword) throws NoSuchAlgorithmException {
         //get the message digest to for SHA-256 to begin hashing password
         MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -148,6 +156,12 @@ public class ClientService {
         return shaPassHex.toString();
     }
 
+    /**
+     * A method to retrieve the client's information based on the provided email if they are in the database
+     * @param clientEmail
+     * @throws NotFoundException
+     *      A client does not exist in the database for the given email
+     */
     public Client getClientByEmail(String clientEmail) throws NotFoundException {
         Optional<Client> target = clientRepo.findByEmail(clientEmail);
         if (target.isPresent()) {
@@ -155,6 +169,19 @@ public class ClientService {
             return clientResult;
         } else {
             throw new NotFoundException("There is no client with that email");
+        }
+    }
+
+    /**
+     * A method to check if there is already a client in the database with the provided email
+     * @param clientEmail
+     * @throws EntityExistsException
+     *      A client exists in the database with the provided email already
+     */
+    public void checkEmailNew(String clientEmail) throws EntityExistsException {
+        Optional<Client> target = clientRepo.findByEmail(clientEmail);
+        if (target.isPresent()) {
+            throw new EntityExistsException("There is already a client with that email!");
         }
     }
 }
