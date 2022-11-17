@@ -67,6 +67,8 @@ public class ClientController {
                                     @RequestParam final String clientEmail,
                                     @RequestParam final String clientPassword) {
         try {
+            //verify that there is no client in the database with that email already
+
             //Create a new client and add the data provided by the user
             Client newClient = new Client();
             newClient.setName(clientName);
@@ -100,11 +102,42 @@ public class ClientController {
      * A method to login a client
      * @param clientEmail
      *      The email of the client trying to login
+     * @param clientPass
+     *      The password of the client trying to login
      */
-//    @GetMapping(path = "/login")
-//    public ResponseEntity clientLogin(@RequestParam final String clientEmail) {
-//
-//    }
+    @GetMapping(path = "/login")
+    public ResponseEntity clientLogin(@RequestParam final String clientEmail,
+                                      @RequestParam final String clientPass) {
+        try {
+            //Check that the email provided is a valid email format
+            clientServ.checkEmail(clientEmail);
+
+            //verify the password is not blank
+
+            //check if there is a client in the database with that email and return them
+            Client fetchedClient = clientServ.getClientByEmail(clientEmail);
+
+            //encrypt the client password provided with SHA-256 algorithm
+            String encryptPassProvided = clientServ.encryptPass(clientPass);
+
+            //check to see if they match if so return the client id (and maybe name)
+            //otherwise throw an exception that the passwords no not match
+            if (encryptPassProvided.equals(fetchedClient.getPassword())) {
+                return new ResponseEntity<>(fetchedClient.getId(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("The password is not valid", HttpStatus.UNAUTHORIZED);
+            }
+
+        } catch (InvaildInputException e) {
+            return new ResponseEntity<>(e.getMessage(),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (NoSuchAlgorithmException e) {
+            return new ResponseEntity<>(e.getMessage(),
+                    HttpStatus.FAILED_DEPENDENCY);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
     /**
      * A method to get all clients.

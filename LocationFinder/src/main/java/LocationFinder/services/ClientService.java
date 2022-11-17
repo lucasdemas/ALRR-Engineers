@@ -147,4 +147,14 @@ public class ClientService {
         //convert the hex version of the sha-256 encrypted password to a string and return it
         return shaPassHex.toString();
     }
+
+    public Client getClientByEmail(String clientEmail) throws NotFoundException {
+        Optional<Client> target = clientRepo.findByEmail(clientEmail);
+        if (target.isPresent()) {
+            Client clientResult = target.get();
+            return clientResult;
+        } else {
+            throw new NotFoundException("There is no client with that email");
+        }
+    }
 }

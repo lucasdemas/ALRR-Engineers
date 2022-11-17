@@ -7,20 +7,16 @@ import LocationFinder.models.Client;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClientRepository extends CrudRepository<Client, Integer> {
     /**
-     * Query to find a client in the database.
-     * @param clientId
-     * @param clientName
+     * Query to find a client in the database by their email.
      * @param clientEmail
      * @return
      *      List of clients
      */
-    @Query(value = "select * from client", nativeQuery = true)
-    List<Client> findByTemplate(@Param("client_id") Integer clientId,
-                              @Param("client_name") String clientName,
-                              @Param("client_email") String clientEmail);
+    @Query(value = "select * from client where client_email = :client_email", nativeQuery = true)
+    Optional<Client> findByEmail(@Param("client_email") String clientEmail);
 }
