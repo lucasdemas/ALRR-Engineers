@@ -1,0 +1,46 @@
+#home_page_header {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.money_info {
+    font-size: 15px;
+}
+
+.home_button {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: lightgray;
+    margin: 10px;
+    width: 300px;
+}
+
+#home_body {
+    text-align: center;
+}
+
+#page_header {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.pur_item {
+    color: blue;
+}
+
+.pur_info {
+    font-weight: bold;
+}
+
+.error_msg {
+    color:red;
+    font-weight: bold;
+}
+
+.pur_input {
+    font-size: 15px;
+}
+
+.pur_detail {
+    margin-bottom: 5px;
+}
