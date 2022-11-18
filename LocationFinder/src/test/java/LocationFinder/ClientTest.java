@@ -195,6 +195,10 @@ class ClientTest {
             }
         });
     }
+
+    /**
+     * A test for getting a client by their email.
+     */
     @Test
     public void testGetClientByEmail() throws NotFoundException {
         //Create a mock client who we will search for by their email
@@ -219,6 +223,11 @@ class ClientTest {
         assertEquals(clientResult.getEmail(), "ClientTest@client.com");
     }
 
+    /**
+     * A test for getting a client by their email when email does not exist.
+     * Excpected: NotFoundException exception
+     */
+
     @Test
     public void testGetClientByEmailException() {
         assertThrows(NotFoundException.class, new Executable() {
@@ -234,6 +243,11 @@ class ClientTest {
         });
     }
 
+    /**
+     * A test for adding a client with an email that already exists.
+     * Excpected: EntityExistsException exception
+     */
+
     @Test
     public void ClientEmailExistException() {
         assertThrows(EntityExistsException.class, new Executable() {
@@ -248,6 +262,11 @@ class ClientTest {
             }
         });
     }
+
+    /**
+     * A test for updating a client email of a client that do not exist.
+     * Excpected: NotFoundException exception
+     */
 
     @Test
     public void updateClientEmailException() {
@@ -265,6 +284,11 @@ class ClientTest {
 
     }
 
+    /**
+     * A test of an empty string password.
+     * Excpected: InvaildInputException exception
+     */
+
     @Test
     public void invalidPasswordException() {
         assertThrows(InvaildInputException.class, new Executable() {
@@ -279,24 +303,30 @@ class ClientTest {
     }
 
 
+    /**
+     * A test to check symmetric password functionality.
+     * Excpected: hash(x) == hash(x) (in other word, entering the same password will
+     * return the same hash, no randomization involved).
+     * This will insure the success of login feature.
+     */
+
     @Test
     public void testSymmetricPassword() throws NoSuchAlgorithmException  {
 
-
+        //Create two password with same value
         String pass1 = clientServ.encryptPass("1234");
         String pass2 = clientServ.encryptPass("1234");
 
+
+        //Generate the hash of each password
         String EncPass1 = clientServ.encryptPass(pass1);
         String EncPass2 = clientServ.encryptPass(pass2);
 
-
+        //Check that password are equal and hashs are equal
         assertEquals(pass1, pass2);
         assertEquals(EncPass1, EncPass2);
 
-
     }
-
-
 
 
 }
