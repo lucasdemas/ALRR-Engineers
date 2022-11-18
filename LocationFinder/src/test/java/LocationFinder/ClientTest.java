@@ -264,6 +264,20 @@ class ClientTest {
 
     }
 
+    @Test
+    public void invalidPasswordException() {
+        assertThrows(InvaildInputException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+
+                //Send an empty string password
+                clientServ.checkPass("      ");
+
+            }
+        });
+    }
+
+
 
 
 }
