@@ -16,7 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import LocationFinder.exceptions.NotFoundException;
+import LocationFinder.exceptions.EntityExistsException;
 import java.util.Optional;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -192,6 +194,46 @@ class ClientTest {
             }
         });
     }
+    @Test
+    public void testGetClientByEmail() throws NotFoundException {
+        //Create a mock client who we will search for by their email
+        Client client1 = new Client(1, "Client Test",
+                "ClientTest@client.com");
+
+        //Have the client be returned in the format
+        //that findByEmail is looking for in the cleintRepo
+        Optional<Client> optClient = Optional.of(client1);
+
+        //Have the mock return the formatted client
+        //when it look for a client with the email "ClientTest@client.com"
+        Mockito.when(clientRepo.findByEmail("ClientTest@client.com")).thenReturn(optClient);
+
+        //Get the result of searching for a client with the email "ClientTest@client.com"
+        Client clientResult = clientServ.getClientByEmail("ClientTest@client.com");
+
+        //Check to see that the results of
+        //the service returned the correct data
+        assertEquals(clientResult.getId(), 1);
+        assertEquals(clientResult.getName(), "Client Test");
+        assertEquals(clientResult.getEmail(), "ClientTest@client.com");
+    }
+
+    @Test
+    public void testGetClientByEmailException() {
+        assertThrows(NotFoundException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                //Tell the mock repo that there is no client with email "ClientTest@client.com"
+                Mockito.when(clientRepo.existsByEmail("ClientTest@client.com")).thenReturn(false);
+
+                //Try and get a client with the email "ClientTest@client.com"
+                //(which results in a NotFound exception)
+                clientServ.getClientByEmail("ClientTest@client.com");
+            }
+        });
+    }
+
+
 }
 
 

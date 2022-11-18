@@ -19,4 +19,7 @@ public interface ClientRepository extends CrudRepository<Client, Integer> {
      */
     @Query(value = "select * from client where client_email = :client_email", nativeQuery = true)
     Optional<Client> findByEmail(@Param("client_email") String clientEmail);
+
+    @Query("select case when count(c)> 0 then true else false end from Client c where lower(c.email) like lower(:clientEmail)")
+    boolean existsByEmail(@Param("clientEmail") String clientEmail);
 }
