@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.exceptions.EntityExistsException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 
@@ -275,6 +276,24 @@ class ClientTest {
 
             }
         });
+    }
+
+
+    @Test
+    public void testSymmetricPassword() throws NoSuchAlgorithmException  {
+
+
+        String pass1 = clientServ.encryptPass("1234");
+        String pass2 = clientServ.encryptPass("1234");
+
+        String EncPass1 = clientServ.encryptPass(pass1);
+        String EncPass2 = clientServ.encryptPass(pass2);
+
+
+        assertEquals(pass1, pass2);
+        assertEquals(EncPass1, EncPass2);
+
+
     }
 
 
