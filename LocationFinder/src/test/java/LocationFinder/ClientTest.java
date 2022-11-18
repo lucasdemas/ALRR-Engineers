@@ -233,6 +233,38 @@ class ClientTest {
         });
     }
 
+    @Test
+    public void ClientEmailExistException() {
+        assertThrows(EntityExistsException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                //Tell the mock repo that there is a client with email "ClientTest@client.com"
+                Mockito.when(clientRepo.existsByEmail("ClientTest@client.com")).thenReturn(true);
+
+                //Check if the client with email "ClientTest@client.com" exists
+                //(which results in a EntityExistsException)
+                clientServ.checkEmailNew("ClientTest@client.com");
+            }
+        });
+    }
+
+    @Test
+    public void updateClientEmailException() {
+        assertThrows(NotFoundException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                //Tell the mock repo that there is no client with id 1
+                Mockito.when(clientRepo.existsById(1)).thenReturn(false);
+
+                //Try to update the email of client with id 1
+                //(which results in a NotFoundException)
+                clientServ.updateClientEmail(1, "ClientTest@client.com");
+            }
+        });
+
+    }
+
+
 
 }
 

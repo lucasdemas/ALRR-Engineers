@@ -178,8 +178,12 @@ public class ClientService {
      *      A client exists in the database with the provided email already
      */
     public void checkEmailNew(String clientEmail) throws EntityExistsException {
-        Optional<Client> target = clientRepo.findByEmail(clientEmail);
-        if (target.isPresent()) {
+        //Optional<Client> target = clientRepo.findByEmail(clientEmail);
+        //if (target.isPresent()) {
+
+        //I have changed thev if statment here for building the test case.
+        //It still offer the same functionality.
+        if(clientRepo.existsByEmail(clientEmail)){
             throw new EntityExistsException("There is already a client with that email!");
         }
     }
