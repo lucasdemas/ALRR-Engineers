@@ -150,5 +150,12 @@ public class LocationService {
         }
 
     }
+
+    /*
+     * This method is to check if spotbug catches a bug.
+     */
+    public Boolean bugMethod() {
+        return null;
+    }
 }
 
