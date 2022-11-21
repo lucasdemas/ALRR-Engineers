@@ -170,6 +170,8 @@ public class ClientController {
     @GetMapping(path = "/authenticate")
     public ResponseEntity<?> authenticateClient(@RequestParam final String clientAuthToken) {
         try {
+//            Cipher decryptCipher = Cipher.getInstance("RSA");
+//            decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
             //check to see if there is any client with the provided authentication token
             Client fetchedClient = clientServ.getClientByAuth(clientAuthToken);
 
