@@ -2,6 +2,11 @@
 
 {% block content %}
 <script type="text/javascript" src="{{ url_for('static', filename = 'home_page.js') }}"></script>
+
+<script>
+  let api_key = {{api_key|tojson}} 
+</script>
+
 <div id="home_body">
   <div id="home_page_header">Test for connecting to web service</div>
 

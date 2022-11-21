@@ -73,6 +73,8 @@ function displayAllLocations(locations) {
 }
 
 $(document).ready(function() {
+    console.log(api_key)
+
     $("#getAll").click(function() {
         getAllLocations();
     })

@@ -10,7 +10,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def home_page():
-    return render_template('home_page.html')
+    api_token = open("api_token.txt")
+    api_key = api_token.read()
+    print(api_key)
+    api_token.close()
+    return render_template('home_page.html', api_key = api_key)
 
 if __name__ == '__main__':
    app.run(debug = True)
