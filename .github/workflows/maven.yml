@@ -2,9 +2,9 @@ name: Java CI
 
 on:
   push:
-    branches: [ci_integration]
+    branches: [ main ]
   pull_request:
-    branches: [ci_integration]
+    branches: [ main ]
 
 jobs:
   build:
@@ -33,5 +33,6 @@ jobs:
           reporter: java-junit
           fail-on-error: true
       - name: Generate Spotbugs and Checkstyle reports
-        run: mvn site --file LocationFinder/pom.xml
-  
+        run: mvn compile site --file LocationFinder/pom.xml
+      - name: Generate Branch Coverage Report
+        run: mvn clean verify --file LocationFinder/pom.xml
