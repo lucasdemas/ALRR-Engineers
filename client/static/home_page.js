@@ -87,6 +87,7 @@ function authorize_client(api_key) {
             console.log(request)
             console.log(status)
             console.log(error)
+            alert(request.responseText);
         }
       });
 }
