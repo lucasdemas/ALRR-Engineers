@@ -119,7 +119,7 @@ public class LocationController {
      * @return
      *      The response from finding all the locations in the database.
      */
-    @CrossOrigin("http://127.0.0.1:5000")
+    @CrossOrigin()
     @GetMapping(path = "/getAll")
     public ResponseEntity<?> getLocations() {
         return new ResponseEntity<>(locRepository.findAll(), HttpStatus.OK);

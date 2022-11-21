@@ -56,8 +56,8 @@ public class ClientController {
      *      The client name to be added
      * @param clientEmail
      *      The client email to be added
-     * @param clientPassword
-     *      The client password that will be added
+     * @param clientAuthToken
+     *      The client's authentication token so they can access their data
      * @return
      *      The response for a successfully added client or the
      *      response for an invalid input
@@ -66,30 +66,34 @@ public class ClientController {
     public ResponseEntity<?> addNewClient(
                                     @RequestParam final String clientName,
                                     @RequestParam final String clientEmail,
-                                    @RequestParam final String clientPassword) {
+                                    @RequestParam final String clientAuthToken) {
         try {
             //verify that there is no client in the database with that email already
             clientServ.checkEmailNew(clientEmail);
 
+            //Check that the email provided is a valid email format
+            clientServ.checkEmail(clientEmail);
+
+            //verify that the auth token is not blank
+            clientServ.checkAuthTokenFormat(clientAuthToken);
+
             //verify the password is not blank
-            clientServ.checkPass(clientPassword);
+            //clientServ.checkPass(clientPassword);
 
             //Create a new client and add the data provided by the user
             Client newClient = new Client();
             newClient.setName(clientName);
             newClient.setEmail(clientEmail);
+            newClient.setAuthToken(clientAuthToken);
 
             //encrypt the new client's password
-            String hashPass = clientServ.encryptPass(clientPassword);
+            //String hashPass = clientServ.encryptPass(clientPassword);
 
             //Set the new client's password to the encrypted version of the password provided
-            newClient.setPassword(hashPass);
+            //newClient.setPassword(hashPass);
 
             //Check that the inputted data is valid
             clientServ.checkInvalid(newClient);
-
-            //Check that the email provided is a valid email format
-            clientServ.checkEmail(clientEmail);
 
             //If data is valid add new client to table
             Client addedClient = clientServ.addClient(newClient);
@@ -97,52 +101,80 @@ public class ClientController {
         } catch (InvaildInputException e) {
             return new ResponseEntity<>(e.getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (NoSuchAlgorithmException e) {
-            return new ResponseEntity<>(e.getMessage(),
-                    HttpStatus.FAILED_DEPENDENCY);
-        } catch (EntityExistsException e) {
+        }
+//        catch (NoSuchAlgorithmException e) {
+//            return new ResponseEntity<>(e.getMessage(),
+//                    HttpStatus.FAILED_DEPENDENCY);
+//        }
+        catch (EntityExistsException e) {
             return new ResponseEntity<>(e.getMessage(),
                     HttpStatus.FORBIDDEN);
         }
     }
 
+//    /**
+//     * A method to login a client
+//     * @param clientEmail
+//     *      The email of the client trying to login
+//     * @param clientPass
+//     *      The password of the client trying to login
+//     */
+//    @GetMapping(path = "/login")
+//    public ResponseEntity clientLogin(@RequestParam final String clientEmail,
+//                                      @RequestParam final String clientPass) {
+//        try {
+//            //Check that the email provided is a valid email format
+//            clientServ.checkEmail(clientEmail);
+//
+//            //verify the password is not blank
+//            clientServ.checkPass(clientPass);
+//
+//            //check if there is a client in the database with that email and return them
+//            Client fetchedClient = clientServ.getClientByEmail(clientEmail);
+//
+//            //encrypt the client password provided with SHA-256 algorithm
+//            String encryptPassProvided = clientServ.encryptPass(clientPass);
+//
+//            //check to see if they match if so return the client id (and maybe name)
+//            //otherwise throw an exception that the passwords no not match
+//            if (encryptPassProvided.equals(fetchedClient.getPassword())) {
+//                return new ResponseEntity<>(fetchedClient.getId(), HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<>("The password is not valid", HttpStatus.UNAUTHORIZED);
+//            }
+//
+//        } catch (InvaildInputException e) {
+//            return new ResponseEntity<>(e.getMessage(),
+//                    HttpStatus.UNPROCESSABLE_ENTITY);
+//        } catch (NoSuchAlgorithmException e) {
+//            return new ResponseEntity<>(e.getMessage(),
+//                    HttpStatus.FAILED_DEPENDENCY);
+//        } catch (NotFoundException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+//        }
+//    }
+
     /**
-     * A method to login a client
-     * @param clientEmail
-     *      The email of the client trying to login
-     * @param clientPass
-     *      The password of the client trying to login
+     * A method to authenticate the client based on their api token.
+     * @param clientAuthToken
+     *      The authentication token of the client trying to use our API's services
+     * @return
+     *      The client's id
      */
-    @GetMapping(path = "/login")
-    public ResponseEntity clientLogin(@RequestParam final String clientEmail,
-                                      @RequestParam final String clientPass) {
+    @CrossOrigin()
+    @GetMapping(path = "/authenticate")
+    public ResponseEntity<?> authenticateClient(@RequestParam final String clientAuthToken) {
         try {
-            //Check that the email provided is a valid email format
-            clientServ.checkEmail(clientEmail);
+            //check to see if there is any client with the provided authentication token
+            Client fetchedClient = clientServ.getClientByAuth(clientAuthToken);
 
-            //verify the password is not blank
-            clientServ.checkPass(clientPass);
+            //Print to terminal that there is an authentication occuriing with the provied
+            //authentication token
+            System.out.println("A client has authenticated with the authentication token: " +
+                    clientAuthToken);
 
-            //check if there is a client in the database with that email and return them
-            Client fetchedClient = clientServ.getClientByEmail(clientEmail);
-
-            //encrypt the client password provided with SHA-256 algorithm
-            String encryptPassProvided = clientServ.encryptPass(clientPass);
-
-            //check to see if they match if so return the client id (and maybe name)
-            //otherwise throw an exception that the passwords no not match
-            if (encryptPassProvided.equals(fetchedClient.getPassword())) {
-                return new ResponseEntity<>(fetchedClient.getId(), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("The password is not valid", HttpStatus.UNAUTHORIZED);
-            }
-
-        } catch (InvaildInputException e) {
-            return new ResponseEntity<>(e.getMessage(),
-                    HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (NoSuchAlgorithmException e) {
-            return new ResponseEntity<>(e.getMessage(),
-                    HttpStatus.FAILED_DEPENDENCY);
+            //return the client's id that matches the authentication token
+            return new ResponseEntity<>(fetchedClient.getId(), HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -190,6 +222,7 @@ public class ClientController {
      *      the response from the client not existing or the
      *      response from the email being invalid
      */
+    @CrossOrigin()
     @PostMapping(path = "/updateEmail")
     public ResponseEntity<?> updateClientEmail(
                             @RequestParam final Integer clientId,

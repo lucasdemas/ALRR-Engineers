@@ -31,8 +31,8 @@ public class Client {
     /**
      * Client Password (encrypted)
      */
-    @Column(name = "client_password")
-    private String password;
+    @Column(name = "client_auth_token")
+    private String authToken;
 
     /**
      * The default constructor.
@@ -41,7 +41,7 @@ public class Client {
         this.id = null;
         this.name = null;
         this.email = null;
-        this.password = null;
+        this.authToken = null;
     }
 
     /**
@@ -61,11 +61,11 @@ public class Client {
     public Client(final Integer clientId,
                   final String clientName,
                   final String clientEmail,
-                  final String clientPassword) {
+                  final String clientAuthToken) {
         this.id = clientId;
         this.name = clientName;
         this.email = clientEmail;
-        this.password = clientPassword;
+        this.authToken = clientAuthToken;
     }
 
     /**
@@ -120,19 +120,19 @@ public class Client {
     }
 
     /**
-     * Password getter.
+     * Auth token getter.
      * @return
-     *      client password
+     *      client auth token
      */
-    public String getPassword() {
-        return password;
+    public String getAuthToken() {
+        return authToken;
     }
 
     /**
-     * Password setter.
-     * @param clientPassword
+     * auth token setter.
+     * @param clientAuthToken
      */
-    public void setPassword(final String clientPassword) {
-        this.password = clientPassword;
+    public void setAuthToken(final String clientAuthToken) {
+        this.authToken = clientAuthToken;
     }
 }

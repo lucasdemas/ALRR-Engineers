@@ -193,4 +193,20 @@ public class ClientService {
             throw new InvaildInputException("The password cannot be blank!");
         }
     }
+
+    public Client getClientByAuth(String clientAuthToken) throws NotFoundException {
+        Optional<Client> target = clientRepo.findByAuthToken(clientAuthToken);
+        if (target.isPresent()) {
+            Client clientResult = target.get();
+            return clientResult;
+        } else {
+            throw new NotFoundException("There is no client with that authentication token");
+        }
+    }
+
+    public void checkAuthTokenFormat(String clientAuthToken) throws InvaildInputException {
+        if (clientAuthToken.trim().isEmpty()) {
+            throw new InvaildInputException("The authentication token cannot be blank!");
+        }
+    }
 }
