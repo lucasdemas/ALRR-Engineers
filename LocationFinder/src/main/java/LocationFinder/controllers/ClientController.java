@@ -66,7 +66,8 @@ public class ClientController {
     public ResponseEntity<?> addNewClient(
                                     @RequestParam final String clientName,
                                     @RequestParam final String clientEmail,
-                                    @RequestParam final String clientAuthToken) {
+                                    @RequestParam final String clientAuthToken,
+                                    @RequestParam final String clientRole) {
         try {
             //verify that there is no client in the database with that email already
             clientServ.checkEmailNew(clientEmail);
@@ -77,6 +78,9 @@ public class ClientController {
             //verify that the auth token is not blank
             clientServ.checkAuthTokenFormat(clientAuthToken);
 
+            //verify that the role being given to the client is a valid one
+            clientServ.checkValidRole(clientRole);
+
             //verify the password is not blank
             //clientServ.checkPass(clientPassword);
 
@@ -85,6 +89,7 @@ public class ClientController {
             newClient.setName(clientName);
             newClient.setEmail(clientEmail);
             newClient.setAuthToken(clientAuthToken);
+            newClient.setRole(clientRole);
 
             //encrypt the new client's password
             //String hashPass = clientServ.encryptPass(clientPassword);

@@ -209,4 +209,13 @@ public class ClientService {
             throw new InvaildInputException("The authentication token cannot be blank!");
         }
     }
+
+    public void checkValidRole(String clientRole) throws InvaildInputException {
+        if (clientRole.trim().isEmpty()) {
+            throw new InvaildInputException("The new client's role cannot be blank!");
+        }
+        else if (!(clientRole.trim().equals("ADMIN") || (clientRole.trim().equals("USER")))) {
+            throw new InvaildInputException("The new client's role needs to be ADMIN or USER!");
+        }
+    }
 }

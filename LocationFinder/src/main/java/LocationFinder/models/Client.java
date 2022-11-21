@@ -29,10 +29,16 @@ public class Client {
     private String email;
 
     /**
-     * Client Password (encrypted)
+     * Client Authentication token
      */
     @Column(name = "client_auth_token")
     private String authToken;
+
+    /**
+     * Client Role (used for authorization)
+     */
+    @Column(name = "client_role")
+    private String role;
 
     /**
      * The default constructor.
@@ -42,6 +48,7 @@ public class Client {
         this.name = null;
         this.email = null;
         this.authToken = null;
+        this.role = null;
     }
 
     /**
@@ -134,5 +141,22 @@ public class Client {
      */
     public void setAuthToken(final String clientAuthToken) {
         this.authToken = clientAuthToken;
+    }
+
+    /**
+     * Client Role getter
+     * @return
+     *      client role
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * auth token setter.
+     * @param clientRole
+     */
+    public void setRole(final String clientRole) {
+        this.role = clientRole;
     }
 }
