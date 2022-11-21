@@ -72,8 +72,28 @@ function displayAllLocations(locations) {
     })
 }
 
+function authorize_client(api_key) {
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8080/client/authenticate",
+        data: {"clientAuthToken": api_key},
+        success: function (result) {
+            console.log("Success");
+            sessionStorage.setItem('client_id', result);
+            console.log(sessionStorage.getItem('client_id'));
+        },
+        error: function(request, status, error){
+            console.log("Error");
+            console.log(request)
+            console.log(status)
+            console.log(error)
+        }
+      });
+}
+
 $(document).ready(function() {
     console.log(api_key)
+    authorize_client(api_key);
 
     $("#getAll").click(function() {
         getAllLocations();
