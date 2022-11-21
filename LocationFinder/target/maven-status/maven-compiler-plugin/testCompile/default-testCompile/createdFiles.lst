@@ -1,6 +1,9 @@
 LocationFinder\LocationFinderApplicationTests.class
 LocationFinder\LocationTest$1.class
+LocationFinder\ClientTest$6.class
+LocationFinder\ClientTest$7.class
 LocationFinder\LocationTest$2.class
+LocationFinder\ClientTest$5.class
 LocationFinder\ClientTest$1.class
 LocationFinder\LocationTest$3.class
 LocationFinder\ClientTest.class
@@ -8,5 +11,6 @@ LocationFinder\LocationTest$4.class
 LocationFinder\ClientTest$3.class
 LocationFinder\ClientTest$4.class
 LocationFinder\ClientTest$2.class
+LocationFinder\ClientTest$8.class
 LocationFinder\LocationTest$5.class
 LocationFinder\LocationTest.class

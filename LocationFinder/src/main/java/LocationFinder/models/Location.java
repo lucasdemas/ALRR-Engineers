@@ -19,6 +19,12 @@ public class Location {
     private Integer locId;
 
     /**
+     * Client Id of a location.
+     */
+    @Column(name = "client_id")
+    private Integer clientId;
+
+    /**
      * Location name.
      */
     @Column(name = "location_name")
@@ -47,6 +53,7 @@ public class Location {
      */
     public Location() {
         this.locId = null;
+        this.clientId = null;
         this.locName = null;
         this.locArea = null;
         this.locCost = null;
@@ -58,11 +65,13 @@ public class Location {
      * @param loc
      * @param area
      * @param cost
+     * @param clientId
      */
-    public Location(final String loc, final String area, final Double cost) {
+    public Location(final String loc, final String area, final Double cost, final Integer clientId) {
         this.locName = loc;
         this.locArea = area;
         this.locCost = cost;
+        this.clientId = clientId;
     }
 
     /**
@@ -80,6 +89,23 @@ public class Location {
      */
     public void setId(final Integer id) {
         this.locId = id;
+    }
+
+    /**
+     * Client Id getter.
+     * @return
+     *      clientId
+     */
+    public Integer getClientId() {
+        return clientId;
+    }
+
+    /**
+     * Client Id setter.
+     * @param clientId
+     */
+    public void setClientId(final Integer clientId) {
+        this.clientId = clientId;
     }
 
     /**

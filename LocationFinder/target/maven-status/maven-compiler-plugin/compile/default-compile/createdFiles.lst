@@ -5,6 +5,7 @@ LocationFinder\models\Location.class
 LocationFinder\repositories\LocationRepository.class
 LocationFinder\services\ClientService.class
 LocationFinder\exceptions\NotFoundException.class
+LocationFinder\exceptions\EntityExistsException.class
 LocationFinder\exceptions\InvaildInputException.class
 LocationFinder\repositories\ClientRepository.class
 LocationFinder\services\LocationService.class
