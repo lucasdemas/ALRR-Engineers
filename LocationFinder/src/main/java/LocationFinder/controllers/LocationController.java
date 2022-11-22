@@ -119,7 +119,7 @@ public class LocationController {
      * @return
      *      The response from finding all the locations in the database.
      */
-    @CrossOrigin()
+    //@CrossOrigin()
     @GetMapping(path = "/getAll")
     public ResponseEntity<?> getLocations() {
         return new ResponseEntity<>(locRepository.findAll(), HttpStatus.OK);
@@ -147,7 +147,7 @@ public class LocationController {
      *      The response from finding all locations by claimed
      *      status or the response from catching an exception
      */
-    @CrossOrigin("http://127.0.0.1:5000")
+    //@CrossOrigin("http://127.0.0.1:5000")
     @GetMapping(path = "/getClaim/{isClaim}")
     public ResponseEntity<?> getLocByClaim(@PathVariable final String isClaim) {
         try {

@@ -1,7 +1,7 @@
 function getAllLocations() {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/location/getAll",
+        url: "http://locationfinder-env.eba-hg6rv8mb.us-east-1.elasticbeanstalk.com/location/getAll",
         success: function (result) {
           console.log(result);
           $("#getAllFill").empty();

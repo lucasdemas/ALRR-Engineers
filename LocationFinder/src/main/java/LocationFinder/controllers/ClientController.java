@@ -166,7 +166,7 @@ public class ClientController {
      * @return
      *      The client's id
      */
-    @CrossOrigin()
+    //@CrossOrigin()
     @GetMapping(path = "/authenticate")
     public ResponseEntity<?> authenticateClient(@RequestParam final String clientAuthToken) {
         try {
@@ -229,7 +229,7 @@ public class ClientController {
      *      the response from the client not existing or the
      *      response from the email being invalid
      */
-    @CrossOrigin()
+    //@CrossOrigin()
     @PostMapping(path = "/updateEmail")
     public ResponseEntity<?> updateClientEmail(
                             @RequestParam final Integer clientId,
@@ -265,7 +265,7 @@ public class ClientController {
      *      The response for a successful deletion or the response
      *      for the client not existing
      */
-    @CrossOrigin("http://127.0.0.1:5000")
+    //@CrossOrigin("http://127.0.0.1:5000")
     @PostMapping(path = "/delete")
     public ResponseEntity<?> deleteClient(
                             @RequestParam final Integer clientId) {
