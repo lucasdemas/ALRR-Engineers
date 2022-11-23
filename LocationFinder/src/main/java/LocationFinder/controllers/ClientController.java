@@ -87,7 +87,7 @@ public class ClientController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (InvalidKeySpecException | BadPaddingException
                 | IllegalBlockSizeException | InvalidKeyException
-                | InvaildInputException e) {
+                | InvaildInputException | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }

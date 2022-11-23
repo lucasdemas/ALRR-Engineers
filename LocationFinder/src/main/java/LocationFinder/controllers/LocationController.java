@@ -181,10 +181,10 @@ public class LocationController {
                 Iterable<Location> ownedLocs = locRepository.getAllByClientId(clientId);
                 System.out.printf("The client with authentication token %s" +
                         " has successfully retrieved all their location from the database.%n", decryptedToken);
-                return new ResponseEntity<>(ownedLocs, HttpStatus.CREATED);
+                return new ResponseEntity<>(ownedLocs, HttpStatus.OK);
             } else {
                 System.out.printf("A client has attempted to retrieve all the locations of the client" +
-                        " client with the id %d using the " +
+                        " with the id %d using the " +
                         "token: %s which is not the token associated with that client.%n", clientId, decryptedToken);
                 return new ResponseEntity<>("The auth token does not match the client id " +
                         "that you are attempting retrieve the location of!", HttpStatus.FORBIDDEN);
@@ -207,13 +207,65 @@ public class LocationController {
      * which area they are located in.
      * @param area
      *      The area where the desired locations are
+     * @param clientId
+     *      The id of the client who's filtering their locations by a specific area
+     * @param clientAuthToken
+     *      The authentication token provided to verify the client is who they say they are
      * @return
      *      The response from finding all locations in the given area
      */
-    @GetMapping(path = "/get/{area}")
-    public ResponseEntity<?> getLocByArea(@PathVariable final String area) {
-        return new ResponseEntity<>(locRepository.findByArea(area),
-         HttpStatus.OK);
+    @CrossOrigin()
+    @GetMapping(path = "/getArea")
+    public ResponseEntity<?> getLocByArea(@RequestParam final String area,
+                                          @RequestParam final Integer clientId,
+                                          @RequestParam final String clientAuthToken) {
+        try {
+            //verify that the area is not blank
+            locService.checkArea(area);
+
+            //verify that the auth token provided by the client is not blank
+            clientServ.checkAuthTokenBlank(clientAuthToken);
+
+            //verify that there is a client with the provided client id in the database
+            clientServ.getClientById(clientId);
+
+            //Decrypt the provided token
+            String decryptedToken = clientServ.decryptToken(clientAuthToken);
+
+            //get the client that the auth token belongs to
+            Client authClient = clientServ.getClientByAuth(decryptedToken);
+
+            //make sure that the client id the auth token is associated to matches the one passed in the request
+            //if they match proceed to retrieve a list of locations that belong to the specified client id
+            //if they do not match, throw an error
+            if (clientId.equals(authClient.getId())) {
+                //Return all the locations with the specified client id
+                List<Location> areaLocs = locRepository.findByArea(area, clientId);
+                System.out.printf("The client with authentication token %s" +
+                        " has successfully retrieved all their locations from the area: %s" +
+                        " from the database.%n", decryptedToken, area);
+                return new ResponseEntity<>(areaLocs, HttpStatus.OK);
+            } else {
+                System.out.printf("A client has attempted to retrieve all the locations of the client" +
+                        " in the area %s, client with the id %d using the " +
+                        "token: %s which is not the token associated with that client.%n", clientId,
+                        area, decryptedToken);
+                return new ResponseEntity<>("The auth token does not match the client id " +
+                        "that you are attempting retrieve the location of!", HttpStatus.FORBIDDEN);
+            }
+
+        } catch (InvaildInputException | InvalidKeySpecException
+                | BadPaddingException | InvalidKeyException
+                | IllegalBlockSizeException | IllegalArgumentException
+                | InvalidTypeException e)  {
+            return new ResponseEntity<>(e.getMessage(),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (NotFoundException | NoSuchAlgorithmException
+                | NoSuchPaddingException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
     }
 
     /**
@@ -225,15 +277,52 @@ public class LocationController {
      *      status or the response from catching an exception
      */
     @CrossOrigin()
-    @GetMapping(path = "/getClaim/{isClaim}")
-    public ResponseEntity<?> getLocByClaim(@PathVariable final String isClaim) {
+    @GetMapping(path = "/getClaim")
+    public ResponseEntity<?> getLocByClaim(@RequestParam final String isClaim,
+                                           @RequestParam final Integer clientId,
+                                           @RequestParam final String clientAuthToken) {
         try {
-            List<Location> searchResults =
-            locService.getLocationByClaim(isClaim);
-            return new ResponseEntity<>(searchResults, HttpStatus.OK);
-        } catch (InvaildInputException e) {
+            //verify that the auth token provided by the client is not blank
+            clientServ.checkAuthTokenBlank(clientAuthToken);
+
+            //verify that there is a client with the provided client id in the database
+            clientServ.getClientById(clientId);
+
+            //Decrypt the provided token
+            String decryptedToken = clientServ.decryptToken(clientAuthToken);
+
+            //get the client that the auth token belongs to
+            Client authClient = clientServ.getClientByAuth(decryptedToken);
+
+            //make sure that the client id the auth token is associated to matches the one passed in the request
+            //if they match proceed to retrieve a list of locations that belong to the specified client id
+            //if they do not match, throw an error
+            if (clientId.equals(authClient.getId())) {
+                //Get a list of the locations that are either claimed or unclaimed specified by the input
+                List<Location> searchResults =
+                        locService.getLocationByClaim(isClaim, clientId);
+                System.out.printf("The client with authentication token %s" +
+                        " has successfully retrieved all their %s locations" +
+                        " from the database.%n", decryptedToken, isClaim);
+                return new ResponseEntity<>(searchResults, HttpStatus.OK);
+            } else {
+                System.out.printf("A client has attempted to retrieve all the %s locations of the client" +
+                                " with the id %d using the " +
+                                "token: %s which is not the token associated with that client.%n", isClaim,
+                        clientId, decryptedToken);
+                return new ResponseEntity<>("The auth token does not match the client id " +
+                        "that you are attempting retrieve the location of!", HttpStatus.FORBIDDEN);
+            }
+        } catch (InvaildInputException | NotFoundException
+                | BadPaddingException | InvalidKeyException
+                | IllegalBlockSizeException | InvalidKeySpecException
+                | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(),
              HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 
