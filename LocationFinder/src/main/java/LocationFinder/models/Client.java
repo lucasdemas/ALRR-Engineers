@@ -41,6 +41,12 @@ public class Client {
     private String role;
 
     /**
+     * Client Role (used for authorization)
+     */
+    @Column(name = "client_byte")
+    private byte[] byteTok;
+
+    /**
      * The default constructor.
      */
     public Client() {
@@ -49,6 +55,7 @@ public class Client {
         this.email = null;
         this.authToken = null;
         this.role = null;
+        this.byteTok = null;
     }
 
     /**
@@ -158,5 +165,22 @@ public class Client {
      */
     public void setRole(final String clientRole) {
         this.role = clientRole;
+    }
+
+    /**
+     * Client Role getter
+     * @return
+     *      client role
+     */
+    public byte[] getByte() {
+        return byteTok;
+    }
+
+    /**
+     * auth token setter.
+     * @param clientByte
+     */
+    public void setByte(final byte[] clientByte) {
+        this.byteTok = clientByte;
     }
 }

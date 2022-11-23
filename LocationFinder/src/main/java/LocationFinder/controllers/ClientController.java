@@ -11,8 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 
 @RestController
@@ -58,16 +63,21 @@ public class ClientController {
      *      The client email to be added
      * @param clientAuthToken
      *      The client's authentication token so they can access their data
+     * @param clientRole
+     *      The client's authentication token so they can access their data
+     * @param userAuthToken
+     *      The authentication token of the person trying to add the new client
      * @return
      *      The response for a successfully added client or the
      *      response for an invalid input
      */
     @PostMapping(path = "/add")
     public ResponseEntity<?> addNewClient(
-                                    @RequestParam final String clientName,
-                                    @RequestParam final String clientEmail,
-                                    @RequestParam final String clientAuthToken,
-                                    @RequestParam final String clientRole) {
+            @RequestParam final String clientName,
+            @RequestParam final String clientEmail,
+            @RequestParam final String clientAuthToken,
+            @RequestParam final String clientRole,
+            @RequestParam final String userAuthToken) {
         try {
             //verify that there is no client in the database with that email already
             clientServ.checkEmailNew(clientEmail);
@@ -75,14 +85,19 @@ public class ClientController {
             //Check that the email provided is a valid email format
             clientServ.checkEmail(clientEmail);
 
-            //verify that the auth token is not blank
-            clientServ.checkAuthTokenFormat(clientAuthToken);
-
             //verify that the role being given to the client is a valid one
             clientServ.checkValidRole(clientRole);
 
-            //verify the password is not blank
-            //clientServ.checkPass(clientPassword);
+            //verify that the auth token for the new client is not blank
+            clientServ.checkAuthTokenBlank(clientAuthToken);
+
+            //verify that the auth token for the new client isn't already in use
+            clientServ.checkAuthTokenExists(clientAuthToken);
+
+            //verify that the auth token of the person adding a new client is not blank
+            clientServ.checkAuthTokenBlank(userAuthToken);
+
+            String decryptedToken = clientServ.decryptToken(userAuthToken);
 
             //Create a new client and add the data provided by the user
             Client newClient = new Client();
@@ -91,12 +106,6 @@ public class ClientController {
             newClient.setAuthToken(clientAuthToken);
             newClient.setRole(clientRole);
 
-            //encrypt the new client's password
-            //String hashPass = clientServ.encryptPass(clientPassword);
-
-            //Set the new client's password to the encrypted version of the password provided
-            //newClient.setPassword(hashPass);
-
             //Check that the inputted data is valid
             clientServ.checkInvalid(newClient);
 
@@ -104,84 +113,64 @@ public class ClientController {
             Client addedClient = clientServ.addClient(newClient);
             return new ResponseEntity<>(addedClient, HttpStatus.CREATED);
         } catch (InvaildInputException e) {
-            return new ResponseEntity<>(e.getMessage(),
-                    HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-//        catch (NoSuchAlgorithmException e) {
-//            return new ResponseEntity<>(e.getMessage(),
-//                    HttpStatus.FAILED_DEPENDENCY);
-//        }
-        catch (EntityExistsException e) {
-            return new ResponseEntity<>(e.getMessage(),
-                    HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (EntityExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (NoSuchAlgorithmException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InvalidKeySpecException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (NoSuchPaddingException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BadPaddingException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (IllegalBlockSizeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (InvalidKeyException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
-
-//    /**
-//     * A method to login a client
-//     * @param clientEmail
-//     *      The email of the client trying to login
-//     * @param clientPass
-//     *      The password of the client trying to login
-//     */
-//    @GetMapping(path = "/login")
-//    public ResponseEntity clientLogin(@RequestParam final String clientEmail,
-//                                      @RequestParam final String clientPass) {
-//        try {
-//            //Check that the email provided is a valid email format
-//            clientServ.checkEmail(clientEmail);
-//
-//            //verify the password is not blank
-//            clientServ.checkPass(clientPass);
-//
-//            //check if there is a client in the database with that email and return them
-//            Client fetchedClient = clientServ.getClientByEmail(clientEmail);
-//
-//            //encrypt the client password provided with SHA-256 algorithm
-//            String encryptPassProvided = clientServ.encryptPass(clientPass);
-//
-//            //check to see if they match if so return the client id (and maybe name)
-//            //otherwise throw an exception that the passwords no not match
-//            if (encryptPassProvided.equals(fetchedClient.getPassword())) {
-//                return new ResponseEntity<>(fetchedClient.getId(), HttpStatus.OK);
-//            } else {
-//                return new ResponseEntity<>("The password is not valid", HttpStatus.UNAUTHORIZED);
-//            }
-//
-//        } catch (InvaildInputException e) {
-//            return new ResponseEntity<>(e.getMessage(),
-//                    HttpStatus.UNPROCESSABLE_ENTITY);
-//        } catch (NoSuchAlgorithmException e) {
-//            return new ResponseEntity<>(e.getMessage(),
-//                    HttpStatus.FAILED_DEPENDENCY);
-//        } catch (NotFoundException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        }
-//    }
 
     /**
      * A method to authenticate the client based on their api token.
      * @param clientAuthToken
-     *      The authentication token of the client trying to use our API's services
+     *      The authentication token of the client trying to use our API's services (encrypted using the public key)
      * @return
      *      The client's id
      */
-    //@CrossOrigin()
+    @CrossOrigin()
     @GetMapping(path = "/authenticate")
     public ResponseEntity<?> authenticateClient(@RequestParam final String clientAuthToken) {
         try {
-//            Cipher decryptCipher = Cipher.getInstance("RSA");
-//            decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
-            //check to see if there is any client with the provided authentication token
-            Client fetchedClient = clientServ.getClientByAuth(clientAuthToken);
+            String decryptedToken = clientServ.decryptToken(clientAuthToken);
+
+            //check to see if there is any client with the decrypted version
+            // of the provided authentication token
+            Client fetchedClient = clientServ.getClientByAuth(decryptedToken);
 
             //Print to terminal that there is an authentication occuriing with the provied
             //authentication token
             System.out.println("A client has authenticated with the authentication token: " +
-                    clientAuthToken);
+                    decryptedToken);
 
             //return the client's id that matches the authentication token
             return new ResponseEntity<>(fetchedClient.getId(), HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (NoSuchAlgorithmException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InvalidKeySpecException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (NoSuchPaddingException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BadPaddingException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (IllegalBlockSizeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (InvalidKeyException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

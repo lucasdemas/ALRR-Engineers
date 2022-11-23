@@ -14,7 +14,7 @@ def home_page():
     api_key = api_token.read()
     print(api_key)
     api_token.close()
-    return render_template('home_page.html', api_key = api_key)
+    return render_template('home_page.html', api_key = api_key, api_token=api_token)
 
 if __name__ == '__main__':
    app.run(debug = True)

@@ -92,9 +92,30 @@ function authorize_client(api_key) {
       });
 }
 
+function authorize_client2() {
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8080/client/authenticate2",
+        data: {"auth_token": "auth_token1.txt"},
+        success: function (result) {
+            console.log("Success");
+        },
+        error: function(request, status, error){
+            console.log("Error");
+            console.log(request)
+            console.log(status)
+            console.log(error)
+            alert(request.responseText);
+        }
+      });
+}
+
 $(document).ready(function() {
     console.log(api_key)
     authorize_client(api_key);
+
+    console.log(api_token)
+    authorize_client2();
 
     $("#getAll").click(function() {
         getAllLocations();
