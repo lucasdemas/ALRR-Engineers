@@ -96,16 +96,15 @@ public class LocationController {
                     @RequestParam final Integer clientId,
                     @RequestParam final String clientAuthToken){
         try {
-            System.out.println("you are here");
             //verify that the auth token provided by the client is not blank
             clientServ.checkAuthTokenBlank(clientAuthToken);
-            System.out.println("you are here1");
+
             //verify that there is a client with the provided client id in the database
             clientServ.getClientById(clientId);
-            System.out.println("you are here2");
+
             //Decrypt the provided token
             String decryptedToken = clientServ.decryptToken(clientAuthToken);
-            System.out.println("you are here3");
+
             //get the client that the auth token belongs to
             Client authClient = clientServ.getClientByAuth(decryptedToken);
 
@@ -113,7 +112,6 @@ public class LocationController {
             //if they match proceed to check the other inputs to see if they are all valid and add the new location
             //if they do not match, throw an error
             if (clientId.equals(authClient.getId())) {
-                System.out.println("you are here4");
                 //Convert the user input into a location entity
                 Location loc = new Location(locName, locArea, locCost, clientId);
 
@@ -125,8 +123,9 @@ public class LocationController {
                 //Add the new location to the database
                 Location savedLocation = locService.addLocation(loc);
                 System.out.printf("The client with authentication token %s" +
-                        " has successfully added a new location with the values", decryptedToken);
-                System.out.println(savedLocation);
+                        " has successfully added a new location with the values: locName: %s," +
+                        " locArea: %s, locCost: %f, clientId: %d%n", decryptedToken, locName, locArea,
+                         locCost, clientId);
                 return new ResponseEntity<>(savedLocation, HttpStatus.CREATED);
             } else {
                 System.out.printf("A client has attempted to add a new location to the client with the id %d using the " +
@@ -136,7 +135,8 @@ public class LocationController {
             }
         } catch (InvalidTypeException | InvaildInputException
                 | InvalidKeySpecException | BadPaddingException
-                | InvalidKeyException | IllegalBlockSizeException e)  {
+                | InvalidKeyException | IllegalBlockSizeException
+                | IllegalArgumentException e)  {
             return new ResponseEntity<>(e.getMessage(),
              HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (NotFoundException | NoSuchAlgorithmException
@@ -180,8 +180,7 @@ public class LocationController {
                 //Return all the locations with the specified client id
                 Iterable<Location> ownedLocs = locRepository.getAllByClientId(clientId);
                 System.out.printf("The client with authentication token %s" +
-                        " has successfully retrieved all their location from the database", decryptedToken);
-                System.out.println(ownedLocs);
+                        " has successfully retrieved all their location from the database.%n", decryptedToken);
                 return new ResponseEntity<>(ownedLocs, HttpStatus.CREATED);
             } else {
                 System.out.printf("A client has attempted to retrieve all the locations of the client" +

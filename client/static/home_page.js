@@ -75,7 +75,7 @@ function displayAllLocations(locations) {
 function authorize_client(api_key) {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/client/authenticate2",
+        url: "http://localhost:8080/client/authenticate",
         data: {"clientAuthToken": "iLc1/dBGmv/XtBQdhGEiR0tuAYesRHmt+2pHOLiq0wj7GtYdlq9bKfu9DwvbzrZJ/dY1E9wSQ4r7/sPe99zAQ1Yu+gniQtloMkSENEYGtMBPmje8kfnxatVjwbGnvbQ99UB5Xac4btJ/KeSNrCe+SBTRnJLNEwMEh3Zx+BWcOkJz8qfwAdN8L8/VgZpU5HxgoWPblobOlVRBBfBd/O/agGxCPUsO8ynYEro58qdK36oDNP/Cq+O5bEJI7W6oCzhDd+ZX3nOTmPumCyXKOeJypDMEiuW8ZN2fvLqN9kGRjKMSSc5Ru9Gcp2Adfnl97Rz36rR+MGlI0u0eF0AQJz6XZA=="},
         success: function (result) {
             console.log("Success");
