@@ -203,12 +203,11 @@ public class ClientService {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
         PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
+
         Cipher decryptCipher = Cipher.getInstance("RSA");
         decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
 
         String decryptedMessage = new String(decryptCipher.doFinal(Base64.getDecoder().decode(userAuthToken)), StandardCharsets.UTF_8);
-
-        System.out.println(decryptedMessage);
 
         return decryptedMessage;
     }

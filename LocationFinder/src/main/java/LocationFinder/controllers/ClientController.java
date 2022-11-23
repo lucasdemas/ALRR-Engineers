@@ -144,6 +144,9 @@ public class ClientController {
     @GetMapping(path = "/authenticate")
     public ResponseEntity<?> authenticateClient(@RequestParam final String clientAuthToken) {
         try {
+            //verify that the auth token for the new client is not blank
+            clientServ.checkAuthTokenBlank(clientAuthToken);
+
             String decryptedToken = clientServ.decryptToken(clientAuthToken);
 
             //check to see if there is any client with the decrypted version
@@ -159,20 +162,12 @@ public class ClientController {
             return new ResponseEntity<>(fetchedClient.getId(), HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (InvalidKeySpecException e) {
+        } catch (InvalidKeySpecException | BadPaddingException
+                | IllegalBlockSizeException | InvalidKeyException
+                | InvaildInputException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (NoSuchPaddingException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (BadPaddingException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (IllegalBlockSizeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (InvalidKeyException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

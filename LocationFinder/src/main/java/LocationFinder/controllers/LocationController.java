@@ -13,6 +13,13 @@ import org.springframework.http.ResponseEntity;
 import com.sun.jdi.InvalidTypeException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 @RestController
@@ -57,16 +64,13 @@ public class LocationController {
      * @return
      *      The response for the exception being handled.
      */
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<?> handleInvalidNumber(
-        final IllegalArgumentException e) {
-
-        return new ResponseEntity<>("Location Claim Must be a either true "
-        + "for claimed or false for unclaimed",
-         HttpStatus.UNPROCESSABLE_ENTITY);
-    }
-
-
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    public ResponseEntity<?> handleInvalidNumber(
+//        final IllegalArgumentException e) {
+//
+//        return new ResponseEntity<>("The Authentication token must be a valid token!",
+//         HttpStatus.UNPROCESSABLE_ENTITY);
+//    }
 
     /**
      * A method that adds a new location to the database.
@@ -78,51 +82,125 @@ public class LocationController {
      *      The location cost
      * @param clientId
      *      The location client id
+     * @param clientAuthToken
+     *      The authentication token of the client attempting to add a new location
      * @return
      *      The response for a successfully created location
      *      or the response for a caught exception
      */
+    @CrossOrigin()
     @PostMapping(path = "/add")
     public ResponseEntity<?> addNewLoc(@RequestParam final String locName,
                     @RequestParam final String locArea,
                     @RequestParam final Double locCost,
-                    @RequestParam final Integer clientId) {
+                    @RequestParam final Integer clientId,
+                    @RequestParam final String clientAuthToken){
         try {
+            System.out.println("you are here");
+            //verify that the auth token provided by the client is not blank
+            clientServ.checkAuthTokenBlank(clientAuthToken);
+            System.out.println("you are here1");
+            //verify that there is a client with the provided client id in the database
+            clientServ.getClientById(clientId);
+            System.out.println("you are here2");
+            //Decrypt the provided token
+            String decryptedToken = clientServ.decryptToken(clientAuthToken);
+            System.out.println("you are here3");
+            //get the client that the auth token belongs to
+            Client authClient = clientServ.getClientByAuth(decryptedToken);
 
-            Client targetClient = clientServ.getClientById(clientId);
-            //Convert the user input into a location entity
-            Location loc = new Location(locName, locArea, locCost, clientId);
+            //make sure that the client id the auth token is associated to matches the one passed in the request
+            //if they match proceed to check the other inputs to see if they are all valid and add the new location
+            //if they do not match, throw an error
+            if (clientId.equals(authClient.getId())) {
+                System.out.println("you are here4");
+                //Convert the user input into a location entity
+                Location loc = new Location(locName, locArea, locCost, clientId);
 
-            //Check that all of the data the user input is in a valid format
-            //Possibly add checker for if the user
-            //inputs a string of spaces (which is invalid)
-            locService.checkInvalid(loc);
+                //Check that all of the data the user input is in a valid format
+                //Possibly add checker for if the user
+                //inputs a string of spaces (which is invalid)
+                locService.checkInvalid(loc);
 
-            //Add the new location to the database
-            Location savedLocation = locService.addLocation(loc);
-            return new ResponseEntity<>(savedLocation, HttpStatus.CREATED);
-        } catch (InvalidTypeException e)  {
+                //Add the new location to the database
+                Location savedLocation = locService.addLocation(loc);
+                System.out.printf("The client with authentication token %s" +
+                        " has successfully added a new location with the values", decryptedToken);
+                System.out.println(savedLocation);
+                return new ResponseEntity<>(savedLocation, HttpStatus.CREATED);
+            } else {
+                System.out.printf("A client has attempted to add a new location to the client with the id %d using the " +
+                        "token: %s which is not the token associated with that client.%n", clientId, decryptedToken);
+                return new ResponseEntity<>("The auth token does not match the client id " +
+                        "that you are attempting to create a location for!", HttpStatus.FORBIDDEN);
+            }
+        } catch (InvalidTypeException | InvaildInputException
+                | InvalidKeySpecException | BadPaddingException
+                | InvalidKeyException | IllegalBlockSizeException e)  {
             return new ResponseEntity<>(e.getMessage(),
              HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | NoSuchAlgorithmException
+                | NoSuchPaddingException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e)  {
-            return new ResponseEntity<>(e.getMessage(),
-             HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
-
-
     }
 
     /**
-     * A method to get all locations in the database.
+     * A method to get all locations in the database for a specific client.
+     * @param clientId
+     *      The id of the client who's locations are being retrieved
+     * @param clientAuthToken
+     *      The authentication token provided to retrieve all the client's locations
      * @return
      *      The response from finding all the locations in the database.
      */
-    //@CrossOrigin()
+    @CrossOrigin()
     @GetMapping(path = "/getAll")
-    public ResponseEntity<?> getLocations() {
-        return new ResponseEntity<>(locRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<?> getLocations(@RequestParam final Integer clientId,
+                                          @RequestParam final String clientAuthToken) {
+        try {
+            //verify that the auth token provided by the client is not blank
+            clientServ.checkAuthTokenBlank(clientAuthToken);
+
+            //verify that there is a client with the provided client id in the database
+            clientServ.getClientById(clientId);
+
+            //Decrypt the provided token
+            String decryptedToken = clientServ.decryptToken(clientAuthToken);
+
+            //get the client that the auth token belongs to
+            Client authClient = clientServ.getClientByAuth(decryptedToken);
+
+            //make sure that the client id the auth token is associated to matches the one passed in the request
+            //if they match proceed to retrieve a list of locations that belong to the specified client id
+            //if they do not match, throw an error
+            if (clientId.equals(authClient.getId())) {
+                //Return all the locations with the specified client id
+                Iterable<Location> ownedLocs = locRepository.getAllByClientId(clientId);
+                System.out.printf("The client with authentication token %s" +
+                        " has successfully retrieved all their location from the database", decryptedToken);
+                System.out.println(ownedLocs);
+                return new ResponseEntity<>(ownedLocs, HttpStatus.CREATED);
+            } else {
+                System.out.printf("A client has attempted to retrieve all the locations of the client" +
+                        " client with the id %d using the " +
+                        "token: %s which is not the token associated with that client.%n", clientId, decryptedToken);
+                return new ResponseEntity<>("The auth token does not match the client id " +
+                        "that you are attempting retrieve the location of!", HttpStatus.FORBIDDEN);
+            }
+        } catch (InvaildInputException | InvalidKeySpecException
+                | BadPaddingException | InvalidKeyException
+                | IllegalBlockSizeException | IllegalArgumentException e)  {
+            return new ResponseEntity<>(e.getMessage(),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (NotFoundException | NoSuchAlgorithmException
+                | NoSuchPaddingException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
     }
 
     /**
@@ -147,7 +225,7 @@ public class LocationController {
      *      The response from finding all locations by claimed
      *      status or the response from catching an exception
      */
-    //@CrossOrigin("http://127.0.0.1:5000")
+    @CrossOrigin()
     @GetMapping(path = "/getClaim/{isClaim}")
     public ResponseEntity<?> getLocByClaim(@PathVariable final String isClaim) {
         try {

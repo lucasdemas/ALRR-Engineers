@@ -62,4 +62,15 @@ public interface LocationRepository extends CrudRepository<Location, Integer> {
     @Query(value = "DELETE from location_data where client_id = :client_id",
             nativeQuery = true)
     void deleteClientLocs(@Param("client_id") Integer client_id);
+
+    /**
+     * Query to find locations by claimed status.
+     * @param client_id
+     *      The id of the client getting all their locations
+     * @return
+     *      List of locations for that client id
+     */
+    @Query(value = "select * from location_data where client_id = :client_id",
+            nativeQuery = true)
+    Iterable<Location> getAllByClientId(@Param("client_id") Integer client_id);
 }

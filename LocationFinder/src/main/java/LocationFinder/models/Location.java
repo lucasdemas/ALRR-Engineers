@@ -72,6 +72,7 @@ public class Location {
         this.locArea = area;
         this.locCost = cost;
         this.clientId = clientId;
+        this.claim = false;
     }
 
     /**
