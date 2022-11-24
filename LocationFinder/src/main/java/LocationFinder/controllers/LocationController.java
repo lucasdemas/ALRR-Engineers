@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.sun.jdi.InvalidTypeException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -64,13 +65,13 @@ public class LocationController {
      * @return
      *      The response for the exception being handled.
      */
-//    @ExceptionHandler(IllegalArgumentException.class)
-//    public ResponseEntity<?> handleInvalidNumber(
-//        final IllegalArgumentException e) {
-//
-//        return new ResponseEntity<>("The Authentication token must be a valid token!",
-//         HttpStatus.UNPROCESSABLE_ENTITY);
-//    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleInvalidNumber(
+        final IllegalArgumentException e) {
+
+        return new ResponseEntity<>("The Authentication token must be a valid token!",
+         HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 
     /**
      * A method that adds a new location to the database.
@@ -335,36 +336,79 @@ public class LocationController {
      * @param clientId
      *      The id of the client assosiated with the location.
      *      For authentication usage.
+     * @param clientAuthToken
+     *      The authentication token provided to verify the client making the request
      * @return
      *      The response from updating the cost or the response
      *      from the location not existing
      */
     @PostMapping(path = "/updateCost")
     public ResponseEntity<?> updateLocCost(@RequestParam final Integer locId,
-                                @RequestParam final Double locCost,
-                                @RequestParam final Integer clientId) {
-        //Get the location based on the id provided
+                                           @RequestParam final Double locCost,
+                                           @RequestParam final Integer clientId,
+                                           @RequestParam final String clientAuthToken) {
         try {
-            //Check to see if the location is in the DB and get it's data
-            Location targetLoc = locService.getLocById(locId);
-            //To Do: Add a client authentication method in service
+            //verify that the auth token provided by the client is not blank
+            clientServ.checkAuthTokenBlank(clientAuthToken);
 
-            locService.checkInvalid(targetLoc);
+            //verify that there is a client with the provided client id in the database
+            clientServ.getClientById(clientId);
 
-            //Update the location's data in the
-            //database given the provided information by the user
-            Location updatedLoc = locService.updateLocCost(targetLoc, locCost);
-            return new ResponseEntity<>(updatedLoc, HttpStatus.OK);
-        } catch (NotFoundException e) {
+            //Decrypt the provided token
+            String decryptedToken = clientServ.decryptToken(clientAuthToken);
+
+            //get the client that the auth token belongs to
+            Client authClient = clientServ.getClientByAuth(decryptedToken);
+
+            //check that the cost specified is a positive number
+            locService.checkCost(locCost);
+
+            //make sure that the client id the auth token is associated to matches the one passed in the request
+            //if they match proceed to retrieve a list of locations that belong to the specified client id
+            //if they do not match, throw an error
+            if (clientId.equals(authClient.getId())) {
+                //Check to see if the location is in the DB and get it's data
+                Location targetLoc = locService.getLocById(locId);
+
+                //check to make sure the client id provided matches the client id that the location belongs to
+                if (clientId.equals(targetLoc.getClientId())) {
+                    //Update the location's data in the
+                    //database given the provided information by the user
+                    Location updatedLoc = locService.updateLocCost(targetLoc, locCost);
+                    System.out.printf("The client with authentication token %s" +
+                            " has successfully updated the location with the location id: %d" +
+                            " to the new cost of %f in the database.%n", decryptedToken, locId, locCost);
+                    return new ResponseEntity<>(updatedLoc, HttpStatus.OK);
+                } else {
+                    System.out.printf("A client with the client id: %d " +
+                                    "has attempted to update the cost of the location with the " +
+                                    " location id %d to the cost of %f " +
+                                    "which does not belong to them.%n", clientId,
+                            locId, locCost);
+                    return new ResponseEntity<>("The location who's cost you are trying to update " +
+                            "does not belong to the client information provided!", HttpStatus.FORBIDDEN);
+                }
+            } else {
+                System.out.printf("A client has attempted to to update the cost of the location with the" +
+                                " location id %d to the cost of %f belong to the client with the " +
+                                "client id %d with the authentication  " +
+                                "token: %s which is not the token associated with that client.%n", locId,
+                        locCost, clientId, decryptedToken);
+                return new ResponseEntity<>("The auth token does not match the client id " +
+                        "that you are attempting to update the cost of a location!", HttpStatus.FORBIDDEN);
+            }
+        } catch (NotFoundException | NoSuchAlgorithmException
+                | NoSuchPaddingException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (InvalidTypeException e)  {
+        } catch (InvalidTypeException | InvalidKeySpecException
+                | BadPaddingException | InvalidKeyException
+                | InvaildInputException | IllegalBlockSizeException |
+                IllegalArgumentException e)  {
             return new ResponseEntity<>(e.getMessage(),
             HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (Exception e)  {
-            return new ResponseEntity<>(e.getMessage(),
-            HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
-
     }
 
     /**
@@ -376,33 +420,100 @@ public class LocationController {
      * @param clientId
      *      The id of the client assosiated with the location.
      *      For authentication usage.
+     * @param clientAuthToken
+     *      The authentication token provided to verify the post request
      * @return
      *      The response from updating the claimed status or the
      *      response from the location not existing
      */
     @PostMapping(path = "/updateClaim")
     public ResponseEntity<?> updateLocClaim(@RequestParam final Integer locId,
-                                @RequestParam final Boolean locClaim,
-                                @RequestParam final Integer clientId) {
+                                            @RequestParam final Boolean locClaim,
+                                            @RequestParam final Integer clientId,
+                                            @RequestParam final String clientAuthToken) {
         try {
-            //Check to see if the location is in the DB and get it's data
-            Location targetLoc = locService.getLocById(locId);
-            //To Do: Add a client authentication method in service
-            locService.checkInvalid(targetLoc);
+            //verify that the auth token provided by the client is not blank
+            clientServ.checkAuthTokenBlank(clientAuthToken);
 
-            //Update the location's data in the
-            //database given the provided information by the user
-            Location updatedLoc =
-             locService.updateLocClaim(targetLoc, locClaim);
-            return new ResponseEntity<>(updatedLoc, HttpStatus.OK);
-        } catch (NotFoundException e) {
+            //verify that there is a client with the provided client id in the database
+            clientServ.getClientById(clientId);
+
+            //Decrypt the provided token
+            String decryptedToken = clientServ.decryptToken(clientAuthToken);
+
+            //get the client that the auth token belongs to
+            Client authClient = clientServ.getClientByAuth(decryptedToken);
+
+            //make sure that the client id the auth token is associated to matches the one passed in the request
+            //if they match proceed to retrieve a list of locations that belong to the specified client id
+            //if they do not match, throw an error
+            if (clientId.equals(authClient.getId())) {
+                //Check to see if the location is in the DB and get it's data
+                Location targetLoc = locService.getLocById(locId);
+
+                //check to make sure the client id provided matches the client id that the location belongs to
+                if (clientId.equals(targetLoc.getClientId())) {
+                    //Update the location's data in the
+                    //database given the provided information by the user
+                    Location updatedLoc = locService.updateLocClaim(targetLoc, locClaim);
+
+                    if (locClaim) {
+                        System.out.printf("The client with authentication token %s" +
+                                " has successfully updated the claimed status of the " +
+                                "location with the location id: %d" +
+                                " to claimed in the database.%n", decryptedToken, locId);
+                    } else {
+                        System.out.printf("The client with authentication token %s" +
+                                " has successfully updated the claimed status of the " +
+                                "location with the location id: %d" +
+                                " to unclaimed in the database.%n", decryptedToken, locId);
+                    }
+                    return new ResponseEntity<>(updatedLoc, HttpStatus.OK);
+                } else {
+                    if (locClaim) {
+                        System.out.printf("A client with the client id: %d " +
+                                        "has attempted to update the claim status of the location with the " +
+                                        " location id %d to claimed but the location" +
+                                        " does not belong to them.%n", clientId,
+                                locId);
+                    } else {
+                        System.out.printf("A client with the client id: %d " +
+                                        "has attempted to update the claim status of the location with the " +
+                                        " location id %d to unclaimed but the location" +
+                                        " does not belong to them.%n", clientId,
+                                locId);
+                    }
+                    return new ResponseEntity<>("The location who's cost you are trying to update " +
+                            "does not belong to the client information provided!", HttpStatus.FORBIDDEN);
+                }
+            } else {
+                if (locClaim) {
+                    System.out.printf("A client has attempted to to update claim status of the location with the" +
+                                    " location id %d to claimed belonging to the client with the " +
+                                    "client id %d with the authentication  " +
+                                    "token: %s which is not the token associated with that client.%n", locId,
+                            clientId, decryptedToken);
+                } else {
+                    System.out.printf("A client has attempted to to update claim status of the location with the" +
+                                    " location id %d to unclaimed belonging to the client with the " +
+                                    "client id %d with the authentication  " +
+                                    "token: %s which is not the token associated with that client.%n", locId,
+                            clientId, decryptedToken);
+                }
+                return new ResponseEntity<>("The auth token does not match the client id " +
+                        "that you are attempting to update the cost of a location!", HttpStatus.FORBIDDEN);
+            }
+        } catch (NotFoundException | NoSuchAlgorithmException
+                | NoSuchPaddingException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (InvalidTypeException e)  {
+        } catch (InvalidTypeException | InvalidKeySpecException
+                | BadPaddingException | InvalidKeyException
+                | InvaildInputException | IllegalBlockSizeException |
+                IllegalArgumentException e)  {
             return new ResponseEntity<>(e.getMessage(),
-            HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (Exception e)  {
-            return new ResponseEntity<>(e.getMessage(),
-            HttpStatus.UNPROCESSABLE_ENTITY);
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 
