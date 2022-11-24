@@ -1,7 +1,7 @@
 function getAllLocations() {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/location/getAll",
+        url: "http://locationfinder-env.eba-hg6rv8mb.us-east-1.elasticbeanstalk.com/location/getAll",
         success: function (result) {
           console.log(result);
           $("#getAllFill").empty();
@@ -72,7 +72,48 @@ function displayAllLocations(locations) {
     })
 }
 
+function authorize_client(api_key) {
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8080/client/authenticate",
+        data: {"clientAuthToken": "iLc1/dBGmv/XtBQdhGEiR0tuAYesRHmt+2pHOLiq0wj7GtYdlq9bKfu9DwvbzrZJ/dY1E9wSQ4r7/sPe99zAQ1Yu+gniQtloMkSENEYGtMBPmje8kfnxatVjwbGnvbQ99UB5Xac4btJ/KeSNrCe+SBTRnJLNEwMEh3Zx+BWcOkJz8qfwAdN8L8/VgZpU5HxgoWPblobOlVRBBfBd/O/agGxCPUsO8ynYEro58qdK36oDNP/Cq+O5bEJI7W6oCzhDd+ZX3nOTmPumCyXKOeJypDMEiuW8ZN2fvLqN9kGRjKMSSc5Ru9Gcp2Adfnl97Rz36rR+MGlI0u0eF0AQJz6XZA=="},
+        success: function (result) {
+            console.log("Success");
+            sessionStorage.setItem('client_id', result);
+            console.log(sessionStorage.getItem('client_id'));
+        },
+        error: function(request, status, error){
+            console.log("Error");
+            console.log(request)
+            console.log(status)
+            console.log(error)
+            alert(request.responseText);
+        }
+      });
+}
+
+function authorize_client2() {
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:8080/client/authenticate2",
+        data: {"auth_token": "auth_token1.txt"},
+        success: function (result) {
+            console.log("Success");
+        },
+        error: function(request, status, error){
+            console.log("Error");
+            console.log(request)
+            console.log(status)
+            console.log(error)
+            alert(request.responseText);
+        }
+      });
+}
+
 $(document).ready(function() {
+    console.log(api_key)
+    authorize_client(api_key);
+
     $("#getAll").click(function() {
         getAllLocations();
     })

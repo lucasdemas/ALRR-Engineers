@@ -68,6 +68,18 @@ public class LocationService {
         }
     }
 
+    public void checkArea(final String locArea) throws InvalidTypeException {
+        if (locArea.trim().isEmpty()) {
+            throw new InvalidTypeException("Location area cannot be blank");
+        }
+    }
+
+    public void checkCost(final double locCost) throws InvalidTypeException {
+        if (locCost < 0) {
+            throw new InvalidTypeException("Location Cost can't be a negative number");
+        }
+    }
+
     /**
      * A method to get locations by claimed status.
      * @param claimStatus
@@ -77,15 +89,11 @@ public class LocationService {
      *      The claimed status input is invalid
      */
     public List<Location> getLocationByClaim(
-        final String claimStatus) throws InvaildInputException {
+        final String claimStatus, final Integer clientId) throws InvaildInputException {
         if (claimStatus.toLowerCase().equals("claimed")) {
-            List<Location> locationList = new LinkedList();
-            locationList = locRepository.findByClaim(true);
-            return locationList;
+            return locRepository.findByClaim(true, clientId);
         } else if (claimStatus.toLowerCase().equals("unclaimed")) {
-            List<Location> locationList = new LinkedList();
-            locationList = locRepository.findByClaim(false);
-            return locationList;
+            return locRepository.findByClaim(false, clientId);
         } else {
             throw new InvaildInputException(
                 "Please specify whether you are searching"
