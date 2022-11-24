@@ -45,57 +45,50 @@ public class LocationController {
 
     /**
      * Exception handling for InvalidTypeInput.
-     * @param e
-     *      The Number Format Exception that is going to be handled
-     * @return
-     *      The response for inputting a negative value for cost
+     *
+     * @param e The Number Format Exception that is going to be handled
+     * @return The response for inputting a negative value for cost
      */
     @ExceptionHandler(NumberFormatException.class)
     public ResponseEntity<?> handleInvalidNumber(
-        final NumberFormatException e) {
+            final NumberFormatException e) {
 
         return new ResponseEntity<>("Cost Must be a positive numeric value",
-         HttpStatus.UNPROCESSABLE_ENTITY);
+                HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     /**
      * Exception handling for InvalidNumberException.
-     * @param e
-     *      The Exception that is handled.
-     * @return
-     *      The response for the exception being handled.
+     *
+     * @param e The Exception that is handled.
+     * @return The response for the exception being handled.
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleInvalidNumber(
-        final IllegalArgumentException e) {
+            final IllegalArgumentException e) {
 
         return new ResponseEntity<>("The Authentication token must be a valid token!",
-         HttpStatus.UNPROCESSABLE_ENTITY);
+                HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     /**
      * A method that adds a new location to the database.
-     * @param locName
-     *      The location name
-     * @param locArea
-     *      The location area
-     * @param locCost
-     *      The location cost
-     * @param clientId
-     *      The location client id
-     * @param clientAuthToken
-     *      The authentication token of the client attempting to add a new location
-     * @return
-     *      The response for a successfully created location
-     *      or the response for a caught exception
+     *
+     * @param locName         The location name
+     * @param locArea         The location area
+     * @param locCost         The location cost
+     * @param clientId        The location client id
+     * @param clientAuthToken The authentication token of the client attempting to add a new location
+     * @return The response for a successfully created location
+     * or the response for a caught exception
      */
     @CrossOrigin()
     @PostMapping(path = "/add")
     public ResponseEntity<?> addNewLoc(@RequestParam final String locName,
-                    @RequestParam final String locArea,
-                    @RequestParam final Double locCost,
-                    @RequestParam final Integer clientId,
-                    @RequestParam final String clientAuthToken){
+                                       @RequestParam final String locArea,
+                                       @RequestParam final Double locCost,
+                                       @RequestParam final Integer clientId,
+                                       @RequestParam final String clientAuthToken) {
         try {
             //verify that the auth token provided by the client is not blank
             clientServ.checkAuthTokenBlank(clientAuthToken);
@@ -124,9 +117,9 @@ public class LocationController {
                 //Add the new location to the database
                 Location savedLocation = locService.addLocation(loc);
                 System.out.printf("The client with authentication token %s" +
-                        " has successfully added a new location with the values: locName: %s," +
-                        " locArea: %s, locCost: %f, clientId: %d%n", decryptedToken, locName, locArea,
-                         locCost, clientId);
+                                " has successfully added a new location with the values: locName: %s," +
+                                " locArea: %s, locCost: %f, clientId: %d%n", decryptedToken, locName, locArea,
+                        locCost, clientId);
                 return new ResponseEntity<>(savedLocation, HttpStatus.CREATED);
             } else {
                 System.out.printf("A client has attempted to add a new location to the client with the id %d using the " +
@@ -137,9 +130,9 @@ public class LocationController {
         } catch (InvalidTypeException | InvaildInputException
                 | InvalidKeySpecException | BadPaddingException
                 | InvalidKeyException | IllegalBlockSizeException
-                | IllegalArgumentException e)  {
+                | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(),
-             HttpStatus.UNPROCESSABLE_ENTITY);
+                    HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (NotFoundException | NoSuchAlgorithmException
                 | NoSuchPaddingException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -150,12 +143,10 @@ public class LocationController {
 
     /**
      * A method to get all locations in the database for a specific client.
-     * @param clientId
-     *      The id of the client who's locations are being retrieved
-     * @param clientAuthToken
-     *      The authentication token provided to retrieve all the client's locations
-     * @return
-     *      The response from finding all the locations in the database.
+     *
+     * @param clientId        The id of the client who's locations are being retrieved
+     * @param clientAuthToken The authentication token provided to retrieve all the client's locations
+     * @return The response from finding all the locations in the database.
      */
     @CrossOrigin()
     @GetMapping(path = "/getAll")
@@ -192,7 +183,7 @@ public class LocationController {
             }
         } catch (InvaildInputException | InvalidKeySpecException
                 | BadPaddingException | InvalidKeyException
-                | IllegalBlockSizeException | IllegalArgumentException e)  {
+                | IllegalBlockSizeException | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (NotFoundException | NoSuchAlgorithmException
@@ -206,14 +197,11 @@ public class LocationController {
     /**
      * A method to get all locations in the database by
      * which area they are located in.
-     * @param area
-     *      The area where the desired locations are
-     * @param clientId
-     *      The id of the client who's filtering their locations by a specific area
-     * @param clientAuthToken
-     *      The authentication token provided to verify the client is who they say they are
-     * @return
-     *      The response from finding all locations in the given area
+     *
+     * @param area            The area where the desired locations are
+     * @param clientId        The id of the client who's filtering their locations by a specific area
+     * @param clientAuthToken The authentication token provided to verify the client is who they say they are
+     * @return The response from finding all locations in the given area
      */
     @CrossOrigin()
     @GetMapping(path = "/getArea")
@@ -248,8 +236,8 @@ public class LocationController {
                 return new ResponseEntity<>(areaLocs, HttpStatus.OK);
             } else {
                 System.out.printf("A client has attempted to retrieve all the locations of the client" +
-                        " in the area %s, client with the id %d using the " +
-                        "token: %s which is not the token associated with that client.%n", clientId,
+                                " in the area %s, client with the id %d using the " +
+                                "token: %s which is not the token associated with that client.%n", clientId,
                         area, decryptedToken);
                 return new ResponseEntity<>("The auth token does not match the client id " +
                         "that you are attempting retrieve the location of!", HttpStatus.FORBIDDEN);
@@ -258,7 +246,7 @@ public class LocationController {
         } catch (InvaildInputException | InvalidKeySpecException
                 | BadPaddingException | InvalidKeyException
                 | IllegalBlockSizeException | IllegalArgumentException
-                | InvalidTypeException e)  {
+                | InvalidTypeException e) {
             return new ResponseEntity<>(e.getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (NotFoundException | NoSuchAlgorithmException
@@ -271,11 +259,10 @@ public class LocationController {
 
     /**
      * A method to get all locations by claimed status.
-     * @param isClaim
-     *      The claimed status on which to search the database
-     * @return
-     *      The response from finding all locations by claimed
-     *      status or the response from catching an exception
+     *
+     * @param isClaim The claimed status on which to search the database
+     * @return The response from finding all locations by claimed
+     * status or the response from catching an exception
      */
     @CrossOrigin()
     @GetMapping(path = "/getClaim")
@@ -319,7 +306,7 @@ public class LocationController {
                 | IllegalBlockSizeException | InvalidKeySpecException
                 | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(),
-             HttpStatus.UNPROCESSABLE_ENTITY);
+                    HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (IOException e) {
@@ -329,19 +316,16 @@ public class LocationController {
 
     /**
      * A method to update the cost of an already existing location.
-     * @param locId
-     *      The id of the location in need of changing
-     * @param locCost
-     *      The new cost of the location
-     * @param clientId
-     *      The id of the client assosiated with the location.
-     *      For authentication usage.
-     * @param clientAuthToken
-     *      The authentication token provided to verify the client making the request
-     * @return
-     *      The response from updating the cost or the response
-     *      from the location not existing
+     *
+     * @param locId           The id of the location in need of changing
+     * @param locCost         The new cost of the location
+     * @param clientId        The id of the client assosiated with the location.
+     *                        For authentication usage.
+     * @param clientAuthToken The authentication token provided to verify the client making the request
+     * @return The response from updating the cost or the response
+     * from the location not existing
      */
+    @CrossOrigin()
     @PostMapping(path = "/updateCost")
     public ResponseEntity<?> updateLocCost(@RequestParam final Integer locId,
                                            @RequestParam final Double locCost,
@@ -403,9 +387,9 @@ public class LocationController {
         } catch (InvalidTypeException | InvalidKeySpecException
                 | BadPaddingException | InvalidKeyException
                 | InvaildInputException | IllegalBlockSizeException |
-                IllegalArgumentException e)  {
+                IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(),
-            HttpStatus.UNPROCESSABLE_ENTITY);
+                    HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (IOException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
@@ -413,19 +397,16 @@ public class LocationController {
 
     /**
      * A method to update the claimed status of an existing location.
-     * @param locId
-     *      The id of the location in need of updating
-     * @param locClaim
-     *      The new claimed status of the location
-     * @param clientId
-     *      The id of the client assosiated with the location.
-     *      For authentication usage.
-     * @param clientAuthToken
-     *      The authentication token provided to verify the post request
-     * @return
-     *      The response from updating the claimed status or the
-     *      response from the location not existing
+     *
+     * @param locId           The id of the location in need of updating
+     * @param locClaim        The new claimed status of the location
+     * @param clientId        The id of the client assosiated with the location.
+     *                        For authentication usage.
+     * @param clientAuthToken The authentication token provided to verify the post request
+     * @return The response from updating the claimed status or the
+     * response from the location not existing
      */
+    @CrossOrigin()
     @PostMapping(path = "/updateClaim")
     public ResponseEntity<?> updateLocClaim(@RequestParam final Integer locId,
                                             @RequestParam final Boolean locClaim,
@@ -509,7 +490,7 @@ public class LocationController {
         } catch (InvalidTypeException | InvalidKeySpecException
                 | BadPaddingException | InvalidKeyException
                 | InvaildInputException | IllegalBlockSizeException |
-                IllegalArgumentException e)  {
+                IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (IOException e) {
@@ -519,25 +500,77 @@ public class LocationController {
 
     /**
      * A method to delete an existing location.
-     * @param locId
-     *      The id of the location to be deleted
-     * @param clientId
-     *      The id of the client assosiated with the location.
-     *      For authentication usage.
-     * @return
-     *      The response from successfully deleting the location or
-     *      the response from the location not existing
+     *
+     * @param locId    The id of the location to be deleted
+     * @param clientId The id of the client associated with the location.
+     *                 For authentication usage.
+     * @param clientAuthToken
+     *      The authentication token provided to the entrypoint to perform the action
+     * @return The response from successfully deleting the location or
+     * the response from the location not existing
      */
+    @CrossOrigin()
     @PostMapping(path = "/delete")
     public ResponseEntity<?> deleteLoc(@RequestParam final Integer locId,
-                                       @RequestParam final Integer clientId) {
+                                       @RequestParam final Integer clientId,
+                                       @RequestParam final String clientAuthToken) {
         try {
-            //To Do: Add a client authentication method in service
-            //Delete the location from the database
-            locService.deleteLocationById(locId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NotFoundException e) {
+            //verify that the auth token provided by the client is not blank
+            clientServ.checkAuthTokenBlank(clientAuthToken);
+
+            //verify that there is a client with the provided client id in the database
+            clientServ.getClientById(clientId);
+
+            //Decrypt the provided token
+            String decryptedToken = clientServ.decryptToken(clientAuthToken);
+
+            //get the client that the auth token belongs to
+            Client authClient = clientServ.getClientByAuth(decryptedToken);
+
+            //make sure that the client id the auth token is associated to matches the one passed in the request
+            //if they match proceed to retrieve a list of locations that belong to the specified client id
+            //if they do not match, throw an error
+            if (clientId.equals(authClient.getId())) {
+                //Check to see if the location is in the DB and get it's data
+                Location targetLoc = locService.getLocById(locId);
+
+                //check to make sure the client id provided matches the client id that the location belongs to
+                if (clientId.equals(targetLoc.getClientId())) {
+                    //Delete the location from the database
+                    locService.deleteLocationById(locId);
+                    System.out.printf("The client with authentication token %s" +
+                            " has successfully deleted the  " +
+                            "location with the location id: %d" +
+                            " in the database.%n", decryptedToken, locId);
+                    return new ResponseEntity<>("Location deleted successfully!", HttpStatus.OK);
+                } else {
+                    System.out.printf("A client with the client id: %d " +
+                                    "has attempted to delete the location with the " +
+                                    " location id %d but the location" +
+                                    " does not belong to them.%n", clientId,
+                            locId);
+                    return new ResponseEntity<>("You cannot delete a location that does not belong to you!"
+                            , HttpStatus.FORBIDDEN);
+                }
+            } else {
+                System.out.printf("A client has attempted to delete the location with the" +
+                                " location id %d using the " +
+                                "client id %d with the authentication  " +
+                                "token: %s which is not the token associated with that client.%n", locId,
+                        clientId, decryptedToken);
+                return new ResponseEntity<>("You cannot delete a location that you do not " +
+                        "have the credentials for!", HttpStatus.FORBIDDEN);
+            }
+        } catch (NotFoundException | NoSuchAlgorithmException
+                | NoSuchPaddingException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InvalidKeySpecException | BadPaddingException
+                | InvalidKeyException | InvaildInputException
+                | IllegalBlockSizeException | IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 }
