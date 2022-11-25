@@ -31,7 +31,7 @@ public class Client {
     /**
      * Client Authentication token
      */
-    @Column(name = "client_auth_token")
+    @Column(name = "client_auth_token", unique = true)
     private String authToken;
 
     /**
