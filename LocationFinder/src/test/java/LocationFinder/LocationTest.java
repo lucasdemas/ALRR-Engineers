@@ -432,6 +432,19 @@ class LocationTest {
     }
 
     /**
+     * test case for valid (none blank) area
+     */
+
+    @Test
+    public void ValidLocArea() throws InvalidTypeException {
+
+        //Test a valid Location area
+        //Expected, no exception thrown or return statments
+        locServ.checkArea("New York");
+
+    }
+
+    /**
      * A test for Invalid Location Cost.
      */
     @Test
@@ -443,5 +456,18 @@ class LocationTest {
                 locServ.checkCost(-1);
             }
         });
+    }
+
+    /**
+     * test case for valid (none blank) cost
+     */
+
+    @Test
+    public void ValidLocCost() throws InvalidTypeException {
+
+        //Test a valid Location cost
+        //Expected, no exception thrown or return statments
+       locServ.checkCost(20.0);
+
     }
 }

@@ -409,6 +409,68 @@ class ClientTest {
     }
 
 
+    /**
+     * test case for valid (none blank) authentication token
+     */
+
+    @Test
+    public void ValidClientAuth() throws InvaildInputException {
+
+        //Test a valid auth token
+        //Expected, no exception thrown or return statments
+        clientServ.checkAuthTokenBlank("1234");
+
+    }
+
+
+    /**
+     * A test to get client by authentication token
+     */
+    @Test
+    public void testGetClientByAuth() throws NotFoundException {
+        //Create a mock client who we will search for by their id
+        Client client1 = new Client(1, "Client Test",
+                "ClientTest@client.com", "1234");
+
+        //Have the client be returned in the format
+        //that findById is looking for in the cleintRepo
+        Optional<Client> optClient = Optional.of(client1);
+
+        //Have the mock return the formatted client
+        //when it look for a client with the auth token 1234
+        Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
+
+        //Get the result of searching for a client with the auth token 1234
+        Client clientResult = clientServ.getClientByAuth("1234");
+
+        //Check to see that the results of
+        //the service returned the correct data
+        assertEquals(clientResult.getId(), 1);
+        assertEquals(clientResult.getName(), "Client Test");
+        assertEquals(clientResult.getEmail(), "ClientTest@client.com");
+        assertEquals(clientResult.getAuthToken(), "1234");
+    }
+
+    /**
+     * A test to see if the correct exception is thrown when
+     * a client auth is not found in the database.
+     */
+    @Test
+    public void testGetClientByAuthException() {
+        assertThrows(NotFoundException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                //Tell the mock repo that there is no client with id 100
+                Mockito.when(clientRepo.existsByAuth("1234")).thenReturn(false);
+
+                //Try and get a client with the auth token 1234
+                //(which results in a NotFound exception)
+                clientServ.getClientByAuth("1234");
+            }
+        });
+    }
+
+
 }
 
 

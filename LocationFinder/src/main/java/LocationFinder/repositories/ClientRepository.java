@@ -37,4 +37,14 @@ public interface ClientRepository extends CrudRepository<Client, Integer> {
      */
     @Query(value = "select * from client where client_auth_token = :client_auth_token", nativeQuery = true)
     Optional<Client> findByAuthToken(@Param("client_auth_token") String clientAuthToken);
+
+
+    /**
+     * Query to see if the auth token is already in use by a client in the database
+     * @param clientEmail
+     * @return
+     *      True/False depending if there is a client with the auth token or not
+     */
+    @Query("select case when count(c)> 0 then true else false end from Client c where lower(c.authToken) like lower(:clientAuth)")
+    boolean existsByAuth(@Param("clientAuth") String clientAuth);
 }
