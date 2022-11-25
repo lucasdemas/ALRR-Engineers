@@ -59,6 +59,17 @@ class LocationTest {
     }
 
     /**
+     * A test to delete a existent location.
+     */
+    @Test
+    public void testDeleteLocation() throws NotFoundException {
+
+        Mockito.when(locRepo.existsById(1)).thenReturn(true);
+        locServ.deleteLocationById(1);
+
+    }
+
+    /**
      * A test to add a location to the database.
      */
     @Test
@@ -146,12 +157,11 @@ class LocationTest {
     }
 
     /**
-     * A test to get a location by invalid input.
-     * @throws InvaildInputException
-     *      One of the input fields is invalid
+     * A test to get a claimed locations.
+     * Return list of claimed locations
      */
     @Test
-    public void testGetLocationByClaim() throws InvaildInputException {
+    public void testGetClaimedLocations() throws InvaildInputException {
 
         //Create a mock location that will represent the data
         //that would be passed in for when a new location is added
@@ -194,6 +204,61 @@ class LocationTest {
         assertEquals(searchResults.get(0).getClientId(), 1);
 
         assertEquals(searchResults.get(1).getClaim(), false);
+        assertEquals(searchResults.get(1).getId(), 1);
+        assertEquals(searchResults.get(1).getName(), "Midtown");
+        assertEquals(searchResults.get(1).getArea(), "New York");
+        assertEquals(searchResults.get(1).getCost(), 2.0);
+        assertEquals(searchResults.get(1).getClientId(), 1);
+    }
+
+    /**
+     * A test to get a unclaimed locations.
+     * Return list of unclaimed locations
+     */
+    @Test
+    public void testGetUnclaimedLocations() throws InvaildInputException {
+
+        //Create a mock location that will represent the data
+        //that would be passed in for when a new location is added
+        Location loc1 = new Location();
+        loc1.setClaim(true);
+        loc1.setId(1);
+        loc1.setName("Times Square");
+        loc1.setArea("New York");
+        loc1.setCost(1.0);
+        loc1.setClientId(1);
+
+        Location loc2 = new Location();
+        loc2.setClaim(true);
+        loc2.setId(1);
+        loc2.setName("Midtown");
+        loc2.setArea("New York");
+        loc2.setCost(2.0);
+        loc2.setClientId(1);
+
+        List<Location> locationList = new LinkedList();
+        locationList.add(loc1);
+        locationList.add(loc2);
+
+
+        Mockito.when(locRepo.findByClaim(true, 1)).thenReturn(locationList);
+
+        //Have the client be returned in the format
+        //that findById is looking for in the cleintRepo
+        List<Location> searchResults = locServ.getLocationByClaim("claimed", 1);
+
+        //Have the mock return the formatted client when
+        //it look for a client with the id 1
+
+        //Check to see that the results of the service returned the correct data
+        assertEquals(searchResults.get(0).getClaim(), true);
+        assertEquals(searchResults.get(0).getId(), 1);
+        assertEquals(searchResults.get(0).getName(), "Times Square");
+        assertEquals(searchResults.get(0).getArea(), "New York");
+        assertEquals(searchResults.get(0).getCost(), 1.0);
+        assertEquals(searchResults.get(0).getClientId(), 1);
+
+        assertEquals(searchResults.get(1).getClaim(), true);
         assertEquals(searchResults.get(1).getId(), 1);
         assertEquals(searchResults.get(1).getName(), "Midtown");
         assertEquals(searchResults.get(1).getArea(), "New York");
@@ -253,6 +318,28 @@ class LocationTest {
                 loc1.setName("Times square");
                 loc1.setArea("New York");
                 loc1.setCost(-1.0);
+                locServ.checkInvalid(loc1);
+            }
+        });
+    }
+
+
+    /**
+     * A test to check invalid type input.
+     * @throws InvalidTypeException
+     *      The input name can not be blank
+     */
+    @Test
+    public void testCheckInvalidName() throws InvalidTypeException {
+        assertThrows(InvalidTypeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                Location loc1 = new Location();
+                loc1.setClaim(false);
+                loc1.setId(1);
+                loc1.setName("  ");
+                loc1.setArea("New York");
+                loc1.setCost(1.0);
                 locServ.checkInvalid(loc1);
             }
         });
@@ -330,6 +417,9 @@ class LocationTest {
         assertEquals(locResult.getCost(), 2.0);
     }
 
+    /**
+     * A test for Invalid Location Area.
+     */
     @Test
     public void testInvalidArea() throws InvalidTypeException {
         assertThrows(InvalidTypeException.class, new Executable() {
@@ -341,6 +431,9 @@ class LocationTest {
         });
     }
 
+    /**
+     * A test for Invalid Location Cost.
+     */
     @Test
     public void testInvalidCost() throws InvalidTypeException {
         assertThrows(InvalidTypeException.class, new Executable() {
