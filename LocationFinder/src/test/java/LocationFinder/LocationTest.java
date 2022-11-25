@@ -329,4 +329,26 @@ class LocationTest {
         //Check to see that the client's email was updated successfully
         assertEquals(locResult.getCost(), 2.0);
     }
+
+    @Test
+    public void testInvalidArea() throws InvalidTypeException {
+        assertThrows(InvalidTypeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+
+                locServ.checkArea(" ");
+            }
+        });
+    }
+
+    @Test
+    public void testInvalidCost() throws InvalidTypeException {
+        assertThrows(InvalidTypeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+
+                locServ.checkCost(-1);
+            }
+        });
+    }
 }
