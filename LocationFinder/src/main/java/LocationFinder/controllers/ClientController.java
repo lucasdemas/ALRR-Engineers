@@ -4,12 +4,18 @@ import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.repositories.ClientRepository;
 import LocationFinder.models.Client;
-import LocationFinder.repositories.LocationRepository;
 import LocationFinder.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -29,29 +35,23 @@ public class ClientController {
     private ClientRepository clientRepo;
 
     /**
-     * An instance of the client repository.
-     */
-    @Autowired
-    private LocationRepository locRepo;
-
-    /**
      * An instance of the client service.
      */
     @Autowired
     private ClientService clientServ;
 
     /**
-     * Exception Handler for Number Format Exception.
-     * @param e
-     * @return
-     *      The response for a number format exception
+     * Exception handling for MissingServletRequestParameter.
+     *
+     * @param e The MissingServletRequestParameter Exception that is going to be handled
+     * @return The response saying what input is missing in the request
      */
-    @ExceptionHandler(NumberFormatException.class)
-    public ResponseEntity<?> handleInvalidNumber(
-            final NumberFormatException e) {
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<?> handleMissingInputs(
+            final MissingServletRequestParameterException e) {
 
-        return new ResponseEntity<>("Client id must be integer",
-                HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(e.getMessage(),
+                HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -89,37 +89,6 @@ public class ClientController {
                 | IllegalBlockSizeException | InvalidKeyException
                 | InvaildInputException | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-    }
-
-    /**
-     * A method to get all clients.
-     * @return
-     *      The response from getting all clients
-     */
-    @GetMapping(path = "/getAll")
-    public ResponseEntity<?> getClients() {
-        return new ResponseEntity<>(clientRepo.findAll(), HttpStatus.OK);
-    }
-
-    /**
-     * A method to get a client instance by the client id.
-     * @param id
-     *      The id of the client
-     * @return
-     *      The response for successfully getting the client or the
-     *      response for the client not existing
-     */
-    @GetMapping(path = "/get/{id}")
-    public ResponseEntity<?> getClientById(
-        @PathVariable final Integer id) throws NumberFormatException {
-        //Search for the client in the client table
-        //based on the provided id (if there is a client with that id)
-        try {
-            Client targetClient = clientServ.getClientById(id);
-            return new ResponseEntity<>(targetClient, HttpStatus.OK);
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
