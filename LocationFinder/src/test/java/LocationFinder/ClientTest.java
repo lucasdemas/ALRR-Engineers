@@ -19,6 +19,20 @@ import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.exceptions.EntityExistsException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.security.*;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 
 @RunWith(SpringRunner.class)
@@ -248,43 +262,43 @@ class ClientTest {
      * Excpected: EntityExistsException exception
      */
 
-    @Test
-    public void ClientEmailExistException() {
-        assertThrows(EntityExistsException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                //Tell the mock repo that there is a client with email "ClientTest@client.com"
-                Mockito.when(clientRepo.existsByEmail("ClientTest@client.com")).thenReturn(true);
-
-                //Check if the client with email "ClientTest@client.com" exists
-                //(which results in a EntityExistsException)
-                clientServ.checkEmailNew("ClientTest@client.com");
-            }
-        });
-    }
+//    @Test
+//    public void ClientEmailExistException() {
+//        assertThrows(EntityExistsException.class, new Executable() {
+//            @Override
+//            public void execute() throws Throwable {
+//                //Tell the mock repo that there is a client with email "ClientTest@client.com"
+//                Mockito.when(clientRepo.existsByEmail("ClientTest@client.com")).thenReturn(true);
+//
+//                //Check if the client with email "ClientTest@client.com" exists
+//                //(which results in a EntityExistsException)
+//                clientServ.checkEmailNew("ClientTest@client.com");
+//            }
+//        });
+//    }
 
     /**
      * A test for adding a client with an email that already exists.
      * Excpected: EntityExistsException exception
      */
 
-    @Test
-    public void NewEmailTest() throws EntityExistsException {
-
-
-        //Tell the mock repo that there is not client with email "ClientTest@client.com"
-        Mockito.when(clientRepo.existsByEmail("ClientTest@client.com")).thenReturn(false);
-
-        //Check if the client with email "ClientTest@client.com" exists
-        //(which results in no exception of EntityExistsException)
-        clientServ.checkEmailNew("ClientTest@client.com");
-
-
-
-
-
-
-    }
+//    @Test
+//    public void NewEmailTest() throws EntityExistsException {
+//
+//
+//        //Tell the mock repo that there is not client with email "ClientTest@client.com"
+//        Mockito.when(clientRepo.existsByEmail("ClientTest@client.com")).thenReturn(false);
+//
+//        //Check if the client with email "ClientTest@client.com" exists
+//        //(which results in no exception of EntityExistsException)
+//        clientServ.checkEmailNew("ClientTest@client.com");
+//
+//
+//
+//
+//
+//
+//    }
 //
 //    /**
 //     * A test for updating a client email of a client that do not exist.
@@ -350,6 +364,49 @@ class ClientTest {
 //        assertEquals(EncPass1, EncPass2);
 //
 //    }
+
+    /**
+     * testing decrypt token
+     */
+
+    @Test
+    public void TestDecryptToken() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+
+        File publicKeyFile = new File("public.key");
+        byte[] publicKeyBytes = Files.readAllBytes(publicKeyFile.toPath());
+
+
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
+        keyFactory.generatePublic(publicKeySpec);
+
+        String secretToken = "1234";
+        PublicKey publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+        Cipher encryptCipher = Cipher.getInstance("RSA");
+        encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+        byte[] secretMessageBytes = secretToken.getBytes(StandardCharsets.UTF_8);
+        byte[] encryptedMessageBytes = encryptCipher.doFinal(secretMessageBytes);
+
+        String encodedMessage = Base64.getEncoder().encodeToString(encryptedMessageBytes);
+        assertEquals(clientServ.decryptToken(encodedMessage), "1234");
+
+    }
+
+    /**
+     * test case for invalid (blank) authentication token
+     */
+
+    @Test
+    public void InvalidClientAuth() {
+        assertThrows(InvaildInputException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+
+                clientServ.checkAuthTokenBlank("    ");
+            }
+        });
+    }
 
 
 }
