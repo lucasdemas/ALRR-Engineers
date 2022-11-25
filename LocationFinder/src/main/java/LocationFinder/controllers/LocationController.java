@@ -171,8 +171,9 @@ public class LocationController {
             if (clientId.equals(authClient.getId())) {
                 //Return all the locations with the specified client id
                 Iterable<Location> ownedLocs = locRepository.getAllByClientId(clientId);
-                System.out.printf("The client with authentication token %s" +
-                        " has successfully retrieved all their location from the database.%n", decryptedToken);
+                System.out.printf("The client with id %d and authentication token %s" +
+                        " has successfully retrieved all their location from the database.%n",
+                         clientId, decryptedToken);
                 return new ResponseEntity<>(ownedLocs, HttpStatus.OK);
             } else {
                 System.out.printf("A client has attempted to retrieve all the locations of the client" +
@@ -289,9 +290,9 @@ public class LocationController {
                 //Get a list of the locations that are either claimed or unclaimed specified by the input
                 List<Location> searchResults =
                         locService.getLocationByClaim(isClaim, clientId);
-                System.out.printf("The client with authentication token %s" +
+                System.out.printf("The client with client id %d and authentication token %s" +
                         " has successfully retrieved all their %s locations" +
-                        " from the database.%n", decryptedToken, isClaim);
+                        " from the database.%n", clientId, decryptedToken, isClaim);
                 return new ResponseEntity<>(searchResults, HttpStatus.OK);
             } else {
                 System.out.printf("A client has attempted to retrieve all the %s locations of the client" +
