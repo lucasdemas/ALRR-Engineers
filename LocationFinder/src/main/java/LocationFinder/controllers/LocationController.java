@@ -323,13 +323,13 @@ public class LocationController {
                 return new ResponseEntity<>("The auth token does not match the client id " +
                         "that you are attempting retrieve the location of!", HttpStatus.FORBIDDEN);
             }
-        } catch (InvaildInputException | NotFoundException
+        } catch (InvaildInputException
                 | BadPaddingException | InvalidKeyException
                 | IllegalBlockSizeException | InvalidKeySpecException
                 | IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(),
                     HttpStatus.UNPROCESSABLE_ENTITY);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (IOException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);

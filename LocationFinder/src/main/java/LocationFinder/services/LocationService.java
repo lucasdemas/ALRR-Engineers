@@ -68,10 +68,11 @@ public class LocationService {
         }
     }
 
-    public void checkArea(final String locArea) throws InvalidTypeException {
+    public String checkArea(final String locArea) throws InvalidTypeException {
         if (locArea.trim().isEmpty()) {
             throw new InvalidTypeException("Location area cannot be blank");
         }
+        return locArea;
     }
 
     public void checkCost(final double locCost) throws InvalidTypeException {
