@@ -3,10 +3,13 @@ package LocationFinder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import LocationFinder.exceptions.InvaildInputException;
 import LocationFinder.models.Client;
 import LocationFinder.repositories.ClientRepository;
 import LocationFinder.services.ClientService;
+import LocationFinder.controllers.ClientController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.runner.RunWith;
@@ -44,11 +47,199 @@ class ClientTest {
     @Autowired
     private ClientService clientServ;
 
+    @Autowired
+    private ClientController clientCont;
+
     /**
      * An instance of the client repository.
      */
     @MockBean
     private ClientRepository clientRepo;
+
+
+    /**
+     * Client Unit test cases section, mock services are used
+     * Not actual changes to the database
+     * Total number of test cases: 7
+     */
+
+    /**
+     * A test to check if a client does not exist the correct
+     * exception is thrown.
+     * @throws NotFoundException
+     *      The id does not exist in the database
+     */
+
+    @Test
+    public void testGetClientById() throws NotFoundException {
+        //Create a mock client who we will search for by their id
+        Client client1 = new Client(1, "Client Test",
+        "ClientTest@client.com");
+
+        //Have the client be returned in the format
+        //that findById is looking for in the cleintRepo
+        Optional<Client> optClient = Optional.of(client1);
+
+        //Have the mock return the formatted client
+        //when it look for a client with the id 100
+        Mockito.when(clientRepo.findById(1)).thenReturn(optClient);
+
+        //Get the result of searching for a client with the id 1
+        Client clientResult = clientServ.getClientById(1);
+
+        //Check to see that the results of
+        //the service returned the correct data
+        assertEquals(clientResult.getId(), 1);
+        assertEquals(clientResult.getName(), "Client Test");
+        assertEquals(clientResult.getEmail(), "ClientTest@client.com");
+    }
+
+    /**
+     * A test to see if the correct exception is thrown when
+     * a client is not found in the database.
+     */
+    @Test
+    public void testGetClientByIdException() {
+        assertThrows(NotFoundException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                //Tell the mock repo that there is no client with id 100
+                Mockito.when(clientRepo.existsById(1)).thenReturn(false);
+
+                //Try and get a client with the id 1
+                //(which results in a NotFound exception)
+                clientServ.getClientById(1);
+            }
+        });
+    }
+
+
+
+    /**
+     * testing decrypt token
+     */
+
+    @Test
+    public void TestDecryptToken() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+
+        File publicKeyFile = new File("public.key");
+        byte[] publicKeyBytes = Files.readAllBytes(publicKeyFile.toPath());
+
+
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
+        keyFactory.generatePublic(publicKeySpec);
+
+        String secretToken = "1234";
+        PublicKey publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+        Cipher encryptCipher = Cipher.getInstance("RSA");
+        encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+        byte[] secretMessageBytes = secretToken.getBytes(StandardCharsets.UTF_8);
+        byte[] encryptedMessageBytes = encryptCipher.doFinal(secretMessageBytes);
+
+        String encodedMessage = Base64.getEncoder().encodeToString(encryptedMessageBytes);
+        assertEquals(clientServ.decryptToken(encodedMessage), "1234");
+
+    }
+
+    /**
+     * test case for invalid (blank) authentication token
+     */
+
+    @Test
+    public void InvalidClientAuth() {
+        assertThrows(InvaildInputException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+
+                clientServ.checkAuthTokenBlank("    ");
+            }
+        });
+    }
+
+
+    /**
+     * test case for valid (none blank) authentication token
+     */
+
+    @Test
+    public void ValidClientAuth() throws InvaildInputException {
+
+        //Test a valid auth token
+        //Expected, no exception thrown or return statments
+        clientServ.checkAuthTokenBlank("1234");
+
+    }
+
+
+    /**
+     * A test to get client by authentication token
+     */
+    @Test
+    public void testGetClientByAuth() throws NotFoundException {
+        //Create a mock client who we will search for by their id
+        Client client1 = new Client(1, "Client Test",
+                "ClientTest@client.com", "1234");
+
+        //Have the client be returned in the format
+        //that findById is looking for in the cleintRepo
+        Optional<Client> optClient = Optional.of(client1);
+
+        //Have the mock return the formatted client
+        //when it look for a client with the auth token 1234
+        Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
+
+        //Get the result of searching for a client with the auth token 1234
+        Client clientResult = clientServ.getClientByAuth("1234");
+
+        //Check to see that the results of
+        //the service returned the correct data
+        assertEquals(clientResult.getId(), 1);
+        assertEquals(clientResult.getName(), "Client Test");
+        assertEquals(clientResult.getEmail(), "ClientTest@client.com");
+        assertEquals(clientResult.getAuthToken(), "1234");
+    }
+
+    /**
+     * A test to see if the correct exception is thrown when
+     * a client auth is not found in the database.
+     */
+    @Test
+    public void testGetClientByAuthException() {
+        assertThrows(NotFoundException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                //Tell the mock repo that there is no client with id 100
+                Mockito.when(clientRepo.existsByAuth("1234")).thenReturn(false);
+
+                //Try and get a client with the auth token 1234
+                //(which results in a NotFound exception)
+                clientServ.getClientByAuth("1234");
+            }
+        });
+    }
+
+
+    /**
+     * Client System test cases section, chain test cases
+     * method is used, test cases are created with the
+     * assumption of already existed clients in the database
+     * Total number of test cases: 7
+     */
+
+    @Test
+    public void TestGetClients() {
+
+        ResponseEntity response = clientCont.getClients();
+        System.out.println("Athy");
+        System.out.println(response.getBody());
+
+    }
+
+
+    // These test cases are not used currently but might be useful in the future
+
 
     /**
      * A negative test for deleting a client.
@@ -94,55 +285,6 @@ class ClientTest {
 //        assertEquals(clientServ.addClient(client1).getId(), 1);
 //    }
 
-
-    /**
-     * A test to check if a client does not exist the correct
-     * exception is thrown.
-     * @throws NotFoundException
-     *      The id does not exist in the database
-     */
-    @Test
-    public void testGetClientById() throws NotFoundException {
-        //Create a mock client who we will search for by their id
-        Client client1 = new Client(1, "Client Test",
-        "ClientTest@client.com");
-
-        //Have the client be returned in the format
-        //that findById is looking for in the cleintRepo
-        Optional<Client> optClient = Optional.of(client1);
-
-        //Have the mock return the formatted client
-        //when it look for a client with the id 100
-        Mockito.when(clientRepo.findById(1)).thenReturn(optClient);
-
-        //Get the result of searching for a client with the id 1
-        Client clientResult = clientServ.getClientById(1);
-
-        //Check to see that the results of
-        //the service returned the correct data
-        assertEquals(clientResult.getId(), 1);
-        assertEquals(clientResult.getName(), "Client Test");
-        assertEquals(clientResult.getEmail(), "ClientTest@client.com");
-    }
-
-    /**
-     * A test to see if the correct exception is thrown when
-     * a client is not found in the database.
-     */
-    @Test
-    public void testGetClientByIdException() {
-        assertThrows(NotFoundException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                //Tell the mock repo that there is no client with id 100
-                Mockito.when(clientRepo.existsById(1)).thenReturn(false);
-
-                //Try and get a client with the id 1
-                //(which results in a NotFound exception)
-                clientServ.getClientById(1);
-            }
-        });
-    }
 
 //    /**
 //     * A test to successfully update a client's email.
@@ -364,113 +506,6 @@ class ClientTest {
 //        assertEquals(EncPass1, EncPass2);
 //
 //    }
-
-    /**
-     * testing decrypt token
-     */
-
-    @Test
-    public void TestDecryptToken() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-
-        File publicKeyFile = new File("public.key");
-        byte[] publicKeyBytes = Files.readAllBytes(publicKeyFile.toPath());
-
-
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
-        keyFactory.generatePublic(publicKeySpec);
-
-        String secretToken = "1234";
-        PublicKey publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
-        Cipher encryptCipher = Cipher.getInstance("RSA");
-        encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-        byte[] secretMessageBytes = secretToken.getBytes(StandardCharsets.UTF_8);
-        byte[] encryptedMessageBytes = encryptCipher.doFinal(secretMessageBytes);
-
-        String encodedMessage = Base64.getEncoder().encodeToString(encryptedMessageBytes);
-        assertEquals(clientServ.decryptToken(encodedMessage), "1234");
-
-    }
-
-    /**
-     * test case for invalid (blank) authentication token
-     */
-
-    @Test
-    public void InvalidClientAuth() {
-        assertThrows(InvaildInputException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-
-                clientServ.checkAuthTokenBlank("    ");
-            }
-        });
-    }
-
-
-    /**
-     * test case for valid (none blank) authentication token
-     */
-
-    @Test
-    public void ValidClientAuth() throws InvaildInputException {
-
-        //Test a valid auth token
-        //Expected, no exception thrown or return statments
-        clientServ.checkAuthTokenBlank("1234");
-
-    }
-
-
-    /**
-     * A test to get client by authentication token
-     */
-    @Test
-    public void testGetClientByAuth() throws NotFoundException {
-        //Create a mock client who we will search for by their id
-        Client client1 = new Client(1, "Client Test",
-                "ClientTest@client.com", "1234");
-
-        //Have the client be returned in the format
-        //that findById is looking for in the cleintRepo
-        Optional<Client> optClient = Optional.of(client1);
-
-        //Have the mock return the formatted client
-        //when it look for a client with the auth token 1234
-        Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
-
-        //Get the result of searching for a client with the auth token 1234
-        Client clientResult = clientServ.getClientByAuth("1234");
-
-        //Check to see that the results of
-        //the service returned the correct data
-        assertEquals(clientResult.getId(), 1);
-        assertEquals(clientResult.getName(), "Client Test");
-        assertEquals(clientResult.getEmail(), "ClientTest@client.com");
-        assertEquals(clientResult.getAuthToken(), "1234");
-    }
-
-    /**
-     * A test to see if the correct exception is thrown when
-     * a client auth is not found in the database.
-     */
-    @Test
-    public void testGetClientByAuthException() {
-        assertThrows(NotFoundException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                //Tell the mock repo that there is no client with id 100
-                Mockito.when(clientRepo.existsByAuth("1234")).thenReturn(false);
-
-                //Try and get a client with the auth token 1234
-                //(which results in a NotFound exception)
-                clientServ.getClientByAuth("1234");
-            }
-        });
-    }
-
-
 }
 
 

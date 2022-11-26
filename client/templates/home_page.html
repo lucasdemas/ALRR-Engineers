@@ -4,15 +4,17 @@
 <script type="text/javascript" src="{{ url_for('static', filename = 'home_page.js') }}"></script>
 
 <script>
-  let api_key = {{api_key|tojson}} 
+  let auth_key = {{auth_key|tojson}} 
 </script>
 
 <div id="home_body">
   <div id="home_page_header">Test for connecting to web service</div>
 
-  <button id="getAll" class="home_button">getAllClients</button>
+  <button id="getAll" class="home_button">Show all locations</button>
 
-  <button id="deleteClient" class="home_button">Delete Client</button>
+  <button id="claimedLoc" class="home_button">Show All Claimed Locations</button>
+
+  <button id="unclaimedLoc" class="home_button">Show All Unclaimed Location</button>
 
   <div id="getAllFill"></div>
 </div>

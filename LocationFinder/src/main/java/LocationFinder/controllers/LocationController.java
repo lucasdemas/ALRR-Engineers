@@ -11,8 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.sun.jdi.InvalidTypeException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -31,6 +37,7 @@ public class LocationController {
      */
     @Autowired
     private LocationRepository locRepository;
+
     /**
      * An instance of Location Service.
      */
@@ -55,6 +62,20 @@ public class LocationController {
 
         return new ResponseEntity<>("Cost Must be a positive numeric value",
                 HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Exception handling for MissingServletRequestParameter.
+     *
+     * @param e The MissingServletRequestParameter Exception that is going to be handled
+     * @return The response saying what input is missing in the request
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<?> handleMissingInputs(
+            final MissingServletRequestParameterException e) {
+
+        return new ResponseEntity<>(e.getMessage(),
+                HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -171,8 +192,9 @@ public class LocationController {
             if (clientId.equals(authClient.getId())) {
                 //Return all the locations with the specified client id
                 Iterable<Location> ownedLocs = locRepository.getAllByClientId(clientId);
-                System.out.printf("The client with authentication token %s" +
-                        " has successfully retrieved all their location from the database.%n", decryptedToken);
+                System.out.printf("The client with id %d and authentication token %s" +
+                        " has successfully retrieved all their location from the database.%n",
+                         clientId, decryptedToken);
                 return new ResponseEntity<>(ownedLocs, HttpStatus.OK);
             } else {
                 System.out.printf("A client has attempted to retrieve all the locations of the client" +
@@ -289,9 +311,9 @@ public class LocationController {
                 //Get a list of the locations that are either claimed or unclaimed specified by the input
                 List<Location> searchResults =
                         locService.getLocationByClaim(isClaim, clientId);
-                System.out.printf("The client with authentication token %s" +
+                System.out.printf("The client with client id %d and authentication token %s" +
                         " has successfully retrieved all their %s locations" +
-                        " from the database.%n", decryptedToken, isClaim);
+                        " from the database.%n", clientId, decryptedToken, isClaim);
                 return new ResponseEntity<>(searchResults, HttpStatus.OK);
             } else {
                 System.out.printf("A client has attempted to retrieve all the %s locations of the client" +

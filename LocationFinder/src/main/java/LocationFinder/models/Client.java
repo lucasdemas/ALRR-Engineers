@@ -12,7 +12,7 @@ public class Client {
      * Client Id.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id")
     private Integer id;
 
@@ -31,7 +31,7 @@ public class Client {
     /**
      * Client Authentication token
      */
-    @Column(name = "client_auth_token")
+    @Column(name = "client_auth_token", unique = true)
     private String authToken;
 
     /**
