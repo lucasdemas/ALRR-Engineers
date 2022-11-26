@@ -75,10 +75,11 @@ public class LocationService {
         return locArea;
     }
 
-    public void checkCost(final double locCost) throws InvalidTypeException {
+    public double checkCost(final double locCost) throws InvalidTypeException {
         if (locCost < 0) {
             throw new InvalidTypeException("Location Cost can't be a negative number");
         }
+        return locCost;
     }
 
     /**
