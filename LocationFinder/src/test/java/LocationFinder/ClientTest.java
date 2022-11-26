@@ -47,9 +47,6 @@ class ClientTest {
     @Autowired
     private ClientService clientServ;
 
-    @Autowired
-    private ClientController clientCont;
-
     /**
      * An instance of the client repository.
      */
@@ -138,6 +135,7 @@ class ClientTest {
         byte[] secretMessageBytes = secretToken.getBytes(StandardCharsets.UTF_8);
         byte[] encryptedMessageBytes = encryptCipher.doFinal(secretMessageBytes);
 
+
         String encodedMessage = Base64.getEncoder().encodeToString(encryptedMessageBytes);
         assertEquals(clientServ.decryptToken(encodedMessage), "1234");
 
@@ -218,23 +216,6 @@ class ClientTest {
                 clientServ.getClientByAuth("1234");
             }
         });
-    }
-
-
-    /**
-     * Client System test cases section, chain test cases
-     * method is used, test cases are created with the
-     * assumption of already existed clients in the database
-     * Total number of test cases: 7
-     */
-
-    @Test
-    public void TestGetClients() {
-
-        ResponseEntity response = clientCont.getClients();
-        System.out.println("Athy");
-        System.out.println(response.getBody());
-
     }
 
 

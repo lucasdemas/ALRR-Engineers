@@ -212,9 +212,10 @@ public class ClientService {
         return decryptedMessage;
     }
 
-    public void checkAuthTokenBlank(String clientAuthToken) throws InvaildInputException {
+    public String checkAuthTokenBlank(String clientAuthToken) throws InvaildInputException {
         if (clientAuthToken.trim().isEmpty()) {
             throw new InvaildInputException("The authentication token cannot be blank!");
         }
+        return clientAuthToken;
     }
 }

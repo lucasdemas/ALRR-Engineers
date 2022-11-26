@@ -2,16 +2,13 @@ LocationFinder\LocationFinderApplicationTests.class
 LocationFinder\LocationTest$1.class
 LocationFinder\LocationTest$7.class
 LocationFinder\LocationTest$2.class
+LocationFinder\ClientSystemTest.class
 LocationFinder\ClientTest$1.class
-<<<<<<< HEAD
 LocationFinder\LocationTest$3.class
 LocationFinder\LocationTest$8.class
 LocationFinder\ClientTest.class
 LocationFinder\LocationTest$4.class
 LocationFinder\ClientTest$3.class
-=======
-LocationFinder\APIEntryPointTest.class
->>>>>>> 8ea2415900b22163398629f1c035a2b14e28daee
 LocationFinder\ClientTest$2.class
 LocationFinder\LocationTest$6.class
 LocationFinder\LocationTest$5.class
