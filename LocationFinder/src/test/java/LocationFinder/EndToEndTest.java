@@ -36,17 +36,17 @@ class EndToEndTest {
 
     @Test
     public void testAuthenticateSuccess() {
-        String authToken = "FoEv6p4c6r2ilAvRkRH39eub9LF9J+7GdoA7vnZK/j7djqRN3F" +
-                "IACngZuYjVeicz0jXtxkXgG3mgUEi0psES5OD687udbMBIy0TE/WBkURdWP/4O" +
-                "Mep0XWgVvTg9RmblWb9BjzrWsv9LAMjeb5x4zcRI0QDXhqcEuWuLaJkgUOPA3y/" +
-                "2/XzKTnIzbk5Jrccd8bTUSupUNmNjRw2WTrLYROGi/wvRUyW2zhYMIuy2fbzKra" +
-                "3jClYkbYpBja9ZXWfnvgx3bAdaznWPF99aAOuS0gMBDmRhzjG4a+2L2lHrw6U8y" +
-                "MNN2p9jz4Iy7e7Ky9QI5Hrjyrqwda6CfKmsbpxiuw==";
+        String authToken = "lqT3jhoRN03DhvnbJSgEiaOZn/JbVWAxPwx5JFi5ALhQXeB" +
+                "XNKYRKRuMVPOl/Hx9cBfR9iPqz78uj/AOuoYpZLx+eWyKhWlkGovJgbYMdp" +
+                "LBN+fCFjYXBZefb+d6g8/EMVTYO9uEM0MmKCAJmQOtjrpWa6bj+x/m0Fh" +
+                "oF53Kk/0pDsUjK7V0t/AtWg24giOlmfW+bfSsijNZIiCQ5ZIiJncz2wLWaqls" +
+                "5a/M28E7OUT9CaL4zR9U+Mp62UFYPtc28e8RMILFtd2lLR7tugvaBi8J+esbJ" +
+                "I2zuyMCU0SYKunGUd2nHpA8YJh9tHqjloVW7ND+f5QXrTbhwaP7hShoOw==";
         ResponseEntity<?> clientId = clientCont.authenticateClient(authToken);
 
         //Make sure the value returned is correct and that the response code is the correct one
         assertEquals(clientId.getStatusCode(), HttpStatus.OK);
-        assertEquals(clientId.getBody(), 1);
+        assertEquals(clientId.getBody(), 3);
     }
 
     @Test
@@ -72,58 +72,58 @@ class EndToEndTest {
     }
 
     @Test void testAddLocationSuccess() {
-        String authToken = "FoEv6p4c6r2ilAvRkRH39eub9LF9J+7GdoA7vnZK/j7djqRN3F" +
-                "IACngZuYjVeicz0jXtxkXgG3mgUEi0psES5OD687udbMBIy0TE/WBkURdWP/4O" +
-                "Mep0XWgVvTg9RmblWb9BjzrWsv9LAMjeb5x4zcRI0QDXhqcEuWuLaJkgUOPA3y/" +
-                "2/XzKTnIzbk5Jrccd8bTUSupUNmNjRw2WTrLYROGi/wvRUyW2zhYMIuy2fbzKra" +
-                "3jClYkbYpBja9ZXWfnvgx3bAdaznWPF99aAOuS0gMBDmRhzjG4a+2L2lHrw6U8y" +
-                "MNN2p9jz4Iy7e7Ky9QI5Hrjyrqwda6CfKmsbpxiuw==";
+        String authToken = "lqT3jhoRN03DhvnbJSgEiaOZn/JbVWAxPwx5JFi5ALhQXeB" +
+                "XNKYRKRuMVPOl/Hx9cBfR9iPqz78uj/AOuoYpZLx+eWyKhWlkGovJgbYMdp" +
+                "LBN+fCFjYXBZefb+d6g8/EMVTYO9uEM0MmKCAJmQOtjrpWa6bj+x/m0Fh" +
+                "oF53Kk/0pDsUjK7V0t/AtWg24giOlmfW+bfSsijNZIiCQ5ZIiJncz2wLWaqls" +
+                "5a/M28E7OUT9CaL4zR9U+Mp62UFYPtc28e8RMILFtd2lLR7tugvaBi8J+esbJ" +
+                "I2zuyMCU0SYKunGUd2nHpA8YJh9tHqjloVW7ND+f5QXrTbhwaP7hShoOw==";
         String locName = "Test";
         String locArea = "TestArea";
-        ResponseEntity<?> savedLocation = locCont.addNewLoc(locName, locArea, 20.0, 1, authToken);
+        ResponseEntity<?> savedLocation = locCont.addNewLoc(locName, locArea, 20.0, 3, authToken);
         assertEquals(savedLocation.getStatusCode(), HttpStatus.CREATED);
     }
 
     @Test void testDeleteLocationSuccess() {
         //First add the location
-        String authToken = "FoEv6p4c6r2ilAvRkRH39eub9LF9J+7GdoA7vnZK/j7djqRN3F" +
-                "IACngZuYjVeicz0jXtxkXgG3mgUEi0psES5OD687udbMBIy0TE/WBkURdWP/4O" +
-                "Mep0XWgVvTg9RmblWb9BjzrWsv9LAMjeb5x4zcRI0QDXhqcEuWuLaJkgUOPA3y/" +
-                "2/XzKTnIzbk5Jrccd8bTUSupUNmNjRw2WTrLYROGi/wvRUyW2zhYMIuy2fbzKra" +
-                "3jClYkbYpBja9ZXWfnvgx3bAdaznWPF99aAOuS0gMBDmRhzjG4a+2L2lHrw6U8y" +
-                "MNN2p9jz4Iy7e7Ky9QI5Hrjyrqwda6CfKmsbpxiuw==";
+        String authToken = "lqT3jhoRN03DhvnbJSgEiaOZn/JbVWAxPwx5JFi5ALhQXeB" +
+                "XNKYRKRuMVPOl/Hx9cBfR9iPqz78uj/AOuoYpZLx+eWyKhWlkGovJgbYMdp" +
+                "LBN+fCFjYXBZefb+d6g8/EMVTYO9uEM0MmKCAJmQOtjrpWa6bj+x/m0Fh" +
+                "oF53Kk/0pDsUjK7V0t/AtWg24giOlmfW+bfSsijNZIiCQ5ZIiJncz2wLWaqls" +
+                "5a/M28E7OUT9CaL4zR9U+Mp62UFYPtc28e8RMILFtd2lLR7tugvaBi8J+esbJ" +
+                "I2zuyMCU0SYKunGUd2nHpA8YJh9tHqjloVW7ND+f5QXrTbhwaP7hShoOw==";
         String locName = "Test";
         String locArea = "TestArea";
-        ResponseEntity<?> savedLocation = locCont.addNewLoc(locName, locArea, 20.0, 1, authToken);
+        ResponseEntity<?> savedLocation = locCont.addNewLoc(locName, locArea, 20.0, 3, authToken);
 
         //Extract the location id from the response body of the function that adds the location
         Location extractedLocation = (Location) savedLocation.getBody();
         Integer extractedId = extractedLocation.getId();
 
         //Execute the delete location when the client data matches
-        ResponseEntity<?> deletedLocation = locCont.deleteLoc(extractedId, 1, authToken);
+        ResponseEntity<?> deletedLocation = locCont.deleteLoc(extractedId, 3, authToken);
 
         assertEquals(deletedLocation.getStatusCode(), HttpStatus.OK);
     }
 
     @Test void testUpdateCostSuccess() {
         //First add the location
-        String authToken = "FoEv6p4c6r2ilAvRkRH39eub9LF9J+7GdoA7vnZK/j7djqRN3F" +
-                "IACngZuYjVeicz0jXtxkXgG3mgUEi0psES5OD687udbMBIy0TE/WBkURdWP/4O" +
-                "Mep0XWgVvTg9RmblWb9BjzrWsv9LAMjeb5x4zcRI0QDXhqcEuWuLaJkgUOPA3y/" +
-                "2/XzKTnIzbk5Jrccd8bTUSupUNmNjRw2WTrLYROGi/wvRUyW2zhYMIuy2fbzKra" +
-                "3jClYkbYpBja9ZXWfnvgx3bAdaznWPF99aAOuS0gMBDmRhzjG4a+2L2lHrw6U8y" +
-                "MNN2p9jz4Iy7e7Ky9QI5Hrjyrqwda6CfKmsbpxiuw==";
+        String authToken = "lqT3jhoRN03DhvnbJSgEiaOZn/JbVWAxPwx5JFi5ALhQXeB" +
+                "XNKYRKRuMVPOl/Hx9cBfR9iPqz78uj/AOuoYpZLx+eWyKhWlkGovJgbYMdp" +
+                "LBN+fCFjYXBZefb+d6g8/EMVTYO9uEM0MmKCAJmQOtjrpWa6bj+x/m0Fh" +
+                "oF53Kk/0pDsUjK7V0t/AtWg24giOlmfW+bfSsijNZIiCQ5ZIiJncz2wLWaqls" +
+                "5a/M28E7OUT9CaL4zR9U+Mp62UFYPtc28e8RMILFtd2lLR7tugvaBi8J+esbJ" +
+                "I2zuyMCU0SYKunGUd2nHpA8YJh9tHqjloVW7ND+f5QXrTbhwaP7hShoOw==";
         String locName = "Test";
         String locArea = "TestArea";
-        ResponseEntity<?> savedLocation = locCont.addNewLoc(locName, locArea, 20.0, 1, authToken);
+        ResponseEntity<?> savedLocation = locCont.addNewLoc(locName, locArea, 20.0, 3, authToken);
 
         //Extract the location id from the response body of the function that adds the location
         Location extractedLocation = (Location) savedLocation.getBody();
         Integer extractedId = extractedLocation.getId();
 
         //Execute the delete location when the client data matches
-        ResponseEntity<?> updatedLocation = locCont.updateLocCost(extractedId, 30.0, 1, authToken);
+        ResponseEntity<?> updatedLocation = locCont.updateLocCost(extractedId, 30.0, 3, authToken);
 
         //Extract the updated location from the response entity
         Location extractedLocationUpdated = (Location) updatedLocation.getBody();
@@ -135,22 +135,22 @@ class EndToEndTest {
 
     @Test void testUpdateClaimSuccess() {
         //First add the location
-        String authToken = "FoEv6p4c6r2ilAvRkRH39eub9LF9J+7GdoA7vnZK/j7djqRN3F" +
-                "IACngZuYjVeicz0jXtxkXgG3mgUEi0psES5OD687udbMBIy0TE/WBkURdWP/4O" +
-                "Mep0XWgVvTg9RmblWb9BjzrWsv9LAMjeb5x4zcRI0QDXhqcEuWuLaJkgUOPA3y/" +
-                "2/XzKTnIzbk5Jrccd8bTUSupUNmNjRw2WTrLYROGi/wvRUyW2zhYMIuy2fbzKra" +
-                "3jClYkbYpBja9ZXWfnvgx3bAdaznWPF99aAOuS0gMBDmRhzjG4a+2L2lHrw6U8y" +
-                "MNN2p9jz4Iy7e7Ky9QI5Hrjyrqwda6CfKmsbpxiuw==";
+        String authToken = "lqT3jhoRN03DhvnbJSgEiaOZn/JbVWAxPwx5JFi5ALhQXeB" +
+                "XNKYRKRuMVPOl/Hx9cBfR9iPqz78uj/AOuoYpZLx+eWyKhWlkGovJgbYMdp" +
+                "LBN+fCFjYXBZefb+d6g8/EMVTYO9uEM0MmKCAJmQOtjrpWa6bj+x/m0Fh" +
+                "oF53Kk/0pDsUjK7V0t/AtWg24giOlmfW+bfSsijNZIiCQ5ZIiJncz2wLWaqls" +
+                "5a/M28E7OUT9CaL4zR9U+Mp62UFYPtc28e8RMILFtd2lLR7tugvaBi8J+esbJ" +
+                "I2zuyMCU0SYKunGUd2nHpA8YJh9tHqjloVW7ND+f5QXrTbhwaP7hShoOw==";
         String locName = "Test";
         String locArea = "TestArea";
-        ResponseEntity<?> savedLocation = locCont.addNewLoc(locName, locArea, 20.0, 1, authToken);
+        ResponseEntity<?> savedLocation = locCont.addNewLoc(locName, locArea, 20.0, 3, authToken);
 
         //Extract the location id from the response body of the function that adds the location
         Location extractedLocation = (Location) savedLocation.getBody();
         Integer extractedId = extractedLocation.getId();
 
         //Execute the delete location when the client data matches
-        ResponseEntity<?> updatedLocation = locCont.updateLocClaim(extractedId, true, 1, authToken);
+        ResponseEntity<?> updatedLocation = locCont.updateLocClaim(extractedId, true, 3, authToken);
 
         //Extract the updated location from the response entity
         Location extractedLocationUpdated = (Location) updatedLocation.getBody();
