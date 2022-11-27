@@ -160,11 +160,11 @@ public class ClientService {
      * @throws EntityExistsException
      *      A client exists in the database with the provided email already
      */
-    public void checkEmailNew(String clientEmail) throws EntityExistsException {
-        if(clientRepo.existsByEmail(clientEmail)){
-            throw new EntityExistsException("There is already a client with that email!");
-        }
-    }
+//    public void checkEmailNew(String clientEmail) throws EntityExistsException {
+//        if(clientRepo.existsByEmail(clientEmail)){
+//            throw new EntityExistsException("There is already a client with that email!");
+//        }
+//    }
 
 //    public void checkPass(String clientPass) throws InvaildInputException {
 //        if (clientPass.trim().isEmpty()) {
@@ -212,9 +212,10 @@ public class ClientService {
         return decryptedMessage;
     }
 
-    public void checkAuthTokenBlank(String clientAuthToken) throws InvaildInputException {
+    public String checkAuthTokenBlank(String clientAuthToken) throws InvaildInputException {
         if (clientAuthToken.trim().isEmpty()) {
             throw new InvaildInputException("The authentication token cannot be blank!");
         }
+        return clientAuthToken;
     }
 }
