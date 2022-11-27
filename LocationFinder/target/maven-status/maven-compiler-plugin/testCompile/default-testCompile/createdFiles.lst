@@ -11,6 +11,7 @@ LocationFinder\LocationTest$4.class
 LocationFinder\ClientTest$3.class
 LocationFinder\LocationSystemTest.class
 LocationFinder\ClientTest$2.class
+LocationFinder\IntegrationTest.class
 LocationFinder\LocationTest$6.class
 LocationFinder\LocationTest$5.class
 LocationFinder\LocationTest.class

@@ -113,31 +113,15 @@ class ClientTest {
 
 
     /**
-     * testing decrypt token
+     * testing decrypt token by providing the encrypted string
+     * from our offline encrypter and comparing it to its decrypted value
      */
 
     @Test
     public void TestDecryptToken() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
 
-        File publicKeyFile = new File("public.key");
-        byte[] publicKeyBytes = Files.readAllBytes(publicKeyFile.toPath());
 
-
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
-        keyFactory.generatePublic(publicKeySpec);
-
-        String secretToken = "1234";
-        PublicKey publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyBytes));
-        Cipher encryptCipher = Cipher.getInstance("RSA");
-        encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-        byte[] secretMessageBytes = secretToken.getBytes(StandardCharsets.UTF_8);
-        byte[] encryptedMessageBytes = encryptCipher.doFinal(secretMessageBytes);
-
-
-        String encodedMessage = Base64.getEncoder().encodeToString(encryptedMessageBytes);
-        assertEquals(clientServ.decryptToken(encodedMessage), "1234");
+        assertEquals(clientServ.decryptToken("D0AyTsyIvQ/syUasc36L+DYeNogP7ShmMKOL0KcepAWRwTk9U+2NZehm9O8AbetLunTovnKYzoNOHKcPdz1tH7qG2qnPIUV7aVorngU1uuZv3Zq8Iq+DyLVyNzIj4Zrvx6Jtjc6BDYm9yWOfTalDnVZkuUneCVz5+wiGjBS91KDECnvDF3qVJ17qedTrqdIcZd1+LDt32O6not/tNnNoOAWv01Esjx38tm7AbV1P4gMV1voWQEQyDAVcdAE5ilwu9Oe+nzNaBbKB2PRlhyk2jevXAPjAmkBdMNh3D4ZPtUUerZmwKr0kLDx6ru4z+uK7Viyl5bDKBJPB14rmdYl0TQ=="), "1234");
 
     }
 

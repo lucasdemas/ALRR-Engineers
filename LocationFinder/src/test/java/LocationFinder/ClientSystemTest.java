@@ -29,6 +29,7 @@ import LocationFinder.models.Client;
 
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.exceptions.InvaildInputException;
+import java.util.Optional;
 
 
 
@@ -56,7 +57,6 @@ public class ClientSystemTest {
         Client client = new Client(1, "client 1", "client1@test.com", "1234");
 
 
-
         Mockito.when(clientServ.checkAuthTokenBlank("1234")).thenReturn("1234");
         Mockito.when(clientServ.decryptToken("1234")).thenReturn("1234");
         Mockito.when(clientServ.getClientByAuth("1234")).thenReturn(client);
@@ -74,11 +74,14 @@ public class ClientSystemTest {
     void clientAuthFail() throws Exception {
 
 
-        Mockito.when(clientServ.checkAuthTokenBlank("1234")).thenReturn("1234");
+
         Mockito.when(clientServ.decryptToken("1234")).thenReturn("1234");
+
         Mockito.when(clientServ.getClientByAuth("1234")).thenThrow(NotFoundException.class);
 
-       mockMvc.perform(get("/client/authenticate").param("clientAuthToken", "1234")
+
+
+        mockMvc.perform(get("/client/authenticate").param("clientAuthToken", "1234")
                         .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isNotFound());
 

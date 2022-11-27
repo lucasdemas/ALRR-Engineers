@@ -48,7 +48,7 @@ public class LocationSystemTest {
     MockMvc mockMvc;
 
     /**
-     * An instance of the client service.
+     * An instance of the location service.
      */
     @MockBean
     private LocationService locServ;
@@ -915,6 +915,7 @@ public class LocationSystemTest {
                 .andExpect(status().isForbidden());
 
     }
+
 
 
     @Test

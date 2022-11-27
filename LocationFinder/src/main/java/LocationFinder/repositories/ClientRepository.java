@@ -47,4 +47,6 @@ public interface ClientRepository extends CrudRepository<Client, Integer> {
      */
     @Query("select case when count(c)> 0 then true else false end from Client c where lower(c.authToken) like lower(:clientAuth)")
     boolean existsByAuth(@Param("clientAuth") String clientAuth);
+
+
 }
