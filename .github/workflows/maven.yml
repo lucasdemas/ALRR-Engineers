@@ -24,6 +24,14 @@ jobs:
         run: cd LocationFinder && mvn -Dtest=ClientTest test
       - name: Run LocationTest
         run: cd LocationFinder && mvn -Dtest=LocationTest test
+      - name: Run ClientSystemTest
+        run: cd LocationFinder && mvn -Dtest=ClientSystemTest test
+      - name: Run LocationSystemTest
+        run: cd LocationFinder && mvn -Dtest=LocationSystemTest test
+      - name: Run EndToEndTet
+        run: cd LocationFinder && mvn -Dtest=EndToEndTest test
+      - name: Run IntegrationTest
+        run: cd LocationFinder && mvn -Dtest=IntegrationTest test
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: always()
