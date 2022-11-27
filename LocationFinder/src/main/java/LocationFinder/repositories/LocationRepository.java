@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public interface LocationRepository extends CrudRepository<Location, Integer> {
     /**
-     * Query to find a location by area for a specific client
+     * Query to find a location by area for a specific client.
      * @param locationArea
      *      The area the client is filtering their location by
      * @param client_id
@@ -26,9 +26,11 @@ public interface LocationRepository extends CrudRepository<Location, Integer> {
      *      List of locations by area
      */
     @Query(value =
-    "select * from location_data where lower(location_area) = lower(:location_area) AND client_id = :client_id",
+    "select * from location_data where lower(location_area) = "
+            + "lower(:location_area) AND client_id = :client_id",
      nativeQuery = true)
-    List<Location> findByArea(@Param("location_area") String locationArea, @Param("client_id") Integer client_id);
+    List<Location> findByArea(@Param("location_area") String locationArea,
+                              @Param("client_id") Integer client_id);
 
     /**
      * Query to find locations by claimed status.
@@ -36,12 +38,14 @@ public interface LocationRepository extends CrudRepository<Location, Integer> {
      * @return
      *      List of locations by claimed status
      */
-    @Query(value = "select * from location_data where claimed = :claimed AND client_id = :client_id",
+    @Query(value = "select * from location_data where claimed = "
+            + ":claimed AND client_id = :client_id",
             nativeQuery = true)
-    List<Location> findByClaim(@Param("claimed") Boolean claimed, @Param("client_id") Integer client_id);
+    List<Location> findByClaim(@Param("claimed") Boolean claimed,
+                               @Param("client_id") Integer client_id);
 
     /**
-     * Query to delete all the locations of a client that has been deleted
+     * Query to delete all the locations of a client that has been deleted.
      * @param client_id
      */
     @Modifying
