@@ -65,7 +65,7 @@ public class LocationService {
         }
     }
     /**
-     * A method to check if the location area is blank 
+     * A method to check if the location area is blank.
      * @param locArea
      * @return
      *      Location Area
@@ -78,7 +78,7 @@ public class LocationService {
         return locArea;
     }
     /**
-     * A method to check if the location cost is negative
+     * A method to check if the location cost is negative.
      * @param locCost
      * @return
      *      Location Cost
@@ -87,7 +87,8 @@ public class LocationService {
     public double checkCost(final double locCost)
         throws InvalidTypeException {
         if (locCost < 0) {
-            throw new InvalidTypeException("Location Cost can't be a negative number");
+            throw new InvalidTypeException(
+                "Location Cost can't be a negative number");
         }
         return locCost;
     }
