@@ -24,6 +24,14 @@ jobs:
         run: cd LocationFinder && mvn -Dtest=ClientTest test
       - name: Run LocationTest
         run: cd LocationFinder && mvn -Dtest=LocationTest test
+      - name: Run ClientSystemTest
+        run: cd LocationFinder && mvn -Dtest=ClientSystemTest test
+      - name: Run LocationSystemTest
+        run: cd LocationFinder && mvn -Dtest=LocationSystemTest test
+      - name: Run EndToEndTet
+        run: cd LocationFinder && mvn -Dtest=EndToEndTest test
+      - name: Run IntegrationTest
+        run: cd LocationFinder && mvn -Dtest=IntegrationTest test
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: always()
@@ -34,5 +42,10 @@ jobs:
           fail-on-error: true
       - name: Generate Spotbugs and Checkstyle reports
         run: mvn compile site --file LocationFinder/pom.xml
+      - name: HTML Preview
+        id: html_preview
+        uses: pavi2410/html-preview-action@v2
+        with:
+          html_file: LocationFinder/target/site/checkstyle.html  
       - name: Generate Branch Coverage Report
         run: mvn clean verify --file LocationFinder/pom.xml
