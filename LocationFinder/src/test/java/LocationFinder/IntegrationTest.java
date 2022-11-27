@@ -76,12 +76,19 @@ public class IntegrationTest {
     public void clientAuthTest() throws Exception {
 
 
-    Client client1 = new Client(1, "Client Test", "ClientTest@client.com", "1234");
+    Client client1 = new Client(1, "Client Test",
+            "ClientTest@client.com", "1234");
 
     Optional<Client> optClient = Optional.of(client1);
 
     //Encoded is 1234.
-    String encoded = clientServ.decryptToken("D0AyTsyIvQ/syUasc36L+DYeNogP7ShmMKOL0KcepAWRwTk9U+2NZehm9O8AbetLunTovnKYzoNOHKcPdz1tH7qG2qnPIUV7aVorngU1uuZv3Zq8Iq+DyLVyNzIj4Zrvx6Jtjc6BDYm9yWOfTalDnVZkuUneCVz5+wiGjBS91KDECnvDF3qVJ17qedTrqdIcZd1+LDt32O6not/tNnNoOAWv01Esjx38tm7AbV1P4gMV1voWQEQyDAVcdAE5ilwu9Oe+nzNaBbKB2PRlhyk2jevXAPjAmkBdMNh3D4ZPtUUerZmwKr0kLDx6ru4z+uK7Viyl5bDKBJPB14rmdYl0TQ==");
+    String encoded = clientServ.decryptToken("D0AyTsyIvQ/syUasc36L+DYeNogP7Sh"
+            + "mMKOL0KcepAWRwTk9U+2NZehm9O8AbetLunTovnKYzoNOHKcPdz1tH7qG2qnPI"
+            + "UV7aVorngU1uuZv3Zq8Iq+DyLVyNzIj4Zrvx6Jtjc6BDYm9yWOfTalDnVZkuUn"
+            + "eCVz5+wiGjBS91KDECnvDF3qVJ17qedTrqdIcZd1+LDt32O6not/tNnNoOAWv0"
+            + "1Esjx38tm7AbV1P4gMV1voWQEQyDAVcdAE5ilwu9Oe+nzNaBbKB2PRlhyk2jev"
+            + "XAPjAmkBdMNh3D4ZPtUUerZmwKr0kLDx6ru4z+uK7Viyl5bDKBJPB14rmdYl"
+            + "0TQ==");
 
 
     Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
@@ -100,18 +107,19 @@ public class IntegrationTest {
     public void getClientAndUpdateClaim() throws Exception {
 
 
-        Client client1 = new Client(1, "Client Test", "ClientTest@client.com", "1234");
+        Client client1 = new Client(1, "Client Test",
+                "ClientTest@client.com", "1234");
         Optional<Client> optClient = Optional.of(client1);
 
 
-        //Mockito.when(clientServ.checkAuthTokenBlank("1234")).thenReturn("1234");
         Mockito.when(clientRepo.findById(1)).thenReturn(optClient);
         Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
 
         Client client2 = clientServ.getClientById(1);
 
 
-        Location loc1 = new Location("Soho", "New York", 20.0, client2.getId());
+        Location loc1 = new Location("Soho", "New York", 20.0,
+                client2.getId());
         loc1.setId(1);
         loc1.setClaim(true);
 
@@ -138,18 +146,19 @@ public class IntegrationTest {
     public void getClientAndUpdateCost() throws Exception {
 
 
-        Client client1 = new Client(1, "Client Test", "ClientTest@client.com", "1234");
+        Client client1 = new Client(1, "Client Test",
+                "ClientTest@client.com", "1234");
         Optional<Client> optClient = Optional.of(client1);
 
 
-        //Mockito.when(clientServ.checkAuthTokenBlank("1234")).thenReturn("1234");
         Mockito.when(clientRepo.findById(1)).thenReturn(optClient);
         Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
 
         Client client2 = clientServ.getClientById(1);
 
 
-        Location loc1 = new Location("Soho", "New York", 20.0, client2.getId());
+        Location loc1 = new Location("Soho", "New York", 20.0,
+                client2.getId());
         loc1.setId(1);
         loc1.setClaim(true);
 
@@ -173,18 +182,19 @@ public class IntegrationTest {
     public void getClientAndGetClaimed() throws Exception {
 
 
-        Client client1 = new Client(1, "Client Test", "ClientTest@client.com", "1234");
+        Client client1 = new Client(1, "Client Test",
+                "ClientTest@client.com", "1234");
         Optional<Client> optClient = Optional.of(client1);
 
 
-        //Mockito.when(clientServ.checkAuthTokenBlank("1234")).thenReturn("1234");
         Mockito.when(clientRepo.findById(1)).thenReturn(optClient);
         Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
 
         Client client2 = clientServ.getClientById(1);
 
 
-        Location loc1 = new Location("Soho", "New York", 20.0, client2.getId());
+        Location loc1 = new Location("Soho", "New York", 20.0,
+                client2.getId());
         loc1.setId(1);
         loc1.setClaim(true);
 
@@ -196,9 +206,6 @@ public class IntegrationTest {
         Mockito.when(locRepo.findByClaim(true, 1)).thenReturn(locationList);
 
 
-
-        //Location location2 = locServ.getLocByArea("New York", loc1.getClientId(), client2.getAuthToken());
-        //List<Location> areaLocs = locRepo.findByArea("New York", loc1.getClientId());
 
         assertEquals(locationList.get(0).getClaim(), true);
         assertEquals(locationList.get(0).getId(), 1);
@@ -216,18 +223,19 @@ public class IntegrationTest {
     public void getClientAndGetByArea() throws Exception {
 
 
-        Client client1 = new Client(1, "Client Test", "ClientTest@client.com", "1234");
+        Client client1 = new Client(1, "Client Test",
+                "ClientTest@client.com", "1234");
         Optional<Client> optClient = Optional.of(client1);
 
 
-        //Mockito.when(clientServ.checkAuthTokenBlank("1234")).thenReturn("1234");
         Mockito.when(clientRepo.findById(1)).thenReturn(optClient);
         Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
 
         Client client2 = clientServ.getClientById(1);
 
 
-        Location loc1 = new Location("Soho", "New York", 20.0, client2.getId());
+        Location loc1 = new Location("Soho", "New York", 20.0,
+                client2.getId());
         loc1.setId(1);
         loc1.setClaim(true);
 
@@ -236,12 +244,11 @@ public class IntegrationTest {
         List<Location> locationList = new LinkedList();
         locationList.add(loc1);
 
-        Mockito.when(locRepo.findByArea("New York", 1)).thenReturn(locationList);
+        Mockito.when(locRepo.findByArea("New York",
+                1)).thenReturn(locationList);
 
 
 
-        //Location location2 = locServ.getLocByArea("New York", loc1.getClientId(), client2.getAuthToken());
-        //List<Location> areaLocs = locRepo.findByArea("New York", loc1.getClientId());
 
         assertEquals(locationList.get(0).getClaim(), true);
         assertEquals(locationList.get(0).getId(), 1);
