@@ -61,7 +61,6 @@ class ClientTest {
      * @throws NotFoundException
      *      The id does not exist in the database
      */
-
     @Test
     public void testGetClientById() throws NotFoundException {
         //Create a mock client who we will search for by their id
