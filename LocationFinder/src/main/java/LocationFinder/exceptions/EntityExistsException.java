@@ -1,6 +1,6 @@
 package LocationFinder.exceptions;
 
-public class EntityExistsException extends Exception{
+public class EntityExistsException extends Exception {
     /**
      * A method to create the exception.
      * @param str
