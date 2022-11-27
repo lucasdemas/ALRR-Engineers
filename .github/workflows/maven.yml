@@ -20,6 +20,8 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package --file LocationFinder/pom.xml -DskipTests
+      - name: Reset Database
+        run: mysql -h rds-mysql-db.c7zumoxkkti0.us-east-1.rds.amazonaws.com -u admin --password=12345678 < "test_sql_dump.sql"
       - name: Run ClientTest
         run: cd LocationFinder && mvn -Dtest=ClientTest test
       - name: Run LocationTest
