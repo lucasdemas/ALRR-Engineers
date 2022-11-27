@@ -1,48 +1,43 @@
 package LocationFinder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import LocationFinder.exceptions.InvaildInputException;
+
+
+
+
 
 import LocationFinder.models.Client;
 import LocationFinder.repositories.ClientRepository;
 import LocationFinder.services.ClientService;
-import LocationFinder.controllers.ClientController;
+
 
 import LocationFinder.models.Location;
 import LocationFinder.repositories.LocationRepository;
 import LocationFinder.services.LocationService;
-import LocationFinder.controllers.LocationController;
+
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
+
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-import LocationFinder.exceptions.NotFoundException;
-import LocationFinder.exceptions.EntityExistsException;
-import java.security.NoSuchAlgorithmException;
+
+
+
 import java.util.Optional;
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.security.*;
-import java.security.spec.EncodedKeySpec;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
+
+
+
+
+
+
+
+
+
 
 import java.util.List;
 import java.util.LinkedList;
