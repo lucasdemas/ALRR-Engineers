@@ -292,14 +292,17 @@ class EndToEndTest {
         assertEquals(returnedResults.size(), 3);
     }
 
-    //A test to fail getting all the locations of a client becasue the authToken does not belong to any client
+    //A test to fail getting all the locations of a client
+    //Because the authToken does not belong to any client
     @Test
     public void testGetAllFailure() {
-        String authToken = "TQByAAVqja+ztMsniKKS5Bp6Wk6QEISQHAqEv49lTJiosj7IQMX2U5jpEvN/" +
-                "muJkcP06gLunn6wviBM7STluqfyvpkbWZuuirM2KPYC8Td5ml0LyTS1Bq6X3nKDGi3Km6oJA" +
-                "Zezb8/y0lwfrCHRiOQoFSVWSSrZv/zqtAWsyPS5sPYvHxhj49F/BpYFlHFYWtpNXVBfMA0bN" +
-                "RY//A9SFjQeEJRRhyo1A2CELbmY8L7eVMWSUOOzJa8Ke3ihEqYXHpxRDExf3eW9G+iUDoBj" +
-                "DvxW7t77Q9pahOrXUgnHDo1QE91eX8NIP4qpcUFUT5lyF/CZXGmwl1apH1Bv0q4eCDA==";
+        String authToken = "TQByAAVqja+ztMsniKKS5Bp6Wk6QEISQHAqEv49lTJios"
+                + "j7IQMX2U5jpEvN/muJkcP06gLunn6wviBM7STluqfyvpkbWZuuirM2KP"
+                + "YC8Td5ml0LyTS1Bq6X3nKDGi3Km6oJAZezb8/y0lwfrCHRiOQoFSVWSSr"
+                + "Zv/zqtAWsyPS5sPYvHxhj49F/BpYFlHFYWtpNXVBfMA0bNRY//A9SFjQe"
+                + "EJRRhyo1A2CELbmY8L7eVMWSUOOzJa8Ke3ihEqYXHpxRDExf3eW9G+iUD"
+                + "oBjDvxW7t77Q9pahOrXUgnHDo1QE91eX8NIP4qpcUFUT5lyF/CZXGmwl"
+                + "1apH1Bv0q4eCDA==";
         ResponseEntity<?> allClientLocations =
                 locCont.getLocations(3, authToken);
 
@@ -319,7 +322,7 @@ class EndToEndTest {
                 + "Ftd2lLR7tugvaBi8J+esbJ"
                 + "I2zuyMCU0SYKunGUd2nHpA8YJh9tHqjloVW7ND+f5QXrTbhwaP7hShoOw==";
         ResponseEntity<?> allAreaLocations =
-                locCont.getLocByArea("Test Area",3, authToken);
+                locCont.getLocByArea("Test Area", 3, authToken);
 
         //Extract the list of locations from the response body
         List<Location> returnedResults =
