@@ -44,6 +44,9 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
+import java.util.List;
+import java.util.LinkedList;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -99,19 +102,23 @@ public class IntegrationTest {
 }
 
     @Test
-    public void getClientAndUpdateCost() throws Exception {
+    public void getClientAndUpdateClaim() throws Exception {
 
 
         Client client1 = new Client(1, "Client Test", "ClientTest@client.com", "1234");
         Optional<Client> optClient = Optional.of(client1);
 
-        Location loc1 = new Location("Soho", "New York", 20.0, 1);
-        loc1.setId(1);
-        loc1.setClaim(true);
 
         //Mockito.when(clientServ.checkAuthTokenBlank("1234")).thenReturn("1234");
         Mockito.when(clientRepo.findById(1)).thenReturn(optClient);
         Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
+
+        Client client2 = clientServ.getClientById(1);
+
+
+        Location loc1 = new Location("Soho", "New York", 20.0, client2.getId());
+        loc1.setId(1);
+        loc1.setClaim(true);
 
         //Have the client be returned in the format
         //that findById is looking for in the cleintRepo
@@ -126,6 +133,127 @@ public class IntegrationTest {
         Location location2 = locServ.updateLocClaim(location1, false);
 
         assertEquals(location2.getClaim(), false);
+
+
+
+    }
+
+
+    @Test
+    public void getClientAndUpdateCost() throws Exception {
+
+
+        Client client1 = new Client(1, "Client Test", "ClientTest@client.com", "1234");
+        Optional<Client> optClient = Optional.of(client1);
+
+
+        //Mockito.when(clientServ.checkAuthTokenBlank("1234")).thenReturn("1234");
+        Mockito.when(clientRepo.findById(1)).thenReturn(optClient);
+        Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
+
+        Client client2 = clientServ.getClientById(1);
+
+
+        Location loc1 = new Location("Soho", "New York", 20.0, client2.getId());
+        loc1.setId(1);
+        loc1.setClaim(true);
+
+        //Have the client be returned in the format
+        //that findById is looking for in the cleintRepo
+        Optional<Location> optLocation = Optional.of(loc1);
+
+        //Have the mock return the formatted client
+        //when it look for a client with the id 1
+        Mockito.when(locRepo.findById(1)).thenReturn(optLocation);
+
+        Location location1 = locServ.getLocById(1);
+
+        Location location2 = locServ.updateLocCost(location1, 100.0);
+
+        assertEquals(location2.getCost(), 100.0);
+
+    }
+
+    @Test
+    public void getClientAndGetClaimed() throws Exception {
+
+
+        Client client1 = new Client(1, "Client Test", "ClientTest@client.com", "1234");
+        Optional<Client> optClient = Optional.of(client1);
+
+
+        //Mockito.when(clientServ.checkAuthTokenBlank("1234")).thenReturn("1234");
+        Mockito.when(clientRepo.findById(1)).thenReturn(optClient);
+        Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
+
+        Client client2 = clientServ.getClientById(1);
+
+
+        Location loc1 = new Location("Soho", "New York", 20.0, client2.getId());
+        loc1.setId(1);
+        loc1.setClaim(true);
+
+
+
+        List<Location> locationList = new LinkedList();
+        locationList.add(loc1);
+
+        Mockito.when(locRepo.findByClaim(true, 1)).thenReturn(locationList);
+
+
+
+        //Location location2 = locServ.getLocByArea("New York", loc1.getClientId(), client2.getAuthToken());
+        //List<Location> areaLocs = locRepo.findByArea("New York", loc1.getClientId());
+
+        assertEquals(locationList.get(0).getClaim(), true);
+        assertEquals(locationList.get(0).getId(), 1);
+        assertEquals(locationList.get(0).getName(), "Soho");
+        assertEquals(locationList.get(0).getArea(), "New York");
+        assertEquals(locationList.get(0).getCost(), 20.0);
+        assertEquals(locationList.get(0).getClientId(), 1);
+
+
+
+    }
+
+
+    @Test
+    public void getClientAndGetByArea() throws Exception {
+
+
+        Client client1 = new Client(1, "Client Test", "ClientTest@client.com", "1234");
+        Optional<Client> optClient = Optional.of(client1);
+
+
+        //Mockito.when(clientServ.checkAuthTokenBlank("1234")).thenReturn("1234");
+        Mockito.when(clientRepo.findById(1)).thenReturn(optClient);
+        Mockito.when(clientRepo.findByAuthToken("1234")).thenReturn(optClient);
+
+        Client client2 = clientServ.getClientById(1);
+
+
+        Location loc1 = new Location("Soho", "New York", 20.0, client2.getId());
+        loc1.setId(1);
+        loc1.setClaim(true);
+
+
+
+        List<Location> locationList = new LinkedList();
+        locationList.add(loc1);
+
+        Mockito.when(locRepo.findByArea("New York", 1)).thenReturn(locationList);
+
+
+
+        //Location location2 = locServ.getLocByArea("New York", loc1.getClientId(), client2.getAuthToken());
+        //List<Location> areaLocs = locRepo.findByArea("New York", loc1.getClientId());
+
+        assertEquals(locationList.get(0).getClaim(), true);
+        assertEquals(locationList.get(0).getId(), 1);
+        assertEquals(locationList.get(0).getName(), "Soho");
+        assertEquals(locationList.get(0).getArea(), "New York");
+        assertEquals(locationList.get(0).getCost(), 20.0);
+        assertEquals(locationList.get(0).getClientId(), 1);
 
 
 
