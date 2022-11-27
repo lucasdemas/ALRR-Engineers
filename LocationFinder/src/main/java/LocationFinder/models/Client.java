@@ -29,7 +29,7 @@ public class Client {
     private String email;
 
     /**
-     * Client Authentication token
+     * Client Authentication token.
      */
     @Column(name = "client_auth_token", unique = true)
     private String authToken;

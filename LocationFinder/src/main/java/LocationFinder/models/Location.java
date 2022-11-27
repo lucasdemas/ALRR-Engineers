@@ -67,7 +67,8 @@ public class Location {
      * @param cost
      * @param clientId
      */
-    public Location(final String loc, final String area, final Double cost, final Integer clientId) {
+    public Location(final String loc, final String area,
+                    final Double cost, final Integer clientId) {
         this.locName = loc;
         this.locArea = area;
         this.locCost = cost;
