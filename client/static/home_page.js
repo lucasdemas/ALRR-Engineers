@@ -1,7 +1,7 @@
 function getAllLocations() {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/location/getAll",
+        url: "https://alrr-engineers.herokuapp.com/location/getAll",
         data : {"clientId": sessionStorage.getItem('client_id'),
                 "clientAuthToken": auth_key},
         success: function (result) {
@@ -23,7 +23,7 @@ function getAllLocations() {
 function getAllClaimed() {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/location/getClaim",
+        url: "https://alrr-engineers.herokuapp.com/location/getClaim",
         data : {"isClaim": "claimed",
                 "clientId": sessionStorage.getItem('client_id'),
                 "clientAuthToken": auth_key},
@@ -45,7 +45,7 @@ function getAllClaimed() {
 function getAllUnclaimed() {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/location/getClaim",
+        url: "https://alrr-engineers.herokuapp.com/location/getClaim",
         data : {"isClaim": "unclaimed",
                 "clientId": sessionStorage.getItem('client_id'),
                 "clientAuthToken": auth_key},
@@ -103,7 +103,7 @@ function displayAllLocations(locations) {
 function authorize_client(api_key) {
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/client/authenticate",
+        url: "https://alrr-engineers.herokuapp.com/client/authenticate",
         data: {"clientAuthToken": auth_key},
         success: function (result) {
             console.log("Success");
