@@ -42,10 +42,5 @@ jobs:
           fail-on-error: true
       - name: Generate Spotbugs and Checkstyle reports
         run: mvn compile site --file LocationFinder/pom.xml
-      - name: HTML Preview
-        id: html_preview
-        uses: pavi2410/html-preview-action@v2
-        with:
-          html_file: 'LocationFinder/target/site/checkstyle.html'
       - name: Generate Branch Coverage Report
         run: mvn clean verify --file LocationFinder/pom.xml
