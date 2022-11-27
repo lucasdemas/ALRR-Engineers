@@ -1,6 +1,4 @@
 package LocationFinder.services;
-
-
 import LocationFinder.models.Location;
 import LocationFinder.exceptions.NotFoundException;
 import LocationFinder.exceptions.InvaildInputException;
