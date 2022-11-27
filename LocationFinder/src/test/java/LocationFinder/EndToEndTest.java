@@ -18,6 +18,8 @@ import org.junit.jupiter.api.function.Executable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 
+import java.util.List;
+
 @RunWith(SpringRunner.class)
 @Transactional
 @SpringBootTest
@@ -158,5 +160,56 @@ class EndToEndTest {
 
         //Check that cost was updated correctly
         assertEquals(updatedClaim, true);
+    }
+
+    @Test
+    public void testGetAllSuccess() {
+        String authToken = "lqT3jhoRN03DhvnbJSgEiaOZn/JbVWAxPwx5JFi5ALhQXeB" +
+                "XNKYRKRuMVPOl/Hx9cBfR9iPqz78uj/AOuoYpZLx+eWyKhWlkGovJgbYMdp" +
+                "LBN+fCFjYXBZefb+d6g8/EMVTYO9uEM0MmKCAJmQOtjrpWa6bj+x/m0Fh" +
+                "oF53Kk/0pDsUjK7V0t/AtWg24giOlmfW+bfSsijNZIiCQ5ZIiJncz2wLWaqls" +
+                "5a/M28E7OUT9CaL4zR9U+Mp62UFYPtc28e8RMILFtd2lLR7tugvaBi8J+esbJ" +
+                "I2zuyMCU0SYKunGUd2nHpA8YJh9tHqjloVW7ND+f5QXrTbhwaP7hShoOw==";
+        ResponseEntity<?> allClientLocations = locCont.getLocations(3, authToken);
+
+        //Extract the list of locations from the response body
+        List<Location> returnedResults = (List<Location>) allClientLocations.getBody();
+
+        //Check to make sure it got all results (which is 3 for our dummy client)
+        assertEquals(returnedResults.size(), 3);
+    }
+
+    @Test
+    public void testGetAreaSuccess() {
+        String authToken = "lqT3jhoRN03DhvnbJSgEiaOZn/JbVWAxPwx5JFi5ALhQXeB" +
+                "XNKYRKRuMVPOl/Hx9cBfR9iPqz78uj/AOuoYpZLx+eWyKhWlkGovJgbYMdp" +
+                "LBN+fCFjYXBZefb+d6g8/EMVTYO9uEM0MmKCAJmQOtjrpWa6bj+x/m0Fh" +
+                "oF53Kk/0pDsUjK7V0t/AtWg24giOlmfW+bfSsijNZIiCQ5ZIiJncz2wLWaqls" +
+                "5a/M28E7OUT9CaL4zR9U+Mp62UFYPtc28e8RMILFtd2lLR7tugvaBi8J+esbJ" +
+                "I2zuyMCU0SYKunGUd2nHpA8YJh9tHqjloVW7ND+f5QXrTbhwaP7hShoOw==";
+        ResponseEntity<?> allAreaLocations = locCont.getLocByArea("Test Area",3, authToken);
+
+        //Extract the list of locations from the response body
+        List<Location> returnedResults = (List<Location>) allAreaLocations.getBody();
+
+        //Check to make sure it got all results (which is 3 for our dummy client)
+        assertEquals(returnedResults.size(), 3);
+    }
+
+    @Test
+    public void testGetClaimSuccess() {
+        String authToken = "lqT3jhoRN03DhvnbJSgEiaOZn/JbVWAxPwx5JFi5ALhQXeB" +
+                "XNKYRKRuMVPOl/Hx9cBfR9iPqz78uj/AOuoYpZLx+eWyKhWlkGovJgbYMdp" +
+                "LBN+fCFjYXBZefb+d6g8/EMVTYO9uEM0MmKCAJmQOtjrpWa6bj+x/m0Fh" +
+                "oF53Kk/0pDsUjK7V0t/AtWg24giOlmfW+bfSsijNZIiCQ5ZIiJncz2wLWaqls" +
+                "5a/M28E7OUT9CaL4zR9U+Mp62UFYPtc28e8RMILFtd2lLR7tugvaBi8J+esbJ" +
+                "I2zuyMCU0SYKunGUd2nHpA8YJh9tHqjloVW7ND+f5QXrTbhwaP7hShoOw==";
+        ResponseEntity<?> allClaimedLocation = locCont.getLocByClaim("claimed",3, authToken);
+
+        //Extract the list of locations from the response body
+        List<Location> returnedResults = (List<Location>) allClaimedLocation.getBody();
+
+        //Check to make sure it got all results (which is 3 for our dummy client)
+        assertEquals(returnedResults.size(), 2);
     }
 }
