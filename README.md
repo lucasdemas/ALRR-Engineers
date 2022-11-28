@@ -12,7 +12,11 @@ After talking to our TA (who said it was fine), we decided to leave the client i
 	* We implemented our own RSA decryption scheme for authentication (and provided the public and private key files used for reference)
 	* We designed this service in that we provide the client an authentication token and they need to provided us an encrypted version of it to verify their identity
 
-## API Endpoints
+## Note for public deployment
+	* Our service is deployed at https://alrr-engineers.herokuapp.com/` and can be accessed through curl/Postman by the entrypoint specified below
+	* This service will not be pulbic for longer than a month (aka till the end of 2022) as heroku costs money to have service deployed publically now
+
+## API Entrypoints
 	* ___Clients___ (paths beginning with /client)
 		* Get `/authenticate`
 			* This endpoint will take the provided encrypted authentication token and see if there is any client that it belongs to in the database
@@ -110,7 +114,7 @@ Go to the LocationFinder folder (/LocationFinder) and run the following command:
 Go to the LocationFinder folder (/LocationFinder) and run the following command:
 	`mvnw test` or `./mvnw test` (some team members needed to run the left for it to work and others had to run the right)
 	
-	* Running this will run all of the Unit tests in the test folder and output the results of the tests
+	* Running this will run all of the tests in the test folder and output the results of the tests
 	
 ## Style Checking, Bug finding and Branch Coverage
 For this assignment we used checkstyle to clean up the code and take care of any issues
