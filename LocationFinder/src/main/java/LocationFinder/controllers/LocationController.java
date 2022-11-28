@@ -108,16 +108,12 @@ public class LocationController {
      */
     @CrossOrigin()
     @PostMapping(path = "/add")
-    public ResponseEntity<?> addNewLoc(@RequestParam final
-                                           String locName,
-                                       @RequestParam final
-                                       String locArea,
-                                       @RequestParam final
-                                           Double locCost,
-                                       @RequestParam final
-                                           Integer clientId,
-                                       @RequestParam final
-                                           String clientAuthToken) {
+    public ResponseEntity<?>
+    addNewLoc(@RequestParam final String locName,
+              @RequestParam final String locArea,
+              @RequestParam final Double locCost,
+              @RequestParam final Integer clientId,
+              @RequestParam final String clientAuthToken) {
         try {
             //verify that the auth token provided by the client is not blank
             clientServ.checkAuthTokenBlank(clientAuthToken);
@@ -192,10 +188,9 @@ public class LocationController {
      */
     @CrossOrigin()
     @GetMapping(path = "/getAll")
-    public ResponseEntity<?> getLocations(@RequestParam final
-                                              Integer clientId,
-                                          @RequestParam final
-                                          String clientAuthToken) {
+    public ResponseEntity<?>
+    getLocations(@RequestParam final Integer clientId,
+                 @RequestParam final String clientAuthToken) {
         try {
             //verify that the auth token provided by the client is not blank
             clientServ.checkAuthTokenBlank(clientAuthToken);
@@ -262,12 +257,10 @@ public class LocationController {
      */
     @CrossOrigin()
     @GetMapping(path = "/getArea")
-    public ResponseEntity<?> getLocByArea(@RequestParam final
-                                              String area,
-                                          @RequestParam final
-                                          Integer clientId,
-                                          @RequestParam final
-                                              String clientAuthToken) {
+    public ResponseEntity<?>
+    getLocByArea(@RequestParam final String area,
+                 @RequestParam final Integer clientId,
+                 @RequestParam final String clientAuthToken) {
         try {
             //verify that the area is not blank
             locService.checkArea(area);
@@ -339,12 +332,10 @@ public class LocationController {
      */
     @CrossOrigin()
     @GetMapping(path = "/getClaim")
-    public ResponseEntity<?> getLocByClaim(@RequestParam final
-                                               String isClaim,
-                                           @RequestParam final
-                                           Integer clientId,
-                                           @RequestParam final
-                                               String clientAuthToken) {
+    public ResponseEntity<?>
+    getLocByClaim(@RequestParam final String isClaim,
+                  @RequestParam final Integer clientId,
+                  @RequestParam final String clientAuthToken) {
         try {
             //verify that the auth token provided by the client is not blank
             clientServ.checkAuthTokenBlank(clientAuthToken);
@@ -417,14 +408,11 @@ public class LocationController {
      */
     @CrossOrigin()
     @PostMapping(path = "/updateCost")
-    public ResponseEntity<?> updateLocCost(@RequestParam final
-                                               Integer locId,
-                                           @RequestParam final
-                                           Double locCost,
-                                           @RequestParam final
-                                               Integer clientId,
-                                           @RequestParam final
-                                               String clientAuthToken) {
+    public ResponseEntity<?>
+    updateLocCost(@RequestParam final Integer locId,
+                  @RequestParam final Double locCost,
+                  @RequestParam final Integer clientId,
+                  @RequestParam final String clientAuthToken) {
         try {
             //verify that the auth token provided by the client is not blank
             clientServ.checkAuthTokenBlank(clientAuthToken);
@@ -520,14 +508,11 @@ public class LocationController {
      */
     @CrossOrigin()
     @PostMapping(path = "/updateClaim")
-    public ResponseEntity<?> updateLocClaim(@RequestParam final
-                                                Integer locId,
-                                            @RequestParam final
-                                            Boolean locClaim,
-                                            @RequestParam final
-                                                Integer clientId,
-                                            @RequestParam final
-                                                String clientAuthToken) {
+    public ResponseEntity<?>
+    updateLocClaim(@RequestParam final Integer locId,
+                   @RequestParam final Boolean locClaim,
+                   @RequestParam final Integer clientId,
+                   @RequestParam final String clientAuthToken) {
         try {
             //verify that the auth token provided by the client is not blank
             clientServ.checkAuthTokenBlank(clientAuthToken);
@@ -651,12 +636,10 @@ public class LocationController {
      */
     @CrossOrigin()
     @PostMapping(path = "/delete")
-    public ResponseEntity<?> deleteLoc(@RequestParam final
-                                           Integer locId,
-                                       @RequestParam final
-                                       Integer clientId,
-                                       @RequestParam final
-                                           String clientAuthToken) {
+    public ResponseEntity<?>
+    deleteLoc(@RequestParam final Integer locId,
+              @RequestParam final Integer clientId,
+              @RequestParam final String clientAuthToken) {
         try {
             //verify that the auth token provided by the client is not blank
             clientServ.checkAuthTokenBlank(clientAuthToken);
