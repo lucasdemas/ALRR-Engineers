@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.sun.jdi.InvalidTypeException;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,17 +64,31 @@ public class LocationService {
             InvalidTypeException("Location Cost can't be a negative number");
         }
     }
-
+    /**
+     * A method to check if the location area is blank.
+     * @param locArea
+     * @return
+     *      Location Area
+     * @throws InvalidTypeException
+     */
     public String checkArea(final String locArea) throws InvalidTypeException {
         if (locArea.trim().isEmpty()) {
             throw new InvalidTypeException("Location area cannot be blank");
         }
         return locArea;
     }
-
-    public double checkCost(final double locCost) throws InvalidTypeException {
+    /**
+     * A method to check if the location cost is negative.
+     * @param locCost
+     * @return
+     *      Location Cost
+     * @throws InvalidTypeException
+     */
+    public double checkCost(final double locCost)
+        throws InvalidTypeException {
         if (locCost < 0) {
-            throw new InvalidTypeException("Location Cost can't be a negative number");
+            throw new InvalidTypeException(
+                "Location Cost can't be a negative number");
         }
         return locCost;
     }
@@ -83,13 +96,15 @@ public class LocationService {
     /**
      * A method to get locations by claimed status.
      * @param claimStatus
+     * @param clientId
      * @return
      *      A list of locations
      * @throws InvaildInputException
      *      The claimed status input is invalid
      */
     public List<Location> getLocationByClaim(
-        final String claimStatus, final Integer clientId) throws InvaildInputException {
+        final String claimStatus, final Integer clientId)
+            throws InvaildInputException {
         if (claimStatus.toLowerCase().equals("claimed")) {
             return locRepository.findByClaim(true, clientId);
         } else if (claimStatus.toLowerCase().equals("unclaimed")) {

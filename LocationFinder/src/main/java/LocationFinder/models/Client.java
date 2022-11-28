@@ -29,7 +29,7 @@ public class Client {
     private String email;
 
     /**
-     * Client Authentication token
+     * Client Authentication token.
      */
     @Column(name = "client_auth_token", unique = true)
     private String authToken;
@@ -58,6 +58,13 @@ public class Client {
         this.email = clientEmail;
     }
 
+    /**
+     * A client object constructor.
+     * @param clientId
+     * @param clientName
+     * @param clientEmail
+     * @param clientAuthToken
+     */
     public Client(final Integer clientId,
                   final String clientName,
                   final String clientEmail,

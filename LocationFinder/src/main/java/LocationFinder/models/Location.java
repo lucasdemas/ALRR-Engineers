@@ -65,13 +65,14 @@ public class Location {
      * @param loc
      * @param area
      * @param cost
-     * @param clientId
+     * @param cId
      */
-    public Location(final String loc, final String area, final Double cost, final Integer clientId) {
+    public Location(final String loc, final String area,
+                    final Double cost, final Integer cId) {
         this.locName = loc;
         this.locArea = area;
         this.locCost = cost;
-        this.clientId = clientId;
+        this.clientId = cId;
         this.claim = false;
     }
 
@@ -103,10 +104,10 @@ public class Location {
 
     /**
      * Client Id setter.
-     * @param clientId
+     * @param cId
      */
-    public void setClientId(final Integer clientId) {
-        this.clientId = clientId;
+    public void setClientId(final Integer cId) {
+        this.clientId = cId;
     }
 
     /**

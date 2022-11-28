@@ -190,7 +190,8 @@ class LocationTest {
 
         //Have the client be returned in the format
         //that findById is looking for in the cleintRepo
-        List<Location> searchResults = locServ.getLocationByClaim("unclaimed", 1);
+        List<Location> searchResults = locServ.getLocationByClaim("unclaimed",
+                1);
 
         //Have the mock return the formatted client when
         //it look for a client with the id 1
@@ -432,11 +433,11 @@ class LocationTest {
     }
 
     /**
-     * test case for valid (none blank) area
+     * test case for valid (none blank) area.
      */
 
     @Test
-    public void ValidLocArea() throws InvalidTypeException {
+    public void validLocArea() throws InvalidTypeException {
 
         //Test a valid Location area
         //Expected, no exception thrown or return statments
@@ -459,11 +460,11 @@ class LocationTest {
     }
 
     /**
-     * test case for valid (none blank) cost
+     * test case for valid (none blank) cost.
      */
 
     @Test
-    public void ValidLocCost() throws InvalidTypeException {
+    public void validLocCost() throws InvalidTypeException {
 
         //Test a valid Location cost
         //Expected, no exception thrown or return statments

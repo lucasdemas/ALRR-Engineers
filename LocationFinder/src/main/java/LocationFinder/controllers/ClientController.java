@@ -43,7 +43,8 @@ public class ClientController {
     /**
      * Exception handling for MissingServletRequestParameter.
      *
-     * @param e The MissingServletRequestParameter Exception that is going to be handled
+     * @param e The MissingServletRequestParameter Exception that
+     *          is going to be handled
      * @return The response saying what input is missing in the request
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -57,13 +58,15 @@ public class ClientController {
     /**
      * A method to authenticate the client based on their api token.
      * @param clientAuthToken
-     *      The authentication token of the client trying to use our API's services (encrypted using the public key)
+     *      The authentication token of the client trying to use
+     *      our API's services (encrypted using the public key)
      * @return
      *      The client's id
      */
     @CrossOrigin()
     @GetMapping(path = "/authenticate")
-    public ResponseEntity<?> authenticateClient(@RequestParam final String clientAuthToken) {
+    public ResponseEntity<?> authenticateClient(
+            @RequestParam final String clientAuthToken) {
         try {
             //verify that the auth token for the new client is not blank
             clientServ.checkAuthTokenBlank(clientAuthToken);
@@ -74,21 +77,24 @@ public class ClientController {
             // of the provided authentication token
             Client fetchedClient = clientServ.getClientByAuth(decryptedToken);
 
-            //Print to terminal that there is an authentication occurring with the provided
-            //authentication token
-            System.out.println("A client has authenticated with the authentication token: " +
-                    decryptedToken);
+            //Print to terminal that there is an authentication occurring with
+            //the provided authentication token
+            System.out.println("A client has authenticated with"
+                    + " the authentication token: "
+                    + decryptedToken);
 
             //return the client's id that matches the authentication token
             return new ResponseEntity<>(fetchedClient.getId(), HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | NotFoundException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException
+                 | NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (InvalidKeySpecException | BadPaddingException
                 | IllegalBlockSizeException | InvalidKeyException
                 | InvaildInputException | IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(e.getMessage(),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 }
