@@ -332,6 +332,8 @@ public class LocationController {
      * A method to get all locations by claimed status.
      *
      * @param isClaim The claimed status on which to search the database
+     * @param clientId
+     * @param clientAuthToken
      * @return The response from finding all locations by claimed
      * status or the response from catching an exception
      */

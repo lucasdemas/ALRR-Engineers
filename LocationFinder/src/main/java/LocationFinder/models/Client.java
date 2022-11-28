@@ -58,6 +58,13 @@ public class Client {
         this.email = clientEmail;
     }
 
+    /**
+     * A client object constructor.
+     * @param clientId
+     * @param clientName
+     * @param clientEmail
+     * @param clientAuthToken
+     */
     public Client(final Integer clientId,
                   final String clientName,
                   final String clientEmail,

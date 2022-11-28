@@ -437,7 +437,7 @@ class LocationTest {
      */
 
     @Test
-    public void ValidLocArea() throws InvalidTypeException {
+    public void validLocArea() throws InvalidTypeException {
 
         //Test a valid Location area
         //Expected, no exception thrown or return statments
@@ -464,7 +464,7 @@ class LocationTest {
      */
 
     @Test
-    public void ValidLocCost() throws InvalidTypeException {
+    public void validLocCost() throws InvalidTypeException {
 
         //Test a valid Location cost
         //Expected, no exception thrown or return statments

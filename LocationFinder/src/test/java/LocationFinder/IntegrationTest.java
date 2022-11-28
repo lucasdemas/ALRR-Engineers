@@ -72,7 +72,11 @@ public class IntegrationTest {
     @MockBean
     private LocationRepository locRepo;
 
-@Test
+    /**
+     * A method to test Client authorization.
+     * @throws Exception
+     */
+    @Test
     public void clientAuthTest() throws Exception {
 
 
@@ -103,6 +107,10 @@ public class IntegrationTest {
 
 }
 
+    /**
+     * A method to test getting a client and updating claim
+     * status.
+     */
     @Test
     public void getClientAndUpdateClaim() throws Exception {
 
@@ -141,7 +149,10 @@ public class IntegrationTest {
 
     }
 
-
+    /**
+     * A method to get a client and update location cost.
+     * @throws Exception
+     */
     @Test
     public void getClientAndUpdateCost() throws Exception {
 
@@ -178,6 +189,10 @@ public class IntegrationTest {
 
     }
 
+    /**
+     * A method to get client and get claimed status.
+     * @throws Exception
+     */
     @Test
     public void getClientAndGetClaimed() throws Exception {
 
@@ -219,6 +234,10 @@ public class IntegrationTest {
     }
 
 
+    /**
+     * A method to get client and get all areas.
+     * @throws Exception
+     */
     @Test
     public void getClientAndGetByArea() throws Exception {
 
