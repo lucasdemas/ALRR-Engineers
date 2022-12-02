@@ -1,12 +1,13 @@
 # ALRR-Engineers Location Finder
 
-## NOTE For First Iteration
-After talking to our TA (who said it was fine), we decided to leave the client id out of the location table due to uncertainty of it in regards to what multi-client is representing (we will add this for the second iteration)
+## Second Iteration
+	* The README has been updated to reflect the changes/additions done for the second iteration of the term project
+	* Our group has met wiht our IA to demo this iteration on 12/2/2022
 
 ## NOTE For Performing End to End Tests
 	* The database should be prepopulated with a test client for this entrypoint (that has a client id of 3 and an unencryped auth token value of 1)
 	* The database should also have 3 locations associated to the test client (with location ids 7, 8, 9 where 2 of them are claimed)
-	*If this information is not in the database, the end to end tests will fail
+	* If this information is not in the database, the end to end tests will fail (please let one of us know and we can fix it)
 	
 ## Note For Authentication
 	* We implemented our own RSA decryption scheme for authentication (and provided the public and private key files used for reference)
